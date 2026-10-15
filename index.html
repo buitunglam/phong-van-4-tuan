@@ -11,41 +11,60 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: sticky tab bar + single reading column; weeks as a vertical track with a mono "metro" index */
+/* Layout: fixed left sidebar (track switch, section nav, language) + single reading column; collapses to a sticky top bar on narrow screens */
 :root{
   --bg:#f5f7f8; --surface:#ffffff; --fg:#14212b; --muted:#5b6b77; --line:#d9e1e6;
-  --accent:#0b7f9e; --accent-soft:#e2f2f6; --must:#b5432f; --nice:#5a6fb0; --ok:#2f8a57;
+  --rn:#0b7f9e; --rn-soft:#e2f2f6; --fl:#2f5fc4; --fl-soft:#e6ecfa;
+  --accent:var(--rn); --accent-soft:var(--rn-soft); --must:#b5432f; --nice:#5a6fb0; --ok:#2f8a57;
   --display:"Bricolage Grotesque","Be Vietnam Pro",system-ui,sans-serif;
   --body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0f171d; --surface:#16212a; --fg:#e4ecf0; --muted:#93a4b0; --line:#273641;
-  --accent:#4cc3e0; --accent-soft:#16323c; --must:#f08a72; --nice:#9fb0ee; --ok:#6cc995; color-scheme:dark}}
+  --rn:#4cc3e0; --rn-soft:#16323c; --fl:#86a8f2; --fl-soft:#1b2744;
+  --must:#f08a72; --nice:#9fb0ee; --ok:#6cc995; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0f171d; --surface:#16212a; --fg:#e4ecf0; --muted:#93a4b0; --line:#273641;
-  --accent:#4cc3e0; --accent-soft:#16323c; --must:#f08a72; --nice:#9fb0ee; --ok:#6cc995; color-scheme:dark}
+  --rn:#4cc3e0; --rn-soft:#16323c; --fl:#86a8f2; --fl-soft:#1b2744;
+  --must:#f08a72; --nice:#9fb0ee; --ok:#6cc995; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font:15px/1.65 var(--body);padding-inline:16px;padding-block:0 64px}
+html[data-lang="en"] .l-vi,html:not([data-lang="en"]) .l-en{display:none!important}
+body{background:var(--bg);color:var(--fg);font:15px/1.65 var(--body);margin:0}
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.app[data-track="fl"]{--accent:var(--fl);--accent-soft:var(--fl-soft)}
+aside.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;overflow-y:auto;border-right:1px solid var(--line);background:var(--surface);padding:24px 16px;display:flex;flex-direction:column;gap:22px}
+.brand{font:800 18px/1.2 var(--display)}
+.brand small{display:block;font:600 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.grp{display:grid;gap:8px}
+.side-top{display:grid;gap:22px}
+.grp-label{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:8px;padding:3px;gap:3px;background:var(--bg)}
+.seg button{font:600 13px var(--body);border:0;background:none;color:var(--muted);padding:7px 8px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgb(0 0 0 / .12)}
+nav.secnav{display:grid;gap:2px}
+nav.secnav button{display:flex;gap:10px;align-items:baseline;text-align:left;font:500 14px var(--body);color:var(--fg);background:none;border:0;padding:8px 10px;border-radius:6px;cursor:pointer}
+nav.secnav button .n{font:600 11px var(--mono);color:var(--muted);width:16px;flex:none}
+nav.secnav button[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav.secnav button[aria-current="true"] .n{color:var(--accent)}
+.side-foot{margin-top:auto;font-size:12.5px;color:var(--muted)}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{padding-inline:32px;padding-block:0 64px;min-width:0}
 .wrap{max-width:860px;margin:0 auto}
-header.hero{padding-block:40px 20px;display:grid;gap:10px}
+header.hero{padding-block:40px 8px;display:grid;gap:10px}
 .eyebrow{font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 h1{font:800 clamp(30px,6vw,46px)/1.08 var(--display);margin:0;text-wrap:balance}
 h2{font:700 26px/1.2 var(--display);margin:0;text-wrap:balance}
 h3{font:600 18px/1.3 var(--display);margin:0;text-wrap:balance}
 p{margin:0;max-width:68ch}
 .lede{color:var(--muted);font-size:16px}
-nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;padding-block:8px}
-nav.tabs button{font:600 14px var(--body);color:var(--muted);background:none;border:0;padding:8px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
-nav.tabs button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
-nav.tabs button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 section.panel{display:grid;gap:22px;padding-block:28px}
 .mono{font-family:var(--mono);font-size:12.5px}
 .muted{color:var(--muted)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
 .box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:10px;min-width:0}
 .freq{display:grid;gap:8px}
-.freq-row{display:grid;grid-template-columns:minmax(0,1fr) 110px 34px;gap:10px;align-items:center;font-size:14px}
+.freq-row{display:grid;grid-template-columns:minmax(0,1fr) 110px 40px;gap:10px;align-items:center;font-size:14px}
 .bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--accent)}
 .bar.nice i{background:var(--nice)}
@@ -88,34 +107,72 @@ pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;bord
 .filter button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .src a{color:var(--accent)}
 .src li{font-size:13.5px}
-@media (max-width:520px){.week{grid-template-columns:40px minmax(0,1fr);gap:10px}.week .idx b{font-size:22px}.freq-row{grid-template-columns:minmax(0,1fr) 70px 30px}}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  aside.side{height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;gap:10px;z-index:5}
+  .brand,.side-foot,.grp-label{display:none}
+  .side-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  nav.secnav{display:flex;overflow-x:auto;gap:4px}
+  nav.secnav button{white-space:nowrap;padding:6px 10px}
+  nav.secnav button .n{display:none}
+  main{padding-inline:16px}
+}
+@media (max-width:520px){.week{grid-template-columns:40px minmax(0,1fr);gap:10px}.week .idx b{font-size:22px}.freq-row{grid-template-columns:minmax(0,1fr) 70px 34px}}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style>
 
+<div class="app" id="app" data-track="rn">
+<aside class="side">
+  <div class="brand">Lộ trình phỏng vấn<small>Mobile · 10/2026</small></div>
+  <div class="side-top">
+    <div class="grp">
+      <span class="grp-label"><span class="l-vi">Công nghệ</span><span class="l-en">Stack</span></span>
+      <div class="seg" id="trackSeg">
+        <button data-track="rn" aria-pressed="true">React Native</button>
+        <button data-track="fl" aria-pressed="false">Flutter</button>
+      </div>
+    </div>
+    <div class="grp">
+      <span class="grp-label"><span class="l-vi">Ngôn ngữ Q&amp;A</span><span class="l-en">Q&amp;A language</span></span>
+      <div class="seg" id="langSeg">
+        <button data-lang="vi" aria-pressed="true">VI</button>
+        <button data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+  <div class="grp">
+    <span class="grp-label"><span class="l-vi">Mục</span><span class="l-en">Sections</span></span>
+    <nav class="secnav" id="secnav" aria-label="Sections">
+      <button data-sec="jd"><span class="n">01</span><span><span class="l-vi">JD nói gì</span><span class="l-en">What JDs ask for</span></span></button>
+      <button data-sec="plan"><span class="n">02</span><span><span class="l-vi">Lộ trình 8 tuần</span><span class="l-en">8-week plan</span></span></button>
+      <button data-sec="quiz"><span class="n">03</span><span><span class="l-vi">Câu hỏi luyện tập</span><span class="l-en">Practice questions</span></span></button>
+      <button data-sec="iv"><span class="n">04</span><span><span class="l-vi">Câu hỏi phỏng vấn</span><span class="l-en">Interview questions</span></span></button>
+      <button data-sec="lc"><span class="n">05</span><span>Live coding</span></button>
+    </nav>
+  </div>
+  <p class="side-foot"><span class="l-vi">Nút VI/EN đổi ngôn ngữ phần câu hỏi và câu trả lời. Tiến độ tick được lưu trên trình duyệt này.</span><span class="l-en">VI/EN switches the language of questions and answers. Checklist progress is saved in this browser.</span></p>
+</aside>
+
+<main>
 <div class="wrap">
-<header class="hero">
+<header class="hero" data-track="rn">
   <span class="eyebrow">Lộ trình phỏng vấn · React Native · 10/2026</span>
   <h1>React Native trong 8 tuần</h1>
-  <p class="lede">Tổng hợp từ các JD React Native trên TopDev, TopCV, JobsGO, ITviec, Workable, LinkedIn và các trang tuyển dụng quốc tế. Mỗi tuần có mục tiêu, checklist, bài lab và câu hỏi tự kiểm tra. Cuối trang là bộ câu hỏi phỏng vấn theo cấp độ.</p>
+  <p class="lede">Tổng hợp từ các JD React Native trên TopDev, TopCV, JobsGO, ITviec, Workable, LinkedIn và các trang tuyển dụng quốc tế. Mỗi tuần có mục tiêu, checklist, bài lab và câu hỏi tự kiểm tra.</p>
+</header>
+<header class="hero" data-track="fl" hidden>
+  <span class="eyebrow">Lộ trình phỏng vấn · Flutter · 10/2026</span>
+  <h1>Flutter trong 8 tuần</h1>
+  <p class="lede">Tổng hợp từ các JD Flutter trên TopDev, TopCV, JobsGO, ITviec, LinkedIn và các trang tuyển dụng quốc tế. Cùng cấu trúc với lộ trình React Native.</p>
 </header>
 
-<nav class="tabs" role="tablist" aria-label="Phần">
-  <button role="tab" id="t-jd" aria-controls="jd" aria-selected="true">JD nói gì</button>
-  <button role="tab" id="t-plan" aria-controls="plan" aria-selected="false">Lộ trình 8 tuần</button>
-  <button role="tab" id="t-quiz" aria-controls="quiz" aria-selected="false">Câu hỏi luyện tập</button>
-  <button role="tab" id="t-iv" aria-controls="iv" aria-selected="false">Câu hỏi phỏng vấn</button>
-  <button role="tab" id="t-lc" aria-controls="lc" aria-selected="false">Live coding</button>
-</nav>
-
-<!-- ============ JD ============ -->
-<section class="panel" id="jd" role="tabpanel" aria-labelledby="t-jd">
+<!-- ================= RN · JD ================= -->
+<section class="panel" data-track="rn" data-sec="jd">
   <div style="display:grid;gap:8px">
     <h2>Các JD thực sự yêu cầu gì</h2>
     <p class="muted">Đếm trên 9 JD đọc chi tiết (4 Việt Nam, 5 quốc tế, Junior → Senior). Thanh xanh là yêu cầu bắt buộc, thanh tím là điểm cộng.</p>
   </div>
-  <div class="box">
-    <div class="freq" id="freq"></div>
-  </div>
+  <div class="box"><div class="freq" id="rn-freq"></div></div>
 
   <div class="grid2">
     <div class="box">
@@ -243,38 +300,36 @@ pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;bord
   </div>
 </section>
 
-<!-- ============ PLAN ============ -->
-<section class="panel" id="plan" role="tabpanel" aria-labelledby="t-plan" hidden>
+<!-- ================= RN · PLAN / QUIZ / IV ================= -->
+<section class="panel" data-track="rn" data-sec="plan" hidden>
   <div style="display:grid;gap:8px">
     <h2>Lộ trình 8 tuần</h2>
     <p class="muted">Khoảng 10–12 giờ mỗi tuần. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab cả 8 tuần cộng lại thành một app hoàn chỉnh để đưa vào CV: <b>“Expense Tracker”</b> có login, danh sách, realtime, offline, push và CI.</p>
   </div>
-  <div class="box progress"><span class="mono" id="pct">0%</span><div class="bar"><i id="pctbar" style="width:0"></i></div><span class="muted" id="pcttxt"></span></div>
-  <div id="weeks"></div>
+  <div class="box progress"><span class="mono" id="rn-pct">0%</span><div class="bar"><i id="rn-pctbar" style="width:0"></i></div><span class="muted" id="rn-pcttxt"></span></div>
+  <div id="rn-weeks"></div>
 </section>
 
-<!-- ============ QUIZ ============ -->
-<section class="panel" id="quiz" role="tabpanel" aria-labelledby="t-quiz" hidden>
+<section class="panel" data-track="rn" data-sec="quiz" hidden>
   <div style="display:grid;gap:8px">
-    <h2>Câu hỏi luyện tập</h2>
-    <p class="muted">Tự trả lời thành tiếng trước, sau đó mới mở đáp án. Mục tiêu là nói được trong 1–2 phút có ví dụ cụ thể.</p>
+    <h2><span class="l-vi">Câu hỏi luyện tập</span><span class="l-en">Practice questions</span></h2>
+    <p class="muted"><span class="l-vi">Tự trả lời thành tiếng trước, sau đó mới mở đáp án. Mục tiêu là nói được trong 1–2 phút có ví dụ cụ thể.</span><span class="l-en">Answer out loud before you open the model answer. Aim for one to two minutes with a concrete example.</span></p>
   </div>
-  <div class="filter" id="qfilter"></div>
-  <div id="quizlist" class="qgroup"></div>
+  <div class="filter" id="rn-qfilter"></div>
+  <div id="rn-quizlist" class="qgroup"></div>
 </section>
 
-<!-- ============ INTERVIEW ============ -->
-<section class="panel" id="iv" role="tabpanel" aria-labelledby="t-iv" hidden>
+<section class="panel" data-track="rn" data-sec="iv" hidden>
   <div style="display:grid;gap:8px">
-    <h2>Câu hỏi phỏng vấn</h2>
-    <p class="muted">Gom theo dạng nhà tuyển dụng hay hỏi. Mỗi câu có các ý interviewer muốn nghe. Lọc theo cấp độ bạn đang ứng tuyển.</p>
+    <h2><span class="l-vi">Câu hỏi phỏng vấn</span><span class="l-en">Interview questions</span></h2>
+    <p class="muted"><span class="l-vi">Gom theo dạng nhà tuyển dụng hay hỏi. Mỗi câu có các ý interviewer muốn nghe. Lọc theo cấp độ bạn đang ứng tuyển.</span><span class="l-en">Grouped the way interviewers usually ask them. Each question lists the points they want to hear. Filter by the level you're applying for.</span></p>
   </div>
-  <div class="filter" id="lvfilter"></div>
-  <div id="ivlist" style="display:grid;gap:26px"></div>
+  <div class="filter" id="rn-lvfilter"></div>
+  <div id="rn-ivlist" style="display:grid;gap:26px"></div>
 </section>
 
-<!-- ============ LIVE CODING ============ -->
-<section class="panel" id="lc" role="tabpanel" aria-labelledby="t-lc" hidden>
+<!-- ================= RN · LIVE CODING ================= -->
+<section class="panel" data-track="rn" data-sec="lc" hidden>
   <div style="display:grid;gap:8px">
     <h2>Vòng live coding React Native</h2>
     <p class="muted">Tổng hợp từ một repo đề thi live coding công khai, bài kể lại của ứng viên và các handbook phỏng vấn. Không có công ty Việt Nam nào công bố đề, nhưng các blog tuyển dụng trong nước (TopCV, ITNavi) xác nhận nhiều công ty có thêm bài test code thực hành.</p>
@@ -457,7 +512,7 @@ function useInfiniteList&lt;T extends { id: string }&gt;(fetchPage: (cursor?: st
   </div>
 
   <div class="box">
-    <h3>Bài code review mẫu: tìm lỗi trong 10 phút</h3>
+    <h3><span class="l-vi">Bài code review mẫu: tìm lỗi trong 10 phút</span><span class="l-en">Sample code review: find the bugs in 10 minutes</span></h3>
 <pre>function Users({ navigate }) {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
@@ -482,7 +537,8 @@ function useInfiniteList&lt;T extends { id: string }&gt;(fetchPage: (cursor?: st
     /&gt;
   );
 }</pre>
-    <details><summary><span>Xem đáp án (8 lỗi)</span></summary><div class="ans"><ul>
+    <details><summary><span><span class="l-vi">Xem đáp án (8 lỗi)</span><span class="l-en">Show the answer (8 bugs)</span></span></summary><div class="ans">
+    <ul class="l-vi">
       <li><b>Stale closure:</b> <code>users</code> trong effect là giá trị cũ. Dùng <code>setUsers(prev =&gt; [...prev, ...d])</code>.</li>
       <li><b>Không xử lý lỗi:</b> thiếu <code>.catch</code> và không kiểm tra <code>r.ok</code>.</li>
       <li><b>Race condition:</b> không hủy request; trang về sai thứ tự sẽ chèn sai. Dùng AbortController trong cleanup.</li>
@@ -491,6 +547,16 @@ function useInfiniteList&lt;T extends { id: string }&gt;(fetchPage: (cursor?: st
       <li><b>setPage(1) không reset danh sách:</b> dữ liệu trang 1 bị nối thêm vào cuối. Nếu page đang là 1 thì effect còn không chạy lại.</li>
       <li><b>Key sai chỗ:</b> <code>key</code> trong renderItem bị bỏ qua và lại là index. Dùng <code>keyExtractor={u =&gt; u.id}</code>.</li>
       <li><b>Re-render thừa:</b> renderItem và onPress tạo mới mỗi lần render nên Row có memo cũng vô ích; <code>useState([])</code> không có type sẽ thành <code>never[]</code> trong TS.</li>
+    </ul>
+    <ul class="l-en">
+      <li><b>Stale closure:</b> <code>users</code> inside the effect is an old value. Use <code>setUsers(prev =&gt; [...prev, ...d])</code>.</li>
+      <li><b>No error handling:</b> there's no <code>.catch</code>, and <code>r.ok</code> is never checked.</li>
+      <li><b>Race condition:</b> requests are never cancelled, so pages that come back out of order land in the wrong place. Abort them in the cleanup.</li>
+      <li><b>onEndReached fires repeatedly:</b> there's no in-flight flag and no notion of the last page, so the same page gets loaded twice.</li>
+      <li><b>Leaked listener:</b> the AppState subscription is never <code>remove()</code>d in a cleanup.</li>
+      <li><b>setPage(1) doesn't reset the list:</b> page 1 gets appended to the end again. And if page is already 1, the effect doesn't even re-run.</li>
+      <li><b>Key in the wrong place:</b> React ignores a <code>key</code> returned from renderItem, and it's the index anyway. Use <code>keyExtractor={u =&gt; u.id}</code>.</li>
+      <li><b>Wasted re-renders:</b> renderItem and onPress are recreated on every render, so memoizing Row achieves nothing. Also, <code>useState([])</code> without a type is inferred as <code>never[]</code> in TypeScript.</li>
     </ul></div></details>
   </div>
 
@@ -526,19 +592,561 @@ function useInfiniteList&lt;T extends { id: string }&gt;(fetchPage: (cursor?: st
     </ul>
   </div>
 </section>
+
+<!-- ================= FLUTTER · JD ================= -->
+<section class="panel" data-track="fl" data-sec="jd" hidden>
+  <div style="display:grid;gap:8px">
+    <h2>Các JD Flutter thực sự yêu cầu gì</h2>
+    <p class="muted">Đếm trên 15 JD có đủ thông tin kỹ năng (10 Việt Nam, 5 quốc tế, phần lớn là Senior). Nhiều trang TopCV/ITviec chặn đọc chi tiết nên một phần lấy từ đoạn trích của công cụ tìm kiếm, con số thực tế có thể cao hơn.</p>
+  </div>
+  <div class="box"><div class="freq" id="fl-freq"></div></div>
+
+  <div class="grid2">
+    <div class="box">
+      <span class="tag must">Phải có</span>
+      <ul>
+        <li>Dart vững: null safety, async/Future/Stream, generics, isolate</li>
+        <li>Hiểu framework: widget / element / render tree, rebuild, layout constraint</li>
+        <li>State management: <b>Bloc</b> (nhiều nhất), Riverpod hoặc Provider</li>
+        <li>REST API với Dio: interceptor, retry, auth flow</li>
+        <li>Clean Architecture, SOLID, DI</li>
+        <li>Unit / widget / integration test</li>
+        <li>Phát hành App Store + Google Play, có app đã publish</li>
+        <li>Xử lý được lỗi native Android / iOS</li>
+      </ul>
+    </div>
+    <div class="box">
+      <span class="tag nice">Điểm cộng tạo khác biệt</span>
+      <ul>
+        <li>Kotlin / Swift ở mức platform channel, Pigeon</li>
+        <li>CI/CD: Codemagic, GitHub Actions, Fastlane, Bitrise</li>
+        <li>Firebase (Auth, FCM, Crashlytics), Supabase, AWS</li>
+        <li>Local DB / offline: Drift, sqflite, Hive, Isar</li>
+        <li>Hiệu năng trên máy yếu: startup, memory, network</li>
+        <li>Dùng AI coding tool (Claude, Codex, Cursor) có kiểm soát</li>
+        <li>Flutter Web / Desktop, React/Next.js, WebSocket, thanh toán</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Senior trên TopCV, ITviec, TopDev</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Công ty</th><th>Kinh nghiệm</th><th>Điểm đáng chú ý</th></tr></thead>
+        <tbody>
+          <tr><td><b>VUS</b> <span class="mono muted">TopCV</span></td><td class="mono">3+ năm Flutter</td><td>Riverpod, DI, SOLID, clean architecture; concurrency, nền tảng CS (DSA, OS, mạng). Lương 30–40 triệu</td></tr>
+          <tr><td><b>FPT Telecom</b> <span class="mono muted">TopCV</span></td><td class="mono">4+ năm, 2+ Flutter</td><td>Clean Architecture, test 3 tầng, CI/CD (Codemagic, GitHub Actions, Fastlane, Bitrise)</td></tr>
+          <tr><td><b>4GOO</b> <span class="mono muted">ITviec</span></td><td class="mono">5+ mobile, 3+ Flutter</td><td>Auth flow, offline storage, test 3 tầng, GitLab CI, mentor, tiếng Anh B2+</td></tr>
+          <tr><td><b>Softflex</b> <span class="mono muted">ITviec · fintech</span></td><td class="mono">6+ năm, 4+ Flutter</td><td>Flutter <b>kèm</b> React/Next.js, WebSocket, thanh toán, push, xử lý lỗi native</td></tr>
+          <tr><td><b>Digital Unicorn</b> <span class="mono muted">ITviec</span></td><td class="mono">5+ năm</td><td>Yêu cầu dùng <b>Claude / Codex</b> ngay trong tiêu đề; Bloc/Provider, Supabase, làm được khi không có backend</td></tr>
+          <tr><td><b>EPOS Vietnam</b> <span class="mono muted">ITviec</span></td><td class="mono">6+ năm Flutter</td><td>Flutter + Kotlin native, tối ưu trên máy yếu, mentor, tiếng Anh C1. Khoảng 800 triệu–1,2 tỷ/năm</td></tr>
+          <tr><td><b>MB Bank</b> <span class="mono muted">ITviec</span></td><td class="mono">3+ năm</td><td>RN <b>hoặc</b> Flutter, cộng 1+ năm native mỗi nền tảng; ưu tiên kinh nghiệm ngân hàng</td></tr>
+          <tr><td><b>DeliGroup</b> <span class="mono muted">ITviec</span></td><td class="mono">3+ năm</td><td>Bloc hoặc Riverpod, thiết kế module, code review, mentor</td></tr>
+          <tr><td><b>Nexsoft</b> <span class="mono muted">TopDev</span></td><td class="mono">3+ Flutter, 2+ native</td><td>Flutter cho iOS, Android, PC và Web; UI chuẩn pixel. Tối đa 35 triệu</td></tr>
+          <tr><td><b>Trusting Social</b> <span class="mono muted">LinkedIn</span></td><td class="mono">5+ mobile, 3+ Flutter</td><td>App quy mô lớn</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><b>Senior khác Middle ở:</b> tự thiết kế kiến trúc (Clean/SOLID/DI), mentor và review code, sửa được lỗi native, tối ưu hiệu năng, đủ test và CI/CD. Middle thường đòi 1–3 năm và ít nhất một app đã publish.</li>
+      <li><b>Native vẫn quan trọng:</b> 10/15 JD nhắc Kotlin hoặc Swift.</li>
+      <li><b>Fintech và ngân hàng</b> chiếm phần lớn tin Senior ở Việt Nam (MB Bank, Softflex, ví BNPL).</li>
+      <li><b>Flutter đi kèm stack khác:</b> React/Next.js, React Native, Kotlin native.</li>
+      <li><b>AI tool đã vào JD:</b> 4/15 tin nhắc, 2 tin bắt buộc.</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h3>Mức lương thấy được</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Mức</th><th>Vị trí</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">≤ 25 triệu / tháng</td><td>Junior–Middle, 1 năm (K-Tech)</td></tr>
+          <tr><td class="mono">20–35 triệu / tháng</td><td>Middle–Senior (HOPEE, Aggregatori Capaci, Nexsoft)</td></tr>
+          <tr><td class="mono">30–40 triệu / tháng</td><td>Senior (VUS)</td></tr>
+          <tr><td class="mono">≤ 50 triệu / tháng</td><td>Senior 5+ năm, app BNPL (VietnamWorks)</td></tr>
+          <tr><td class="mono">~67–100 triệu / tháng</td><td>Senior 6+ năm, EPOS (800 triệu–1,2 tỷ/năm)</td></tr>
+          <tr><td class="mono">€35–54K / năm</td><td>Senior, Imaginary Cloud (Bồ Đào Nha)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:13px">LinkedIn hiện có khoảng 81 tin Flutter ở Việt Nam. JobsGO chủ yếu là tin Junior.</p>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Cấp độ</th><th>Kinh nghiệm JD đòi</th><th>Nhà tuyển dụng kỳ vọng</th></tr></thead>
+      <tbody>
+        <tr><td><b>Fresher / Junior</b></td><td class="mono">0–1 năm</td><td>Dựng UI theo design, gọi API, dùng state management theo pattern có sẵn.</td></tr>
+        <tr><td><b>Middle</b></td><td class="mono">1–3 năm</td><td>Tự làm feature trọn vẹn, có app đã publish, viết test, xử lý khác biệt iOS/Android.</td></tr>
+        <tr><td><b>Senior / Lead</b></td><td class="mono">3–6+ năm</td><td>Kiến trúc, native, hiệu năng, CI/CD, mentor; ở công ty sản phẩm và fintech thường là 5–6 năm.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box src">
+    <h3>Nguồn</h3>
+    <ul>
+      <li><a href="https://www.topcv.vn/viec-lam/senior-mobile-developer-flutter-ios-android-dart/2002289.html" target="_blank" rel="noopener">TopCV · VUS, Senior Mobile Developer (Flutter)</a></li>
+      <li><a href="https://www.topcv.vn/viec-lam/senior-flutter-developer/1946536.html" target="_blank" rel="noopener">TopCV · FPT Telecom, Senior Flutter Developer</a></li>
+      <li><a href="https://www.topcv.vn/viec-lam/senior-flutter-developer/1472899.html" target="_blank" rel="noopener">TopCV · Aggregatori Capaci, Senior Flutter Developer</a></li>
+      <li><a href="https://www.topcv.vn/viec-lam/lead-flutter-developer/2183829.html" target="_blank" rel="noopener">TopCV · Wavez, Lead Flutter Developer</a></li>
+      <li><a href="https://www.topcv.vn/viec-lam/flutter-developer/1653268.html" target="_blank" rel="noopener">TopCV · HOPEE, Flutter Developer</a></li>
+      <li><a href="https://www.topcv.vn/viec-lam/flutter-developer/1709974.html" target="_blank" rel="noopener">TopCV · K-Tech, Flutter Developer</a></li>
+      <li><a href="https://itviec.com/it-jobs/senior-flutter-developer-dart-ios-android-4goo-5659" target="_blank" rel="noopener">ITviec · 4GOO, Senior Flutter Developer</a></li>
+      <li><a href="https://itviec.com/it-jobs/senior-mobile-developer-flutter-softflex-llc-co-ltd-4603" target="_blank" rel="noopener">ITviec · Softflex, Senior Mobile Developer (Flutter)</a></li>
+      <li><a href="https://itviec.com/it-jobs/senior-flutter-developer-flutter-dart-claude-codex-digital-unicorn-2346" target="_blank" rel="noopener">ITviec · Digital Unicorn, Senior Flutter Developer</a></li>
+      <li><a href="https://itviec.com/it-jobs/senior-flutter-software-engineer-epos-vietnam-1937" target="_blank" rel="noopener">ITviec · EPOS Vietnam, Senior Flutter Software Engineer</a></li>
+      <li><a href="https://itviec.com/viec-lam-it/senior-mobile-developer-react-native-flutter-mb-bank-3130" target="_blank" rel="noopener">ITviec · MB Bank, Senior Mobile Developer (RN / Flutter)</a></li>
+      <li><a href="https://itviec.com/it-jobs/junior-middle-mobile-developer-flutter-mb-bank-0932" target="_blank" rel="noopener">ITviec · MB Bank, Junior/Middle Mobile Developer (Flutter)</a></li>
+      <li><a href="https://itviec.com/viec-lam-it/junior-senior-mobile-app-developer-flutter-dart-deligroup-1755" target="_blank" rel="noopener">ITviec · DeliGroup, Mobile App Developer (Flutter)</a></li>
+      <li><a href="https://topdev.vn/viec-lam/urgent-03-flutter-developer-middle-senior-nexsoft-technology-2035533" target="_blank" rel="noopener">TopDev · Nexsoft, Flutter Developer (Middle/Senior)</a></li>
+      <li><a href="https://topdev.vn/detail-jobs/flutter-mobile-developer-vnib-tech-2035007" target="_blank" rel="noopener">TopDev · VNIB Tech, Flutter Mobile Developer</a></li>
+      <li><a href="https://www.vietnamworks.com/senior-mobile-developer-up-to-50-mil-1987206-jv" target="_blank" rel="noopener">VietnamWorks · Senior Mobile Developer (Flutter, BNPL)</a></li>
+      <li><a href="https://jobsgo.vn/viec-lam-flutter-developer.html" target="_blank" rel="noopener">JobsGO · Việc làm Flutter Developer</a></li>
+      <li><a href="https://vn.linkedin.com/jobs/flutter-jobs" target="_blank" rel="noopener">LinkedIn · Flutter jobs in Vietnam</a></li>
+      <li><a href="https://vn.linkedin.com/jobs/view/senior-mobile-developer-flutter-at-trusting-social-3502681018" target="_blank" rel="noopener">LinkedIn · Trusting Social, Senior Mobile Developer (Flutter)</a></li>
+      <li><a href="https://teamtailor.imaginarycloud.com/jobs/8546113-senior-mobile-developer-flutter" target="_blank" rel="noopener">Imaginary Cloud · Senior Mobile Developer (Flutter)</a></li>
+      <li><a href="https://jobs.lever.co/idt/027b0693-41d8-4262-a0de-26fd2b186d28" target="_blank" rel="noopener">Lever · IDT, Senior Flutter</a></li>
+      <li><a href="https://jobs.lever.co/zocks/4dea8576-f17f-4e38-bca6-430e8cc9565b" target="_blank" rel="noopener">Lever · Zocks, Senior Flutter</a></li>
+      <li><a href="https://apply.workable.com/t63/jobs/view/9B1760761F.md" target="_blank" rel="noopener">Workable · Talent-360, Senior Flutter</a></li>
+      <li><a href="https://apply.workable.com/tawantech/jobs/view/E4F7EC89FB.md" target="_blank" rel="noopener">Workable · TawanTech, Senior Flutter</a></li>
+      <li><a href="https://riverpod.dev/docs/whats_new" target="_blank" rel="noopener">riverpod.dev · What's new in Riverpod 3.0</a></li>
+    </ul>
+    <p class="muted" style="font-size:13px">Nhiều tin đã hết hạn nhưng yêu cầu vẫn đại diện. Không có JD nào nhắc Impeller, flavors hay FFI, nhưng các câu này vẫn hay được hỏi trong phỏng vấn Senior.</p>
+  </div>
+</section>
+
+<!-- ================= FLUTTER · PLAN / QUIZ / IV ================= -->
+<section class="panel" data-track="fl" data-sec="plan" hidden>
+  <div style="display:grid;gap:8px">
+    <h2>Lộ trình 8 tuần</h2>
+    <p class="muted">Khoảng 10–12 giờ mỗi tuần. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab 8 tuần cộng lại thành app <b>“Expense Tracker”</b> bản Flutter: login, danh sách, offline, push, plugin native, CI.</p>
+  </div>
+  <div class="box progress"><span class="mono" id="fl-pct">0%</span><div class="bar"><i id="fl-pctbar" style="width:0"></i></div><span class="muted" id="fl-pcttxt"></span></div>
+  <div id="fl-weeks"></div>
+</section>
+
+<section class="panel" data-track="fl" data-sec="quiz" hidden>
+  <div style="display:grid;gap:8px">
+    <h2><span class="l-vi">Câu hỏi luyện tập</span><span class="l-en">Practice questions</span></h2>
+    <p class="muted"><span class="l-vi">Tự trả lời thành tiếng trước, sau đó mới mở đáp án. Mục tiêu là nói được trong 1–2 phút có ví dụ cụ thể.</span><span class="l-en">Answer out loud before you open the model answer. Aim for one to two minutes with a concrete example.</span></p>
+  </div>
+  <div class="filter" id="fl-qfilter"></div>
+  <div id="fl-quizlist" class="qgroup"></div>
+</section>
+
+<section class="panel" data-track="fl" data-sec="iv" hidden>
+  <div style="display:grid;gap:8px">
+    <h2><span class="l-vi">Câu hỏi phỏng vấn</span><span class="l-en">Interview questions</span></h2>
+    <p class="muted"><span class="l-vi">Gom theo dạng nhà tuyển dụng hay hỏi. Mỗi câu có các ý interviewer muốn nghe. Lọc theo cấp độ bạn đang ứng tuyển.</span><span class="l-en">Grouped the way interviewers usually ask them. Each question lists the points they want to hear. Filter by the level you're applying for.</span></p>
+  </div>
+  <div class="filter" id="fl-lvfilter"></div>
+  <div id="fl-ivlist" style="display:grid;gap:26px"></div>
+</section>
+
+<!-- ================= FLUTTER · LIVE CODING ================= -->
+<section class="panel" data-track="fl" data-sec="lc" hidden>
+  <div style="display:grid;gap:8px">
+    <h2>Vòng live coding Flutter</h2>
+    <p class="muted">Tổng hợp từ hướng dẫn tuyển dụng của các công ty thuê Flutter, review trên Glassdoor, đề take-home công khai và các guide phỏng vấn 2026. Chưa có công ty nào công bố bảng chấm chính thức, nên tiêu chí bên dưới là tổng hợp từ phía người tuyển.</p>
+  </div>
+
+  <div class="box">
+    <h3>Các dạng hay gặp</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Dạng</th><th>Thời gian</th><th>Diễn ra thế nào</th></tr></thead>
+        <tbody>
+          <tr><td><b>Live, đề tăng dần</b></td><td class="mono">45–60′</td><td>Chia sẻ màn hình, 2–3 bài nối tiếp: counter → gọi REST có loading/error → search có debounce và phân trang.</td></tr>
+          <tr><td><b>Dựng từ đầu, tắt AI</b></td><td class="mono">60′</td><td>Very Good Ventures: ứng viên dựng project từ đầu, vừa làm vừa giải thích, không được dùng AI. Một số ứng viên được hỏi về project cũ thay vì code.</td></tr>
+          <tr><td><b>Refactor</b></td><td class="mono">45–60′</td><td>Nhận một project Flutter viết vội, refactor và giải thích vì sao đổi.</td></tr>
+          <tr><td><b>Online assessment</b></td><td class="mono">1–3h</td><td>Junior: app tính giai thừa có validate input. Middle: ListView bài viết từ REST, pull-to-refresh, retry khi lỗi. Senior: task manager dùng SQLite (thêm, đánh dấu xong, xóa, tìm kiếm), chạy được cả dọc và ngang.</td></tr>
+          <tr><td><b>Take-home</b></td><td class="mono">3–8h</td><td>Ví dụ: app ghi cân nặng dùng Firebase anonymous auth + Firestore, danh sách realtime sắp theo ngày; bonus sửa/xóa/đăng xuất. Chấm: đủ yêu cầu, cấu trúc project, tách UI/auth/DB, không over-engineer, đặt tên rõ.</td></tr>
+          <tr><td><b>Lý thuyết sâu, không IDE</b></td><td class="mono">30–45′</td><td>Giải thích widget/element/render tree, tìm lỗi trong đoạn code khó test, lý giải lựa chọn state management.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:13.5px">Năm 2026, phần lớn vòng live vẫn cấm AI, còn take-home thì thường cho dùng. Hỏi recruiter trước để chuẩn bị đúng cách.</p>
+  </div>
+
+  <div class="box">
+    <h3>Đề phổ biến và cách chấm</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Đề</th><th>Mức đạt</th><th>Mức Senior</th></tr></thead>
+        <tbody>
+          <tr><td><b>Fetch + hiển thị list</b></td><td>loading, error, empty; chọn đúng FutureBuilder hay StreamBuilder</td><td>Tách repository, model có type (freezed/json_serializable), retry, parse JSON lớn trong isolate</td></tr>
+          <tr><td><b>Search có debounce</b></td><td>Timer hoặc debounceTime, không gọi API mỗi phím</td><td>Bỏ response cũ (request id / restartable), cancel timer trong dispose, kiểm tra mounted</td></tr>
+          <tr><td><b>Infinite scroll + pull-to-refresh</b></td><td>ScrollController theo ngưỡng, RefreshIndicator</td><td>Chặn request trùng, dedupe theo id, xử lý tranh chấp giữa refresh và tải trang, hết trang thì dừng</td></tr>
+          <tr><td><b>Form có validate</b></td><td>Form + TextFormField validator</td><td>Chặn submit 2 lần, focus chuyển ô, bàn phím không che, Semantics</td></tr>
+          <tr><td><b>Chọn state management</b></td><td>Dùng được Bloc hoặc Riverpod</td><td>Lý giải theo ràng buộc dự án, nêu phương án thay thế và điểm yếu</td></tr>
+          <tr><td><b>SQLite task manager</b></td><td>CRUD chạy đúng</td><td>Repository, migration, query search, layout chạy cả dọc và ngang</td></tr>
+          <tr><td><b>Platform channel</b></td><td>MethodChannel trả về giá trị</td><td>Pigeon type-safe, PlatformException, đúng thread, EventChannel cho stream</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:13.5px">Với Senior, nên trả lời theo khung: bối cảnh → quyết định → phương án khác → khi nào nó hỏng → bằng chứng.</p>
+  </div>
+
+  <div class="box">
+    <h3>Chia 60 phút thế nào</h3>
+    <div class="tbl">
+      <table>
+        <tbody>
+          <tr><td class="mono">0–5′</td><td>Hỏi lại yêu cầu: API trả gì, có phân trang không, được dùng package nào (http/dio, Bloc/Riverpod) hay chỉ setState.</td></tr>
+          <tr><td class="mono">5–10′</td><td>Nói kế hoạch: widget nào, state đặt ở đâu, model ra sao.</td></tr>
+          <tr><td class="mono">10–35′</td><td>Happy path chạy được trước. Vừa code vừa nói.</td></tr>
+          <tr><td class="mono">35–50′</td><td>loading, error, empty, dispose, mounted, edge case.</td></tr>
+          <tr><td class="mono">50–60′</td><td>Dọn code, nói sẽ viết widget test gì, trade-off, hướng mở rộng.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <span class="tag ok">Nên</span>
+      <ul>
+        <li>Nghĩ thành tiếng, hỏi trước khi giả định.</li>
+        <li>Dùng setState nếu đề nhỏ; chỉ thêm Bloc/Riverpod khi được yêu cầu hoặc có lý do.</li>
+        <li>Thêm <code>const</code> và Key cho item list.</li>
+        <li>Dispose controller, cancel Timer và StreamSubscription.</li>
+        <li>Kiểm tra <code>mounted</code> sau mỗi <code>await</code>.</li>
+        <li>Thuộc sẵn: ListView.builder, RefreshIndicator, Timer debounce, FutureBuilder.</li>
+        <li>Quen sẵn DartPad hoặc editor bạn sẽ dùng.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <span class="tag must">Tránh</span>
+      <ul>
+        <li>ListView trong Column mà không có Expanded (unbounded height).</li>
+        <li><code>ListView(children:)</code> cho danh sách dài.</li>
+        <li>Gọi API trong <code>build()</code>.</li>
+        <li>Dùng <code>context</code> sau await mà không kiểm tra.</li>
+        <li>Rải <code>!</code> để né null safety.</li>
+        <li>Dùng GetX hay GlobalKey khi không cần.</li>
+        <li>Chấp nhận code AI gợi ý mà không giải thích được.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Đoạn code nên thuộc: search có debounce</h3>
+<pre>class SearchPage extends StatefulWidget {
+  const SearchPage({super.key, required this.search});
+  final Future&lt;List&lt;Repo&gt;&gt; Function(String query) search;
+
+  @override
+  State&lt;SearchPage&gt; createState() =&gt; _SearchPageState();
+}
+
+class _SearchPageState extends State&lt;SearchPage&gt; {
+  Timer? _debounce;
+  int _requestId = 0;
+  bool _loading = false;
+  Object? _error;
+  List&lt;Repo&gt; _results = const [];
+
+  void _onChanged(String text) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () =&gt; _run(text.trim()));
+  }
+
+  Future&lt;void&gt; _run(String query) async {
+    final id = ++_requestId; // only the latest request may update the UI
+    if (query.isEmpty) {
+      setState(() {
+        _results = const [];
+        _error = null;
+        _loading = false;
+      });
+      return;
+    }
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final results = await widget.search(query);
+      if (!mounted || id != _requestId) return;
+      setState(() {
+        _results = results;
+        _loading = false;
+      });
+    } catch (e) {
+      if (!mounted || id != _requestId) return;
+      setState(() {
+        _error = e;
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextField(
+          onChanged: _onChanged,
+          decoration: const InputDecoration(hintText: 'Search repositories'),
+        ),
+        if (_loading) const LinearProgressIndicator(),
+        if (_error != null)
+          Text('Something went wrong', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+        Expanded(
+          child: ListView.builder(
+            itemCount: _results.length,
+            itemBuilder: (context, i) =&gt; ListTile(
+              key: ValueKey(_results[i].id),
+              title: Text(_results[i].name),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}</pre>
+  </div>
+
+  <div class="box">
+    <h3>Đoạn code nên thuộc: infinite scroll + pull-to-refresh</h3>
+<pre>class PageResult&lt;T&gt; {
+  const PageResult(this.items, this.next);
+  final List&lt;T&gt; items;
+  final String? next; // null means there are no more pages
+}
+
+class _FeedPageState extends State&lt;FeedPage&gt; {
+  final _scroll = ScrollController();
+  final _items = &lt;Post&gt;[];
+  final _ids = &lt;String&gt;{};
+  String? _cursor;
+  bool _hasMore = true;
+  bool _loading = false; // guards against duplicate page requests
+  Object? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(() {
+      if (_scroll.position.extentAfter &lt; 500) _loadMore();
+    });
+    // setState is not allowed inside initState, so start after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) =&gt; _loadMore());
+  }
+
+  Future&lt;void&gt; _loadMore() async {
+    if (_loading || !_hasMore) return;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final page = await widget.fetchPage(_cursor);
+      if (!mounted) return;
+      setState(() {
+        for (final p in page.items) {
+          if (_ids.add(p.id)) _items.add(p); // dedupe by id
+        }
+        _cursor = page.next;
+        _hasMore = page.next != null;
+      });
+    } catch (e) {
+      if (mounted) setState(() =&gt; _error = e); // keep what is already on screen
+    } finally {
+      if (mounted) setState(() =&gt; _loading = false);
+    }
+  }
+
+  Future&lt;void&gt; _refresh() async {
+    if (_loading) return; // don't race a page that is still loading
+    _loading = true;
+    try {
+      final page = await widget.fetchPage(null);
+      if (!mounted) return;
+      setState(() {
+        _items
+          ..clear()
+          ..addAll(page.items);
+        _ids
+          ..clear()
+          ..addAll(page.items.map((p) =&gt; p.id));
+        _cursor = page.next;
+        _hasMore = page.next != null;
+        _error = null;
+      });
+    } catch (e) {
+      if (mounted) setState(() =&gt; _error = e); // the old list stays visible
+    } finally {
+      _loading = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_items.isEmpty &amp;&amp; _loading) return const Center(child: CircularProgressIndicator());
+    if (_items.isEmpty &amp;&amp; _error != null) {
+      return Center(child: TextButton(onPressed: _loadMore, child: const Text('Retry')));
+    }
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: ListView.builder(
+        controller: _scroll,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: _items.length + (_hasMore || _error != null ? 1 : 0),
+        itemBuilder: (context, i) {
+          if (i == _items.length) {
+            return _error != null
+                ? TextButton(onPressed: _loadMore, child: const Text('Retry'))
+                : const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+          }
+          final post = _items[i];
+          return PostTile(key: ValueKey(post.id), post: post);
+        },
+      ),
+    );
+  }
+}</pre>
+    <p class="muted" style="font-size:13.5px">Đặt tên <code>PageResult</code> thay vì <code>Page</code> vì Flutter đã có class <code>Page</code> của Navigator. Câu hỏi tiếp theo hay gặp: chuyển đoạn này sang Bloc (event transformer <code>droppable</code>) hoặc Riverpod <code>AsyncNotifier</code> thế nào?</p>
+  </div>
+
+  <div class="box">
+    <h3><span class="l-vi">Bài code review mẫu: tìm lỗi trong 10 phút</span><span class="l-en">Sample code review: find the bugs in 10 minutes</span></h3>
+<pre>class UserList extends StatefulWidget {
+  @override
+  State&lt;UserList&gt; createState() =&gt; _UserListState();
+}
+
+class _UserListState extends State&lt;UserList&gt; {
+  List users = [];
+  int page = 1;
+  final controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    load();
+    controller.addListener(() {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        page++;
+        load();
+      }
+    });
+    Connectivity().onConnectivityChanged.listen((_) =&gt; load());
+  }
+
+  void load() async {
+    final res = await http.get(Uri.parse('https://api.example.com/users?page=$page'));
+    setState(() =&gt; users.addAll(jsonDecode(res.body)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Loaded page $page')));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Text('Users'),
+      ListView(
+        controller: controller,
+        children: users.map((u) =&gt; UserTile(user: u)).toList(),
+      ),
+    ]);
+  }
+}</pre>
+    <details><summary><span><span class="l-vi">Xem đáp án (8 lỗi)</span><span class="l-en">Show the answer (8 bugs)</span></span></summary><div class="ans">
+    <ul class="l-vi">
+      <li><b>Dùng state và context sau await:</b> không kiểm tra <code>mounted</code>; widget đã dispose thì setState và ScaffoldMessenger sẽ lỗi.</li>
+      <li><b>Không xử lý lỗi:</b> không try/catch, không kiểm tra <code>statusCode</code>; <code>jsonDecode</code> payload lớn chạy trên UI isolate.</li>
+      <li><b>Tải trang trùng:</b> listener ở đáy cuộn gọi nhiều lần liên tiếp, <code>page++</code> nhảy trang; không có cờ đang tải và không biết hết trang.</li>
+      <li><b>Rò rỉ subscription:</b> stream connectivity không được cancel trong dispose, và mỗi lần đổi mạng lại nối thêm trang hiện tại vào danh sách.</li>
+      <li><b>Không dispose ScrollController.</b></li>
+      <li><b>Unbounded height:</b> ListView nằm trong Column không có Expanded sẽ báo lỗi layout.</li>
+      <li><b>ListView(children:)</b> build toàn bộ danh sách; dùng <code>ListView.builder</code> và Key theo id.</li>
+      <li><b>Type và chữ ký:</b> <code>List users</code> là <code>List&lt;dynamic&gt;</code> không có model; <code>void load() async</code> không await được và lỗi bị nuốt, nên dùng <code>Future&lt;void&gt;</code>; thiếu <code>const</code> và <code>super.key</code>.</li>
+    </ul>
+    <ul class="l-en">
+      <li><b>State and context used after an await:</b> <code>mounted</code> is never checked, so setState and ScaffoldMessenger blow up if the widget has been disposed.</li>
+      <li><b>No error handling:</b> no try/catch and no <code>statusCode</code> check, and <code>jsonDecode</code> runs on the UI isolate even for large payloads.</li>
+      <li><b>Duplicate page loads:</b> the bottom-of-list listener fires several times in a row, so <code>page++</code> skips pages. There's no in-flight flag and no notion of the last page.</li>
+      <li><b>Leaked subscription:</b> the connectivity stream is never cancelled in dispose, and every network change appends the current page to the list again.</li>
+      <li><b>The ScrollController is never disposed.</b></li>
+      <li><b>Unbounded height:</b> a ListView inside a Column without Expanded throws a layout error.</li>
+      <li><b>ListView(children:)</b> builds the entire list up front. Use <code>ListView.builder</code> with keys based on id.</li>
+      <li><b>Types and signatures:</b> <code>List users</code> is a <code>List&lt;dynamic&gt;</code> with no model; <code>void load() async</code> can't be awaited and swallows errors, so make it <code>Future&lt;void&gt;</code>; <code>const</code> and <code>super.key</code> are missing.</li>
+    </ul></div></details>
+  </div>
+
+  <div class="box">
+    <h3>7 bài luyện bấm giờ</h3>
+    <p class="muted" style="font-size:14px">Làm trên DartPad hoặc máy của bạn, bấm giờ, vừa làm vừa nói và quay màn hình. Bài 6 là đề Senior thật trong online assessment.</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>#</th><th>Bài</th><th>Giờ</th><th>Sau tuần</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">1</td><td>Đồng hồ đếm ngược Start / Pause / Reset, dispose đúng, không lệch giờ khi app vào background</td><td class="mono">15′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">2</td><td>Danh sách user từ <code>jsonplaceholder.typicode.com/users</code> có loading, error, retry; làm bằng FutureBuilder rồi chuyển sang Cubit</td><td class="mono">25′</td><td class="mono">4</td></tr>
+          <tr><td class="mono">3</td><td>Search repo GitHub (<code>api.github.com/search/repositories?q=</code>) có debounce và bỏ response cũ</td><td class="mono">30′</td><td class="mono">4</td></tr>
+          <tr><td class="mono">4</td><td>Danh sách Pokémon (<code>pokeapi.co/api/v2/pokemon?limit=20</code>) infinite scroll + pull-to-refresh</td><td class="mono">40′</td><td class="mono">5</td></tr>
+          <tr><td class="mono">5</td><td>Form đăng ký có validate, chặn submit 2 lần, bàn phím không che</td><td class="mono">30′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">6</td><td>Task manager dùng SQLite (sqflite hoặc Drift): thêm, đánh dấu xong, xóa, tìm kiếm; chạy được cả dọc và ngang</td><td class="mono">60′</td><td class="mono">5</td></tr>
+          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng</td><td class="mono">20′</td><td class="mono">7</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:13.5px">Muốn luyện take-home: làm app ghi cân nặng với Firebase anonymous auth + Firestore trong tối đa 4 giờ, rồi tự chấm theo 5 tiêu chí ở bảng “Các dạng hay gặp”.</p>
+  </div>
+
+  <div class="box src">
+    <h3>Nguồn</h3>
+    <ul>
+      <li><a href="https://www.wisemonk.io/blogs/a-comprehensive-guide-to-interviewing-flutter-developers-in-india" target="_blank" rel="noopener">Wisemonk · Guide to interviewing Flutter developers</a></li>
+      <li><a href="https://www.glassdoor.com/Interview/Very-Good-Ventures-Flutter-Developer-Interview-Questions-EI_IE4873928.0,18_KO19,36.htm" target="_blank" rel="noopener">Glassdoor · Very Good Ventures, Flutter Developer interviews</a></li>
+      <li><a href="https://www.glassdoor.co.in/Interview/senior-flutter-engineer-interview-questions-SRCH_KO0,23.htm" target="_blank" rel="noopener">Glassdoor · Senior Flutter Engineer interview questions</a></li>
+      <li><a href="https://codewithandrea.com/videos/take-home-job-interview-flutter-firebase/" target="_blank" rel="noopener">Code With Andrea · Flutter + Firebase take-home</a></li>
+      <li><a href="https://codewithandrea.com/articles/flutter-riverpod-pagination/" target="_blank" rel="noopener">Code With Andrea · Riverpod pagination</a></li>
+      <li><a href="https://github.com/debasmitasarkar/flutter_interview_guide_2026" target="_blank" rel="noopener">GitHub · flutter_interview_guide_2026</a></li>
+      <li><a href="https://lemon.io/interview-questions/flutter/" target="_blank" rel="noopener">Lemon.io · Flutter interview questions</a></li>
+      <li><a href="https://distantjob.com/interview-questions/flutter/" target="_blank" rel="noopener">DistantJob · Flutter interview questions</a></li>
+      <li><a href="https://salari.dev/guides/cross-platform/senior-flutter-interview-questions/" target="_blank" rel="noopener">salari.dev · Senior Flutter interview questions</a></li>
+      <li><a href="https://medium.com/@artur.fijal.koalasoft/real-flutter-interview-questions-d522f77cbd87" target="_blank" rel="noopener">Medium · Real Flutter interview questions</a></li>
+      <li><a href="https://www.techinterview.org/post/3233474911/ai-tool-policy-tracker-tech-companies-2026/" target="_blank" rel="noopener">techinterview.org · AI tool policy tracker 2026</a></li>
+    </ul>
+  </div>
+</section>
+
+</div>
+</main>
 </div>
 
 <script>
-const FREQ=[
+/* ---------------- React Native data ---------------- */
+const RN_FREQ=[
   ["JavaScript / TypeScript",9,0],["React / RN core, hooks",9,0],["Git, quy trình nhóm",8,0],
   ["State: Redux · Saga · MobX · Zustand",7,0],["REST API / bên thứ ba",7,0],["Release App Store / Google Play",7,0],
   ["Debug & tối ưu hiệu năng",6,0],["Unit / E2E test",5,0],["Tiếng Anh giao tiếp",5,0],
   ["Native iOS/Android, native module",7,1],["CI/CD mobile",4,1],["Firebase / Push / Deep link",4,1],
   ["Expo / EAS",3,1],["New Architecture (JSI, Turbo, Fabric)",3,1],["WebSocket / realtime",2,1],["GraphQL / Realm",1,1]
 ];
-document.getElementById('freq').innerHTML=FREQ.map(([t,n,nice])=>`<div class="freq-row"><span>${t}</span><span class="bar ${nice?'nice':''}"><i style="width:${n/9*100}%"></i></span><span class="n">${n}/9</span></div>`).join('');
+const RN_FREQ_TOTAL=9;
 
-const WEEKS=[
+const RN_WEEKS=[
  {t:"JavaScript & TypeScript nền tảng",g:"Trả lời trôi chảy mọi câu JS cơ bản, đọc và viết type phức tạp không cần tra.",
   k:["Event loop: call stack, microtask (Promise) vs macrotask (setTimeout)","Closure, scope, hoisting, TDZ của let/const","this, call/apply/bind, arrow function","Promise, async/await, Promise.all / allSettled / race, xử lý lỗi","Immutability, spread, shallow vs deep copy, ===","TS: generics, union, discriminated union, narrowing, type guard","TS: utility types (Partial, Pick, Omit, Record, ReturnType), keyof, typeof","Module ES, debounce/throttle tự viết"],
   lab:"Khởi tạo repo Expo + TypeScript strict. Viết util debounce, throttle, retry(fn, n) có test Jest. Bật ESLint + Prettier + husky.",
@@ -568,139 +1176,369 @@ const WEEKS=[
   lab:"Viết test RNTL cho form và list, 1 flow E2E (login → thêm giao dịch) bằng Maestro. Tích hợp Sentry. Ghi lại số đo trước/sau một lần tối ưu.",
   r:"callstack.com “Ultimate Guide to React Native Optimization” · callstack.github.io/react-native-testing-library · maestro.mobile.dev"},
  {t:"Release, CI/CD & phỏng vấn thử",g:"Tự đưa app lên store, có pipeline, và kể được dự án theo STAR.",
-  k:["Versioning: versionCode/CFBundleVersion, semver, môi trường dev/staging/prod","Signing: keystore Android, certificate + provisioning profile iOS","EAS Build / Submit / Update; Fastlane; GitHub Actions","OTA update: EAS Update, runtime version, giới hạn (không đổi được native). CodePush của App Center đã ngừng 03/2025","Quy trình review App Store / Google Play, lý do bị reject hay gặp, staged rollout","System design mobile: kiến trúc feature-based, offline sync, cache, phân lớp","Behavioral: STAR, xung đột, sự cố production","Mock interview 2 buổi + chỉnh CV/GitHub","Staged rollout (Play Console, App Store phased release, EAS Update rollout) và rollback","Portfolio: link store của app đã release, kể được vai trò và số liệu","Monorepo (Nx / Turborepo): chia sẻ type, API client, logic giữa web và mobile","Luyện live coding: làm 7 bài bấm giờ ở tab Live coding, quay màn hình và tự review"],
+  k:["Versioning: versionCode/CFBundleVersion, semver, môi trường dev/staging/prod","Signing: keystore Android, certificate + provisioning profile iOS","EAS Build / Submit / Update; Fastlane; GitHub Actions","OTA update: EAS Update, runtime version, giới hạn (không đổi được native). CodePush của App Center đã ngừng 03/2025","Quy trình review App Store / Google Play, lý do bị reject hay gặp, staged rollout","System design mobile: kiến trúc feature-based, offline sync, cache, phân lớp","Behavioral: STAR, xung đột, sự cố production","Mock interview 2 buổi + chỉnh CV/GitHub","Staged rollout (Play Console, App Store phased release, EAS Update rollout) và rollback","Portfolio: link store của app đã release, kể được vai trò và số liệu","Monorepo (Nx / Turborepo): chia sẻ type, API client, logic giữa web và mobile","Luyện live coding: làm 7 bài bấm giờ ở mục Live coding, quay màn hình và tự review"],
   lab:"Pipeline GitHub Actions: lint + test mỗi PR, EAS Build khi merge main, EAS Update cho channel staging. Viết README có kiến trúc, ảnh chụp, video demo.",
   r:"docs.expo.dev/eas · docs.fastlane.tools · Apple App Review Guidelines"}
 ];
-const KEY='rn8w-done';
-let done={};try{done=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
-const total=WEEKS.reduce((a,w)=>a+w.k.length,0);
-document.getElementById('weeks').innerHTML=WEEKS.map((w,i)=>`
+
+/* [week, question VI, answer VI, question EN, answer EN] */
+const RN_QUIZ=[
+ [1,"Thứ tự log của đoạn code sau là gì?<pre>console.log(1);\nsetTimeout(()=>console.log(2),0);\nPromise.resolve().then(()=>console.log(3));\nconsole.log(4);</pre>","<b>1 → 4 → 3 → 2.</b> Code đồng bộ chạy trước. Callback của Promise vào microtask queue, được xử lý ngay khi call stack rỗng. setTimeout vào macrotask queue nên chạy sau toàn bộ microtask.",
+  "What does this code log, and in what order?<pre>console.log(1);\nsetTimeout(()=>console.log(2),0);\nPromise.resolve().then(()=>console.log(3));\nconsole.log(4);</pre>","<b>1 → 4 → 3 → 2.</b> Synchronous code runs first. The Promise callback goes into the microtask queue, which drains as soon as the call stack is empty. The setTimeout callback is a macrotask, so it only runs once every pending microtask has finished."],
+ [1,"Closure là gì? Cho một ví dụ bug thực tế liên quan tới closure trong React.","Closure là hàm “nhớ” biến của scope nơi nó được tạo. Bug điển hình: <code>setInterval(()=>setCount(count+1),1000)</code> trong useEffect với deps rỗng, <code>count</code> luôn là 0 (stale closure). Sửa: dùng updater <code>setCount(c=>c+1)</code> hoặc đưa count vào deps / dùng ref.",
+  "What is a closure? Give a real React bug caused by one.","A closure is a function that keeps access to the variables of the scope it was created in. The classic bug is <code>setInterval(()=>setCount(count+1),1000)</code> inside a useEffect with an empty dependency array: <code>count</code> is captured as 0 forever (a stale closure), so the counter gets stuck at 1. Fix it with the updater form <code>setCount(c=>c+1)</code>, by adding count to the deps, or by reading it from a ref."],
+ [1,"<code>interface</code> và <code>type</code> khác nhau thế nào? Khi nào dùng discriminated union?","interface mở rộng được (declaration merging, extends), phù hợp cho object shape public. type mô tả được union, tuple, mapped/conditional type. Discriminated union (<code>{status:'loading'}|{status:'ok',data:T}|{status:'error',error:E}</code>) dùng cho state có nhiều trạng thái, TS tự narrow theo field <code>status</code> và loại bỏ trạng thái không hợp lệ.",
+  "How do <code>interface</code> and <code>type</code> differ? When would you reach for a discriminated union?","Interfaces can be extended and merged (declaration merging), which suits public object shapes. Type aliases can also express unions, tuples, and mapped or conditional types. A discriminated union such as <code>{status:'loading'}|{status:'ok',data:T}|{status:'error',error:E}</code> is the right tool for state with several modes: TypeScript narrows on the <code>status</code> field, and invalid combinations become impossible to represent."],
+ [1,"Promise.all và Promise.allSettled khác gì? Gọi 3 API mà 1 cái lỗi thì sao?","all reject ngay khi một promise reject (fail-fast), các kết quả thành công bị mất. allSettled chờ tất cả và trả về mảng <code>{status, value|reason}</code>. Màn dashboard gọi 3 API độc lập nên dùng allSettled để hiện phần thành công.",
+  "Promise.all vs Promise.allSettled: what happens if you fire three API calls and one of them fails?","Promise.all is fail-fast. It rejects as soon as one promise rejects, and you lose the results that did succeed. allSettled waits for all of them and returns an array of <code>{status, value|reason}</code>. For a dashboard that calls three independent APIs, allSettled lets you render whatever came back."],
+ [2,"Khi nào một component React re-render?","Khi state của nó đổi, khi component cha re-render (dù props không đổi), hoặc khi context mà nó dùng đổi giá trị. Props đổi không phải nguyên nhân trực tiếp. Re-render là do cha render lại. React.memo chặn trường hợp “cha render” nếu props shallow-equal.",
+  "When does a React component re-render?","When its own state changes, when its parent re-renders (even if the props are identical), or when a context it reads changes value. New props aren't really a cause on their own: props only change because the parent rendered again. React.memo skips the parent-rendered case when the props are shallowly equal."],
+ [2,"useMemo/useCallback có nên bọc mọi thứ không?","Không. Chúng có chi phí (so sánh deps, giữ bộ nhớ). Chỉ dùng khi: tính toán nặng; giá trị/hàm truyền vào component đã memo hoặc vào deps của hook khác; tham chiếu ổn định cần cho item của FlatList. Đo bằng Profiler trước. React Compiler (React 19) tự memo nên giảm nhu cầu viết tay.",
+  "Should you wrap everything in useMemo and useCallback?","No. They aren't free: React has to compare the deps and hold on to the previous value. Use them when a computation is genuinely expensive, when a value or function is passed to a memoized child or into another hook's deps, or when FlatList rows need stable references. Profile first. The React Compiler in React 19 memoizes for you, so you need far fewer of these by hand."],
+ [2,"Fetch dữ liệu trong useEffect có thể gặp race condition thế nào? Cách xử lý?","User đổi tab A→B nhanh, response A về sau B và ghi đè. Xử lý: cleanup với AbortController hoặc cờ <code>ignore=true</code>; tốt hơn là dùng TanStack Query / RTK Query vốn đã xử lý cache, hủy và dedupe.",
+  "How can fetching in useEffect cause a race condition, and how do you fix it?","The user switches quickly from tab A to tab B, A's response arrives after B's, and it overwrites the screen. Fix it in the cleanup with an AbortController or an <code>ignore = true</code> flag. Better still, use TanStack Query or RTK Query, which already handle caching, cancellation and deduplication."],
+ [2,"Tại sao không nên dùng index làm key?","Khi list thêm/xóa/sắp xếp, index của item thay đổi nên React gán nhầm state/DOM cũ cho item mới. Lỗi thấy rõ ở TextInput, checkbox, animation. Dùng id ổn định từ dữ liệu.",
+  "Why shouldn't you use the array index as a key?","When items are inserted, removed or reordered, their indexes shift, so React attaches old state and views to the wrong items. You notice it most with text inputs, checkboxes and animations. Use a stable id from the data."],
+ [3,"FlatList bị giật với 2.000 item. Bạn làm gì?","1) Đo trước (Perf Monitor xem JS FPS hay UI FPS tụt). 2) Item bọc React.memo, renderItem/keyExtractor ổn định bằng useCallback. 3) <code>getItemLayout</code> nếu chiều cao cố định. 4) Chỉnh <code>windowSize</code>, <code>initialNumToRender</code>, <code>maxToRenderPerBatch</code>. 5) Ảnh có cache và resize đúng kích thước. 6) Tránh logic nặng trong item. 7) Cân nhắc FlashList (tái sử dụng view).",
+  "A FlatList with 2,000 items is janky. What do you do?","1) Measure first: the Perf Monitor tells you whether the JS or the UI frame rate is dropping. 2) Wrap the row in React.memo and keep renderItem and keyExtractor stable with useCallback. 3) Add <code>getItemLayout</code> if rows have a fixed height. 4) Tune <code>windowSize</code>, <code>initialNumToRender</code> and <code>maxToRenderPerBatch</code>. 5) Cache images and load them at the size they're displayed. 6) Keep heavy logic out of the row. 7) Consider FlashList, which recycles views."],
+ [3,"Flexbox trong RN khác web như thế nào?","flexDirection mặc định là column. Mọi View đều là flex container. flex: số dương là grow theo tỉ lệ. Không có cascade CSS, style không kế thừa (trừ Text lồng Text). Đơn vị là dp không có px/em. Không có grid (trừ thư viện).",
+  "How is Flexbox in React Native different from the web?","flexDirection defaults to column, and every View is a flex container. A positive <code>flex</code> value grows proportionally. There's no CSS cascade and styles aren't inherited, except for Text nested inside Text. Units are density-independent pixels, with no px or em, and there's no grid layout without a library."],
+ [3,"Reanimated chạy animation trên UI thread nghĩa là gì và vì sao quan trọng?","Code trong worklet được chạy trên UI thread nên animation không phụ thuộc JS thread. Khi JS bận (parse JSON, render list) animation vẫn 60/120fps. Animated API cũ chỉ đạt điều đó với useNativeDriver và chỉ cho transform/opacity.",
+  "Reanimated runs animations on the UI thread. What does that mean, and why does it matter?","Code marked as a worklet executes on the UI thread, so the animation doesn't depend on the JS thread. Even while JS is busy parsing JSON or rendering a list, the animation holds 60 or 120 fps. The old Animated API only gets there with useNativeDriver, and only for transform and opacity."],
+ [4,"Server state và client state là gì? Bạn chọn công cụ nào cho từng loại?","Server state: dữ liệu thuộc backend, cần cache, đồng bộ, refetch (danh sách giao dịch). Dùng TanStack Query hoặc RTK Query. Client state: UI/session (theme, filter, form nháp). Dùng useState, Zustand hoặc Redux slice. Nhét server state vào Redux tự viết dẫn tới phải tự lo loading/error/cache.",
+  "What's the difference between server state and client state? Which tools do you use for each?","Server state belongs to the backend and needs caching, syncing and refetching, like a list of transactions. TanStack Query or RTK Query fit that. Client state is UI or session data, such as the theme, filters or a draft form, and useState, Zustand or a Redux slice is plenty. If you put server state in hand-written Redux, you end up rebuilding loading, error and cache handling yourself."],
+ [4,"Redux-Saga dùng để làm gì? So sánh với thunk.","Saga xử lý side effect bằng generator: dễ làm flow phức tạp (hủy bằng takeLatest, race, debounce, chạy nền, polling), test dễ vì yield trả về mô tả effect. Thunk đơn giản hơn, phù hợp async một bước. Dự án mới thường dùng RTK + RTK Query/listener middleware thay saga.",
+  "What is Redux-Saga for, and how does it compare with thunks?","Sagas handle side effects with generators. They make complex flows straightforward, such as cancellation with takeLatest, races, debouncing, background tasks and polling, and they're easy to test because each yield returns a plain description of the effect. Thunks are simpler and fine for a single async step. New projects usually pick RTK with RTK Query or the listener middleware instead of sagas."],
+ [4,"Auth flow trong React Navigation làm thế nào cho đúng?","Render có điều kiện hai nhóm screen theo trạng thái token (<code>isSignedIn ? AppStack : AuthStack</code>), không dùng navigate('Home') sau login. Lúc khởi động hiển thị splash trong khi đọc token từ secure storage. Khi logout state đổi, navigator tự chuyển và xóa history.",
+  "How do you implement an auth flow correctly with React Navigation?","Render two groups of screens conditionally on the token (<code>isSignedIn ? AppStack : AuthStack</code>) rather than calling navigate('Home') after login. On launch, show a splash screen while you read the token from secure storage. On logout the state flips, the navigator switches on its own, and the history is cleared."],
+ [4,"AsyncStorage, MMKV, SQLite: chọn cái nào?","AsyncStorage: key-value async, chậm, phù hợp dữ liệu nhỏ. MMKV: key-value đồng bộ qua JSI, rất nhanh, hỗ trợ mã hóa, tốt cho settings/persist store. SQLite / WatermelonDB / Realm: dữ liệu quan hệ, truy vấn, lượng lớn, offline-first. Token phải ở Keychain/Keystore.",
+  "AsyncStorage, MMKV or SQLite: how do you choose?","AsyncStorage is asynchronous key-value storage. It's slow and best for small amounts of data. MMKV is synchronous key-value storage over JSI: very fast, with encryption, and a good fit for settings or persisting a store. SQLite, WatermelonDB or Realm are for relational data, queries, large volumes and offline-first apps. Tokens belong in the Keychain or Keystore."],
+ [5,"Nhiều request cùng nhận 401. Làm sao chỉ gọi refresh token một lần?","Interceptor giữ một biến <code>refreshPromise</code>. Request đầu tiên gặp 401 tạo promise refresh, các request sau chờ cùng promise đó rồi retry với token mới. Refresh lỗi thì logout và reject toàn bộ hàng đợi. Đánh dấu request đã retry để không lặp vô hạn.",
+  "Several requests get a 401 at the same time. How do you make sure the token is refreshed only once?","Keep a shared <code>refreshPromise</code> in the interceptor. The first request that hits a 401 starts the refresh, and every other request awaits that same promise before retrying with the new token. If the refresh fails, log the user out and reject everything in the queue. Mark retried requests so you can never loop forever."],
+ [5,"Push notification hoạt động thế nào ở 3 trạng thái app?","Foreground: app nhận message, tự quyết định hiện local notification. Background: OS hiện notification, khi bấm app nhận event mở. Killed: OS hiện, khi bấm lấy initial notification lúc khởi động để điều hướng. Android cần notification channel, iOS cần xin quyền và APNs key. Data-only message có giới hạn trên iOS.",
+  "How do push notifications behave in each of the three app states?","Foreground: the app receives the message and decides whether to show a local notification. Background: the OS displays it, and the app gets an event when the user taps it. Killed: the OS displays it, and on launch you read the initial notification to navigate to the right screen. Android needs a notification channel; iOS needs permission and an APNs key. Data-only messages are restricted on iOS."],
+ [5,"Giữ kết nối WebSocket ổn định trên mobile thế nào?","Reconnect với exponential backoff + jitter; heartbeat ping/pong để phát hiện kết nối chết; lắng nghe NetInfo và AppState (đóng khi background lâu, mở lại và đồng bộ lại khi active); dedupe message theo id; fallback sang refetch REST khi reconnect.",
+  "How do you keep a WebSocket connection reliable on mobile?","Reconnect with exponential backoff and jitter. Use ping/pong heartbeats to detect dead connections. Listen to NetInfo and AppState: close the socket after a long stretch in the background, then reopen and resync when the app becomes active. Deduplicate messages by id, and refetch over REST after reconnecting to fill any gap."],
+ [6,"Bridge cũ và JSI khác nhau thế nào?","Bridge: JS và native giao tiếp qua message JSON bất đồng bộ, có batch, tốn serialize và không gọi đồng bộ được. JSI: interface C++ cho JS giữ tham chiếu trực tiếp tới object host, gọi đồng bộ, không serialize. JSI là nền của TurboModules, Fabric, Reanimated, MMKV, VisionCamera.",
+  "How does the old bridge differ from JSI?","The bridge passed asynchronous, batched JSON messages between JS and native, so every call paid a serialization cost and nothing could be called synchronously. JSI is a C++ interface that lets JS hold direct references to host objects and call them synchronously, with no serialization. It's the foundation for TurboModules, Fabric, Reanimated, MMKV and VisionCamera."],
+ [6,"Fabric và TurboModules giải quyết vấn đề gì?","Fabric: renderer mới viết bằng C++, shadow tree dùng chung, layout đồng bộ khi cần, hỗ trợ concurrent React (Suspense, transition). TurboModules: native module load lười khi dùng lần đầu (startup nhanh hơn), có type an toàn nhờ Codegen sinh từ spec TypeScript, gọi qua JSI.",
+  "What problems do Fabric and TurboModules solve?","Fabric is the new renderer, written in C++. It shares one shadow tree across platforms, can lay out synchronously when needed, and supports concurrent React features like Suspense and transitions. TurboModules are native modules that load lazily on first use, which speeds up startup. They're type-safe because Codegen generates the native interfaces from a TypeScript spec, and they're called through JSI."],
+ [6,"Khi nào cần viết native module? Bạn đã/sẽ làm thế nào?","Khi cần API hệ điều hành chưa có thư viện, SDK native của bên thứ ba, hoặc tác vụ nặng cần tốc độ native. Cách nhanh nhất hiện nay: Expo Modules API (Kotlin/Swift, khai báo Function, AsyncFunction, Events), dùng được cả trong app bare. Cần chú ý thread, permission, xử lý lỗi trả về Promise reject.",
+  "When do you need to write a native module? How would you go about it?","When you need an OS API that no library covers, a third-party native SDK, or heavy work that should run at native speed. The quickest route today is the Expo Modules API (Kotlin and Swift, declaring Function, AsyncFunction and Events), which works in bare apps too. Watch out for threading and permissions, and reject the Promise with a clear error when something fails."],
+ [6,"Hermes mang lại gì?","Engine JS tối ưu cho mobile: biên dịch sẵn sang bytecode lúc build nên startup nhanh, ít RAM, bundle nhỏ. Là engine mặc định. Debug qua React Native DevTools (Chrome DevTools protocol).",
+  "What does Hermes give you?","A JavaScript engine built for mobile. It compiles to bytecode at build time, so apps start faster, use less memory and ship smaller bundles. It's the default engine, and you debug it with React Native DevTools over the Chrome DevTools protocol."],
+ [6,"Bạn nâng cấp app từ RN 0.7x lên bản mới nhất thế nào?","1) Đọc changelog và breaking change từng bản. 2) Dùng React Native Upgrade Helper để xem diff file native (Gradle, Podfile, AppDelegate). Với Expo thì <code>npx expo install --fix</code> theo từng SDK. 3) Kiểm thư viện bên thứ ba có hỗ trợ New Architecture chưa (React Native Directory), thay hoặc patch nếu cần. 4) Nâng từng bước nếu cách xa nhiều bản. 5) Chạy toàn bộ test + E2E, test tay cả 2 nền tảng, release theo staged rollout.",
+  "How would you upgrade an app from RN 0.7x to the latest version?","1) Read the changelog and breaking changes for each release. 2) Use the React Native Upgrade Helper to see the diff in the native files (Gradle, Podfile, AppDelegate). On Expo, run <code>npx expo install --fix</code> one SDK at a time. 3) Check that third-party libraries support the New Architecture (React Native Directory), and replace or patch the ones that don't. 4) If you're many versions behind, go in steps. 5) Run the full unit and E2E suites, test both platforms by hand, and ship with a staged rollout."],
+ [7,"App khởi động chậm 4 giây. Quy trình điều tra?","Đo từng giai đoạn: native init → load bundle → JS chạy → màn đầu render → dữ liệu đầu tiên. Công cụ: Android Studio/Xcode Instruments, Hermes profile, log mốc thời gian. Xử lý: bật Hermes, inline requires/lazy load màn, giảm import nặng ở root, trì hoãn SDK không cần ngay (analytics), cache dữ liệu màn đầu, giữ splash cho tới khi sẵn sàng.",
+  "The app takes 4 seconds to start. How do you investigate?","Measure each phase: native init, bundle load, JS execution, first screen render, first data. Use Android Studio and Xcode Instruments, a Hermes profile, and timestamps in your logs. Then fix: enable Hermes, use inline requires and lazy-load screens, cut heavy imports at the root, defer SDKs you don't need straight away (like analytics), cache the first screen's data, and keep the splash screen up until the app is ready."],
+ [7,"Test gì bằng Jest + RNTL, test gì bằng E2E?","RNTL: hành vi component/màn hình như người dùng thấy (getByRole, getByText, fireEvent/userEvent), mock API và module native. Nhanh, chạy mỗi PR. E2E (Detox/Maestro): vài flow quan trọng chạy trên app thật (login, thanh toán). Chậm và dễ flaky nên giữ ít. Unit thuần cho util, reducer, hook logic.",
+  "What do you test with Jest and RNTL, and what with E2E?","RNTL tests components and screens the way a user experiences them (getByRole, getByText, fireEvent or userEvent), with the API and native modules mocked. These tests are fast and run on every PR. E2E tests (Detox or Maestro) cover a few critical flows on a real build, like login or payment. They're slow and prone to flakiness, so keep them few. Plain unit tests cover utils, reducers and hook logic."],
+ [7,"Các nguồn memory leak hay gặp trong RN?","Listener (AppState, Keyboard, NetInfo, EventEmitter) không remove trong cleanup; setInterval/setTimeout chưa clear; subscription WebSocket/Firebase không hủy; setState sau unmount trên promise; ảnh lớn không resize; giữ tham chiếu trong module scope. Phát hiện: memory profiler Android Studio / Instruments, Hermes heap snapshot.",
+  "What are the usual sources of memory leaks in RN?","Listeners (AppState, Keyboard, NetInfo, EventEmitter) that are never removed in a cleanup; setInterval or setTimeout that's never cleared; WebSocket or Firebase subscriptions left open; setState called after unmount when a promise resolves; large images that aren't resized; and references held in module scope. Track them down with the Android Studio memory profiler, Instruments, or a Hermes heap snapshot."],
+ [7,"Sentry báo crash tăng sau bản release mới. Bạn xử lý thế nào?","Xem crash-free rate theo release và nhóm issue mới xuất hiện. Đọc stack trace đã symbolicate (cần upload source map / dSYM / mapping), xem breadcrumb, lọc theo OS, thiết bị, phiên bản. Đánh giá mức ảnh hưởng: tạm dừng staged rollout nếu nghiêm trọng. Tái hiện, sửa, hotfix qua OTA nếu lỗi ở JS hoặc build mới nếu ở native. Cuối cùng thêm test và alert để không lặp lại.",
+  "Sentry shows crashes climbing after a new release. What do you do?","Check the crash-free rate for that release and which issues are new in it. Read the symbolicated stack traces (which means source maps, dSYMs and mapping files have to be uploaded), go through the breadcrumbs, and filter by OS, device and version. Gauge the impact, and pause the staged rollout if it's serious. Reproduce and fix it, then hotfix over OTA if the bug is in JS or ship a new build if it's native. Finally, add a test and an alert so it doesn't happen again."],
+ [8,"OTA update làm được gì và không làm được gì?","Được: đổi JS bundle và asset (sửa bug, đổi UI) mà không qua review store. Không được: thay đổi code native, thêm thư viện native, đổi permission. Cần quản lý runtime version để bundle mới không chạy trên binary không tương thích. Phải tuân thủ chính sách store (không đổi bản chất app).",
+  "What can an OTA update do, and what can't it do?","It can replace the JS bundle and assets, so you can fix bugs or change the UI without store review. It can't change native code, add native libraries or change permissions. You have to manage the runtime version so a new bundle never runs on an incompatible binary, and you're still bound by store policy, which forbids changing what the app fundamentally does."],
+ [8,"Mô tả quy trình release mà bạn đề xuất cho một team 4 dev.","Trunk-based với feature flag; mỗi PR chạy lint + typecheck + test; merge main build bản internal (TestFlight / Internal testing) tự động; QA trên staging; tag release → build production, tăng version tự động; staged rollout 10% → 50% → 100% theo dõi crash-free rate trên Sentry/Crashlytics; hotfix JS qua OTA, native qua build mới.",
+  "Describe the release process you'd propose for a team of four developers.","Trunk-based development with feature flags. Every PR runs lint, type-checking and tests. A merge to main automatically builds an internal release for TestFlight or Play internal testing, and QA tests on staging. A release tag triggers the production build with an auto-incremented version, followed by a staged rollout of 10% → 50% → 100% while we watch the crash-free rate in Sentry or Crashlytics. JS hotfixes go out over OTA; native fixes need a new build."],
+ [8,"Staged rollout là gì, làm thế nào trên từng nền tảng?","Phát hành dần cho một phần người dùng để phát hiện lỗi sớm. Google Play: chọn % rollout, có thể halt. App Store: phased release 7 ngày, có thể pause. EAS Update: rollout theo %, rollback về bản trước. Theo dõi crash-free rate, ANR, chỉ số business trước khi tăng %.",
+  "What is a staged rollout, and how do you run one on each platform?","You release to a fraction of users first so problems surface early. On Google Play you pick a rollout percentage and can halt it. On the App Store, a phased release spreads over seven days and can be paused. EAS Update can roll out by percentage and roll back to the previous update. Watch the crash-free rate, ANRs and business metrics before raising the percentage."],
+ [8,"Android build release crash nhưng debug thì không. Bạn kiểm tra gì?","Đọc logcat của bản release. Nghi phạm thường gặp: ProGuard/R8 xóa class dùng qua reflection (thêm keep rule), biến môi trường khác nhau, khác biệt Hermes/minify, lỗi chỉ hiện khi không có Metro, cấu hình signing. Bật source map và mapping file để đọc stack trace.",
+  "The Android release build crashes, but the debug build doesn't. What do you check?","Start with logcat from the release build. The usual suspects are ProGuard or R8 stripping classes that are used through reflection (add keep rules), different environment variables, Hermes or minification differences, bugs that only appear without Metro, and the signing configuration. Generate source maps and the mapping file so the stack trace is readable."]
+];
+
+/* group: {c: VI title, e: EN title, q: [[level, question VI, points VI, question EN, points EN]]} */
+const RN_IV=[
+ {c:"JavaScript / TypeScript",e:"JavaScript / TypeScript",q:[
+  ["J","Phân biệt var, let, const. Hoisting là gì?","Scope function vs block; TDZ; const không có nghĩa là immutable với object.","Explain the differences between var, let and const. What is hoisting?","Function vs block scope; the temporal dead zone; const doesn't make an object immutable."],
+  ["J","== khác === thế nào? Truthy/falsy?","Ép kiểu ngầm; luôn dùng ===; 0, '', null, undefined, NaN là falsy.","What's the difference between == and ===? Which values are falsy?","Implicit coercion; always use ===; 0, '', null, undefined and NaN are falsy."],
+  ["M","Giải thích event loop và vì sao JS thread bận làm app đơ.","Microtask/macrotask; RN render cần JS gửi lệnh; tác vụ nặng chia nhỏ hoặc chuyển native/worklet.","Explain the event loop, and why a busy JS thread freezes the app.","Microtasks vs macrotasks; RN needs the JS thread to drive rendering; split heavy work up or move it to native code or a worklet."],
+  ["M","Viết hàm debounce. Viết type cho hàm debounce có generic.","Closure giữ timer; <code>&lt;T extends (...a:any[])=&gt;void&gt;</code>, Parameters&lt;T&gt;.","Write a debounce function, then give it a generic type.","A closure holds the timer; <code>&lt;T extends (...a:any[])=&gt;void&gt;</code> with Parameters&lt;T&gt;."],
+  ["S","Bạn thiết kế type cho response API thế nào để an toàn runtime?","TS chỉ kiểm lúc compile; validate bằng zod/valibot tại biên; sinh type từ OpenAPI.","How do you type API responses so they're also safe at runtime?","TypeScript only checks at compile time; validate at the boundary with zod or valibot; generate types from the OpenAPI spec."]]},
+ {c:"React",e:"React",q:[
+  ["J","Props và state khác nhau thế nào?","Props từ cha, read-only; state nội bộ, đổi gây re-render.","What's the difference between props and state?","Props come from the parent and are read-only; state is internal, and changing it triggers a re-render."],
+  ["J","useEffect với deps [], [a], không có deps khác nhau ra sao?","Chạy 1 lần sau mount / khi a đổi / mỗi lần render; cleanup chạy trước lần sau và khi unmount.","How does useEffect behave with [], with [a], and with no dependency array?","Once after mount / whenever a changes / after every render; the cleanup runs before the next run and on unmount."],
+  ["M","Context có vấn đề gì về hiệu năng? Giải pháp?","Mọi consumer re-render khi value đổi; tách context, memo value, dùng store có selector (Zustand, Redux).","What's the performance catch with Context, and how do you deal with it?","Every consumer re-renders when the value changes; split contexts, memoize the value, or use a store with selectors (Zustand, Redux)."],
+  ["M","Kể một lần bạn sửa vấn đề re-render.","Dùng Profiler tìm nguyên nhân, số liệu trước/sau, giải pháp cụ thể.","Tell me about a time you fixed a re-render problem.","How the Profiler pointed to the cause, before-and-after numbers, the specific fix."],
+  ["S","React 19 / React Compiler thay đổi cách bạn viết code thế nào?","Auto-memo, Actions, use(), giảm useMemo/useCallback tay; điều kiện tuân thủ Rules of React.","How do React 19 and the React Compiler change the way you write code?","Automatic memoization, Actions, use(), far less manual useMemo/useCallback; the code has to follow the Rules of React."]]},
+ {c:"React Native core",e:"React Native core",q:[
+  ["J","ScrollView và FlatList khác nhau thế nào?","ScrollView render hết; FlatList ảo hóa, chỉ render vùng nhìn thấy.","How do ScrollView and FlatList differ?","ScrollView renders every child; FlatList virtualizes and only renders what's near the viewport."],
+  ["J","Làm sao viết code khác nhau cho iOS và Android?","Platform.OS, Platform.select, file .ios/.android.","How do you write different code for iOS and Android?","Platform.OS, Platform.select, and .ios/.android file extensions."],
+  ["M","Xử lý bàn phím che input trên Android và iOS thế nào?","KeyboardAvoidingView behavior khác nhau, windowSoftInputMode, react-native-keyboard-controller.","How do you stop the keyboard from covering inputs on Android and iOS?","KeyboardAvoidingView needs a different behavior per platform; windowSoftInputMode; react-native-keyboard-controller."],
+  ["M","Bạn tổ chức thư mục project RN thế nào?","Feature-based, tách ui/hooks/api/store, alias path, shared components.","How do you structure an RN project?","Feature-based folders, ui/hooks/api/store kept apart, path aliases, shared components."],
+  ["S","Expo hay bare React Native cho dự án mới? Vì sao?","Expo hiện là khuyến nghị chính thức; prebuild + config plugin + dev client vẫn viết native được; trường hợp đặc thù cần bare.","Expo or bare React Native for a new project? Why?","Expo is now the officially recommended path; prebuild, config plugins and dev clients still let you write native code; bare only for unusual cases."]]},
+ {c:"State, dữ liệu & mạng",e:"State, data & networking",q:[
+  ["J","Redux hoạt động thế nào? Action, reducer, store.","Luồng một chiều, reducer pure, immutable (Immer trong RTK).","How does Redux work? Walk me through actions, reducers and the store.","One-way data flow, pure reducers, immutable updates (Immer in RTK)."],
+  ["M","Khi nào chọn Redux, Zustand hay chỉ dùng Context?","Quy mô team, devtools, middleware, boilerplate, selector.","When would you pick Redux, Zustand, or just Context?","Team size, devtools, middleware, boilerplate, selectors."],
+  ["M","Xử lý refresh token khi nhiều request cùng hết hạn?","Queue một refresh promise, retry, logout khi fail.","How do you handle token refresh when several requests expire at once?","Queue everything behind one refresh promise, retry, log out if the refresh fails."],
+  ["S","Thiết kế offline-first cho app ghi chép thu chi.","DB local là nguồn hiển thị, outbox hàng đợi thay đổi, sync khi có mạng, conflict (last-write-wins / version), idempotency key.","Design offline-first support for an expense-tracking app.","The local DB drives the UI, an outbox queues changes, sync when back online, conflict resolution (last-write-wins or versioning), idempotency keys."],
+  ["S","Lưu token ở đâu và bảo mật app RN thế nào?","Keychain/Keystore, không lưu secret trong bundle, SSL pinning, jailbreak/root check khi cần, OWASP MASVS.","Where do you store tokens, and how do you secure an RN app?","Keychain/Keystore, no secrets in the bundle, SSL pinning, jailbreak/root detection where it's warranted, OWASP MASVS."]]},
+ {c:"Native & New Architecture",e:"Native & the New Architecture",q:[
+  ["M","Bạn đã dùng native module nào? Có tự viết không?","Ví dụ cụ thể; cách giao tiếp Promise/callback/event.","Which native modules have you used? Have you written one yourself?","A concrete example; how it talks to JS (Promises, callbacks, events)."],
+  ["M","Upgrade React Native lên bản mới bạn làm thế nào?","Upgrade Helper, đọc changelog, kiểm thư viện tương thích New Arch, nâng từng bước, test cả 2 nền tảng.","How do you upgrade React Native to a new version?","Upgrade Helper, read the changelog, check libraries for New Architecture support, upgrade step by step, test both platforms."],
+  ["S","Giải thích JSI, Fabric, TurboModules, Codegen cho một dev mới.","Tại sao bỏ bridge, gọi đồng bộ, lazy load, type-safe spec.","Explain JSI, Fabric, TurboModules and Codegen to a developer who's new to RN.","Why the bridge was dropped, synchronous calls, lazy loading, type-safe specs."],
+  ["S","Một thư viện chưa hỗ trợ New Architecture, bạn xử lý ra sao?","Interop layer, tìm fork/thay thế, tự patch (patch-package), viết lại bằng Expo Modules.","A library doesn't support the New Architecture yet. What do you do?","The interop layer, a fork or a replacement, patching it yourself (patch-package), rewriting it with Expo Modules."]]},
+ {c:"Hiệu năng, test, debug",e:"Performance, testing & debugging",q:[
+  ["J","Bạn debug app RN bằng công cụ gì?","React Native DevTools, console, network inspector, logcat/Xcode console.","What tools do you use to debug an RN app?","React Native DevTools, console logs, the network inspector, logcat and the Xcode console."],
+  ["M","App giật khi scroll. Hướng điều tra?","JS FPS hay UI FPS; Profiler; tối ưu list; ảnh; animation trên UI thread.","The app stutters while scrolling. How do you investigate?","JS FPS or UI FPS; the Profiler; list optimizations; images; animations on the UI thread."],
+  ["M","Bạn viết test gì cho một màn hình login?","RNTL: validate, gọi API mock, loading, lỗi, điều hướng; E2E cho flow thật.","What tests would you write for a login screen?","RNTL: validation, the mocked API call, loading, errors, navigation; an E2E test for the real flow."],
+  ["S","Đặt mục tiêu và theo dõi hiệu năng ở production thế nào?","TTI/startup, crash-free rate, ANR, slow frames; Sentry/Firebase Performance; ngân sách hiệu năng trong CI.","How do you set and track performance targets in production?","TTI and startup time, crash-free rate, ANRs, slow frames; Sentry or Firebase Performance; a performance budget enforced in CI."]]},
+ {c:"Release & CI/CD",e:"Release & CI/CD",q:[
+  ["J","Các bước đưa app Android lên Google Play?","Keystore, build AAB, Play Console, internal testing, review.","What are the steps to publish an Android app on Google Play?","Keystore, build an AAB, Play Console, internal testing, review."],
+  ["M","App bị Apple reject, bạn đã gặp lý do nào?","Thiếu giải thích quyền, đăng nhập Apple, nội dung, crash lúc review, metadata.","Has Apple ever rejected one of your apps? What for?","Missing permission explanations, Sign in with Apple, content, a crash during review, metadata."],
+  ["M","OTA update có rủi ro gì?","Lệch runtime version với native, rollback, chính sách store.","What are the risks of OTA updates?","A runtime version that doesn't match the native build, rollback, store policy."],
+  ["M","Sau khi release, bạn theo dõi chất lượng app thế nào?","Sentry/Crashlytics: crash-free rate, issue mới theo release; ANR; đánh giá store; dừng rollout khi có lỗi nghiêm trọng.","After a release, how do you keep an eye on app quality?","Sentry or Crashlytics: crash-free rate and new issues per release; ANRs; store reviews; halt the rollout on serious bugs."],
+  ["S","Thiết kế pipeline CI/CD cho app RN.","PR check, build tự động, phân môi trường, signing bảo mật trong secret, staged rollout, theo dõi sau release.","Design a CI/CD pipeline for an RN app.","PR checks, automated builds, separate environments, signing keys kept in secrets, staged rollout, post-release monitoring."],
+  ["S","Kể lần bạn nâng cấp React Native hoặc Expo SDK. Khó nhất là gì?","Phiên bản từ/đến, thư viện không tương thích, cách giải quyết, thời gian, cách giảm rủi ro khi release.","Tell me about a React Native or Expo SDK upgrade you did. What was the hardest part?","Which versions, which libraries broke, how you solved it, how long it took, how you de-risked the release."]]},
+ {c:"System design mobile",e:"Mobile system design",q:[
+  ["S","Thiết kế màn chat realtime (tin nhắn, trạng thái gửi, ảnh).","WebSocket + fallback, optimistic UI, ID tạm, phân trang ngược, lưu local, upload nền, push khi offline.","Design a real-time chat screen with messages, delivery status and images.","WebSocket with a fallback, optimistic UI, temporary IDs, reverse pagination, local storage, background uploads, push when offline."],
+  ["S","Thiết kế feed vô hạn có ảnh và video.","Cursor pagination, FlashList, prefetch, cache ảnh, chỉ phát video đang hiện, giải phóng bộ nhớ.","Design an infinite feed with images and video.","Cursor pagination, FlashList, prefetching, image caching, only playing the visible video, releasing memory."],
+  ["S","App có 3 team cùng làm. Bạn chia kiến trúc thế nào?","Monorepo/feature module, design system chung, ranh giới API rõ, ownership, quy ước code, CI riêng từng phần.","Three teams work on the same app. How do you split the architecture?","A monorepo or feature modules, a shared design system, clear API boundaries, ownership, coding conventions, CI per area."]]},
+ {c:"Hành vi (behavioral)",e:"Behavioral",q:[
+  ["J","Kể về dự án RN bạn tự hào nhất.","STAR: bối cảnh, vai trò của bạn, kỹ thuật, kết quả có số.","Tell me about the RN project you're proudest of.","STAR: the context, your role, the technical work, results with numbers."],
+  ["M","Một bug production nghiêm trọng bạn từng xử lý.","Phát hiện thế nào, khoanh vùng, hotfix, postmortem, phòng ngừa.","Walk me through a serious production bug you dealt with.","How it was spotted, how you narrowed it down, the hotfix, the postmortem, prevention."],
+  ["M","Bất đồng với designer/BE về một yêu cầu, bạn làm gì?","Dữ liệu, đề xuất phương án, thỏa hiệp, kết quả.","What do you do when you disagree with a designer or backend developer about a requirement?","Bring data, propose options, find a compromise, share the outcome."],
+  ["S","Bạn mentor junior hoặc nâng chất lượng code của team thế nào?","Review có hướng dẫn, tài liệu, pair programming, lint rule, đo kết quả.","How do you mentor juniors or raise the team's code quality?","Reviews that teach, documentation, pair programming, lint rules, measuring the results."]]},
+ {c:"Bạn nên hỏi lại nhà tuyển dụng",e:"Questions to ask the interviewer",q:[
+  ["J","App dùng Expo hay bare? Phiên bản RN, đã lên New Architecture chưa?","Cho biết độ cũ của codebase và khối lượng nâng cấp.","Is the app on Expo or bare? Which RN version, and has it moved to the New Architecture?","Tells you how old the codebase is and how much upgrade work is waiting."],
+  ["J","Quy trình release và tỉ lệ test tự động hiện tại?","Cho biết mức trưởng thành kỹ thuật.","What does the release process look like, and how much of the testing is automated?","Tells you how mature the engineering practice is."],
+  ["M","Team mobile có bao nhiêu người, có dev native không?","Ai xử lý phần native khi cần.","How big is the mobile team, and are there native developers on it?","Who handles native work when it comes up."],
+  ["S","Vấn đề kỹ thuật lớn nhất của app hiện nay là gì?","Hiểu kỳ vọng thật cho vị trí.","What's the biggest technical challenge in the app right now?","Shows you what they really expect from this role."]]}
+];
+
+/* ---------------- Flutter data (filled below) ---------------- */
+const FL_FREQ=[
+  ["Dart / Flutter",15,0],["State: Bloc 6 · Riverpod 4 · Provider 3",8,0],["REST API / Dio",7,0],["Tiếng Anh",7,0],
+  ["CI/CD",6,0],["Unit / widget / integration test",5,0],["Release store / app đã publish",5,0],["Clean Architecture / SOLID / DI",5,0],["Git",5,0],
+  ["Hiệu năng (isolate, máy yếu)",4,0],["Native Kotlin / Swift, platform channel",10,1],["Mentor / code review",4,1],["AI coding tool (Claude, Codex, Cursor)",4,1],
+  ["Firebase / Supabase / AWS",3,1],["Local DB / offline",2,1],["Push · thanh toán · go_router",2,1],["WebSocket · GraphQL · Web/Desktop",1,1]
+];
+const FL_FREQ_TOTAL=15;
+
+const FL_WEEKS=[
+ {t:"Dart nền tảng",g:"Trả lời trôi chảy về async, isolate, null safety và các tính năng Dart 3.",
+  k:["Null safety: ?, !, late, required, flow analysis và type promotion","final vs const, canonical const","Future, async/await, Stream (single-subscription vs broadcast), StreamController","Event loop: microtask queue vs event queue","Isolate: Isolate.run, compute, SendPort/ReceivePort","Generics, extension, mixin, abstract / interface / base / final class","Dart 3: records, patterns, sealed class, switch expression","Code generation: build_runner, freezed, json_serializable"],
+  lab:"Tạo project Flutter, bật lint nghiêm (very_good_analysis hoặc flutter_lints). Viết util debounce, retry(fn, n) và model freezed có test bằng package:test.",
+  r:"dart.dev/language · dart.dev/language/patterns · dart.dev/language/concurrency"},
+ {t:"Flutter core",g:"Giải thích được vì sao widget rebuild và layout hoạt động thế nào.",
+  k:["Widget, Element, RenderObject; BuildContext là gì","Lifecycle StatefulWidget: initState, didChangeDependencies, didUpdateWidget, dispose","Keys: ValueKey, ObjectKey, UniqueKey, GlobalKey","const constructor và phạm vi rebuild","InheritedWidget, Theme.of, MediaQuery.of","Layout: constraints go down, sizes go up; Row/Column/Flex, Expanded, Flexible","Lỗi layout hay gặp: unbounded height, overflow","Material 3, ThemeData, dark mode, responsive với LayoutBuilder"],
+  lab:"Dựng UI danh sách giao dịch + màn chi tiết theo Material 3, có dark mode. Bật “Track widget rebuilds” trong DevTools và giảm rebuild bằng const và tách widget.",
+  r:"docs.flutter.dev/ui · docs.flutter.dev/ui/layout/constraints · Flutter YouTube “Widget of the Week”"},
+ {t:"UI nâng cao, form & animation",g:"Dựng UI phức tạp, mượt, dễ tiếp cận.",
+  k:["ListView.builder, itemExtent, CustomScrollView và Slivers","Implicit animation (AnimatedContainer, TweenAnimationBuilder) vs explicit (AnimationController)","Hero, page transition, CustomPainter","GestureDetector, Dismissible, Draggable","Form, TextFormField, validator, FocusNode, TextInputAction","SafeArea, bàn phím (resizeToAvoidBottomInset), Semantics cho accessibility","Ảnh: cached_network_image, cacheWidth/cacheHeight","Đa ngôn ngữ: intl, file ARB, định dạng tiền tệ và ngày"],
+  lab:"Thêm swipe-to-delete bằng Dismissible, biểu đồ chi tiêu bằng CustomPainter có animation, form thêm giao dịch có validate và chạy được bằng tiếng Việt / tiếng Anh.",
+  r:"docs.flutter.dev/ui/animations · docs.flutter.dev/ui/accessibility-and-internationalization"},
+ {t:"State management, navigation & kiến trúc",g:"Chọn và bảo vệ được lựa chọn state management và kiến trúc.",
+  k:["setState → InheritedWidget → Provider: vì sao cần thư viện","Bloc / Cubit: event, state, BlocBuilder / BlocListener, event transformer, bloc_test","Riverpod: Notifier, AsyncNotifier, ref.watch / read / listen, family, autoDispose; Riverpod 3 ổn định từ 09/2025","Vì sao ít JD dùng GetX (0/15 JD đã đọc)","go_router: nested route, ShellRoute, redirect làm auth guard, deep link","DI: get_it / injectable hoặc provider của Riverpod","Clean Architecture: presentation / domain / data, repository, khi nào là thừa","Feature-first folder, monorepo với melos"],
+  lab:"Thêm auth flow với go_router redirect. Viết cùng một màn danh sách bằng Cubit và bằng Riverpod AsyncNotifier, so sánh. Tách repository và data source.",
+  r:"bloclibrary.dev · riverpod.dev · pub.dev/packages/go_router · codewithandrea.com"},
+ {t:"Networking, dữ liệu & tích hợp",g:"Lớp API và dữ liệu production-ready: token, offline, push.",
+  k:["Dio: interceptor, QueuedInterceptor cho refresh token, retry, cancel token","Parse JSON lớn trong isolate","SharedPreferences, flutter_secure_storage (Keychain/Keystore)","Drift / sqflite: schema, migration, query; Hive / Isar và tình trạng bảo trì","Offline-first: outbox, sync khi có mạng (connectivity_plus)","Firebase: Auth, Firestore, Crashlytics, Remote Config","Push: firebase_messaging + flutter_local_notifications ở foreground / background / terminated","WebSocket (web_socket_channel) có reconnect; GraphQL cơ bản"],
+  lab:"Lớp apiClient bằng Dio có refresh-token queue, cache offline bằng Drift, push notification mở đúng màn qua go_router.",
+  r:"pub.dev/packages/dio · drift.simonbinder.eu · firebase.flutter.dev"},
+ {t:"Native & nền tảng",g:"Viết được plugin native và cấu hình project cho nhiều môi trường.",
+  k:["Platform channel: MethodChannel, EventChannel, BasicMessageChannel","Pigeon sinh code type-safe Dart / Kotlin / Swift","Viết plugin, federated plugin","dart:ffi và ffigen cho thư viện C/C++/Rust","Android: Gradle, Kotlin, permission; iOS: CocoaPods / Swift Package Manager, Info.plist","Flavors dev / staging / prod, --dart-define, --dart-define-from-file","App lifecycle: AppLifecycleListener, background task","Impeller vs Skia; Flutter Web / Desktop; nâng cấp Flutter SDK và package (flutter pub outdated)"],
+  lab:"Viết plugin “BatteryInfo” bằng Pigeon (Kotlin + Swift): hàm lấy % pin và EventChannel báo khi cắm sạc. Cấu hình 3 flavor, mỗi flavor có tên app và Firebase riêng.",
+  r:"docs.flutter.dev/platform-integration/platform-channels · pub.dev/packages/pigeon · docs.flutter.dev/deployment/flavors"},
+ {t:"Hiệu năng, test & debug",g:"Đo trước khi tối ưu. Có test ở 3 tầng cộng golden.",
+  k:["Chạy profile mode, DevTools Performance: UI thread vs raster thread","Giảm rebuild: const, tách widget, selector (BlocSelector, ref.watch select)","Raster tốn kém: saveLayer, Opacity, clip, shadow; RepaintBoundary","Memory leak: controller chưa dispose, StreamSubscription, Timer; DevTools Memory, leak_tracker","Kích thước app: --analyze-size, App Bundle, deferred components","Unit test + mocktail, bloc_test; widget test: pumpWidget, pump, pumpAndSettle, finder","Golden test (alchemist), integration_test, Patrol hoặc Maestro","Crashlytics / Sentry, --obfuscate --split-debug-info, upload symbol"],
+  lab:"Viết unit test cho repository và Cubit, widget test cho form, 2 golden test, 1 integration test login → thêm giao dịch. Đo jank trước/sau một lần tối ưu và ghi lại số liệu.",
+  r:"docs.flutter.dev/perf · docs.flutter.dev/testing · pub.dev/packages/patrol"},
+ {t:"Release, CI/CD & phỏng vấn thử",g:"Tự đưa app lên store, có pipeline, kể được dự án theo STAR.",
+  k:["Version trong pubspec (version+build number), môi trường","Signing: keystore + key.properties, certificate và provisioning profile iOS","CI/CD: GitHub Actions, Codemagic, Fastlane, Bitrise","Shorebird code push: vá Dart không qua review, giới hạn","Review App Store / Google Play, lý do bị reject, staged rollout","System design mobile: offline sync, chat realtime, feed","Dùng AI coding tool có kiểm soát (4/15 JD nhắc)","Behavioral STAR, mock interview, luyện 7 bài live coding, chỉnh CV/GitHub có link store"],
+  lab:"Pipeline GitHub Actions: analyze + format + test mỗi PR; merge main build flavor staging lên Firebase App Distribution; tag build production và upload bằng Fastlane. README có kiến trúc, ảnh chụp, video demo.",
+  r:"docs.flutter.dev/deployment · docs.codemagic.io · docs.shorebird.dev"}
+];
+
+const FL_QUIZ=[
+ [1,"Future và Stream khác nhau thế nào? Khi nào dùng Stream?","Future trả về một giá trị (hoặc lỗi) đúng một lần. Stream phát nhiều giá trị theo thời gian: sự kiện WebSocket, vị trí GPS, thay đổi trên Firestore. Single-subscription stream chỉ cho một listener, broadcast stream cho nhiều listener. Luôn cancel StreamSubscription trong <code>dispose</code>.",
+  "How do Future and Stream differ? When would you use a Stream?","A Future delivers one value (or an error) exactly once. A Stream delivers many values over time, such as WebSocket events, GPS positions or Firestore changes. A single-subscription stream allows one listener; a broadcast stream allows many. Always cancel the StreamSubscription in <code>dispose</code>."],
+ [1,"Đoạn code sau in ra theo thứ tự nào?<pre>print('A');\nFuture(() =&gt; print('B'));\nscheduleMicrotask(() =&gt; print('C'));\nFuture.value().then((_) =&gt; print('D'));\nprint('E');</pre>","<b>A → E → C → D → B.</b> Code đồng bộ chạy trước. Dart có microtask queue và event queue; toàn bộ microtask (scheduleMicrotask, <code>then</code> của Future đã hoàn tất) chạy hết trước khi lấy event tiếp theo. <code>Future(() =&gt; ...)</code> được đưa vào event queue nên chạy cuối.",
+  "In what order does this code print?<pre>print('A');\nFuture(() =&gt; print('B'));\nscheduleMicrotask(() =&gt; print('C'));\nFuture.value().then((_) =&gt; print('D'));\nprint('E');</pre>","<b>A → E → C → D → B.</b> Synchronous code runs first. Dart has a microtask queue and an event queue, and every microtask (scheduleMicrotask, and <code>then</code> on an already-completed Future) runs before the next event is picked up. <code>Future(() =&gt; ...)</code> goes onto the event queue, so it runs last."],
+ [1,"Isolate là gì? Khi nào dùng Isolate.run hoặc compute?","Mỗi isolate có heap và event loop riêng, không chia sẻ bộ nhớ, giao tiếp bằng message. async/await không làm code chạy song song, nó chỉ không chặn trong lúc chờ I/O. Việc nặng về CPU (parse JSON lớn, xử lý ảnh, mã hóa) chạy trên UI isolate sẽ gây giật, nên chuyển sang <code>Isolate.run</code> hoặc <code>compute</code>.",
+  "What is an isolate? When do you reach for Isolate.run or compute?","Each isolate has its own heap and event loop. Isolates don't share memory and talk to each other through messages. async/await doesn't make code run in parallel; it just avoids blocking while waiting on I/O. CPU-heavy work such as parsing a large JSON payload, processing images or encryption will cause jank on the UI isolate, so move it to <code>Isolate.run</code> or <code>compute</code>."],
+ [1,"Sealed class và pattern matching trong Dart 3 giúp gì khi quản lý state?","<code>sealed class</code> giới hạn subclass trong cùng file, nên <code>switch</code> trên nó được compiler kiểm tra đủ trường hợp: thêm state mới mà quên xử lý là lỗi compile. Kết hợp switch expression và destructuring: <code>switch (state) { Loading() =&gt; ..., Success(:final data) =&gt; ..., Failure(:final error) =&gt; ... }</code>. Record như <code>(int, String)</code> trả nhiều giá trị mà không cần tạo class.",
+  "How do Dart 3 sealed classes and pattern matching help with state?","A <code>sealed class</code> restricts its subclasses to the same file, so the compiler checks that a <code>switch</code> over it is exhaustive: add a new state and forget to handle it, and the code won't compile. Combine that with switch expressions and destructuring: <code>switch (state) { Loading() =&gt; ..., Success(:final data) =&gt; ..., Failure(:final error) =&gt; ... }</code>. Records such as <code>(int, String)</code> let you return several values without declaring a class."],
+ [1,"<code>?</code>, <code>!</code>, <code>late</code>, <code>required</code> khác nhau thế nào? Rủi ro của <code>!</code>?","<code>?</code> cho phép null. <code>!</code> khẳng định không null, sai thì crash lúc runtime. <code>late</code> hoãn khởi tạo, đọc trước khi gán sẽ ném LateInitializationError. <code>required</code> bắt buộc truyền named parameter. Hạn chế <code>!</code>; kiểm tra null để flow analysis tự promote type, hoặc dùng <code>??</code> và <code>?.</code>.",
+  "What do <code>?</code>, <code>!</code>, <code>late</code> and <code>required</code> each mean? What's the risk with <code>!</code>?","<code>?</code> makes a type nullable. <code>!</code> asserts that a value isn't null and crashes at runtime if you're wrong. <code>late</code> defers initialization, and reading it before it's assigned throws a LateInitializationError. <code>required</code> forces a named parameter to be passed. Keep <code>!</code> to a minimum: check for null and let flow analysis promote the type, or use <code>??</code> and <code>?.</code>."],
+ [2,"Widget, Element và RenderObject khác nhau thế nào?","Widget là cấu hình bất biến, rẻ, được tạo lại mỗi lần build. Element là instance sống trong cây: giữ vị trí, giữ State, và quyết định tái sử dụng hay tạo mới dựa trên runtimeType và key. RenderObject lo layout, paint, hit test và tốn kém. Build lại widget không có nghĩa là layout và paint lại; Flutter chỉ cập nhật RenderObject khi cấu hình thực sự đổi.",
+  "What's the difference between a widget, an element and a render object?","A widget is an immutable, cheap description that gets recreated on every build. An element is the live instance in the tree: it holds the position and the State, and decides whether to reuse or replace a child based on runtimeType and key. A render object handles layout, painting and hit testing, and it's the expensive part. Rebuilding a widget doesn't mean re-laying out or repainting; Flutter only updates the render object when the configuration actually changes."],
+ [2,"Mô tả lifecycle của StatefulWidget.","createState → <code>initState</code> (một lần: tạo controller, subscribe) → <code>didChangeDependencies</code> (khi InheritedWidget phụ thuộc thay đổi) → <code>build</code> → <code>didUpdateWidget</code> (cha rebuild với widget mới cùng type) → <code>deactivate</code> → <code>dispose</code> (giải phóng controller, cancel subscription). Không đọc InheritedWidget trong initState; không dùng context sau await mà không kiểm tra <code>mounted</code>.",
+  "Walk me through the StatefulWidget lifecycle.","createState → <code>initState</code> (once: create controllers, subscribe) → <code>didChangeDependencies</code> (when an InheritedWidget it depends on changes) → <code>build</code> → <code>didUpdateWidget</code> (the parent rebuilt with a new widget of the same type) → <code>deactivate</code> → <code>dispose</code> (release controllers, cancel subscriptions). Don't read inherited widgets in initState, and don't use the context after an await without checking <code>mounted</code>."],
+ [2,"Khi nào cần Key? ValueKey, ObjectKey, GlobalKey dùng làm gì?","Khi có danh sách widget cùng type có state và bị sắp xếp, thêm, xóa. Không có key, Element so theo vị trí nên state bị gán nhầm. ValueKey/ObjectKey dựa trên id của dữ liệu. GlobalKey để truy cập State từ bên ngoài (ví dụ FormState) hoặc giữ state khi chuyển widget sang vị trí khác trong cây, nhưng tốn kém nên dùng ít.",
+  "When do you need a Key? What are ValueKey, ObjectKey and GlobalKey for?","When you have a list of stateful widgets of the same type that get reordered, inserted or removed. Without keys, elements are matched by position, so state ends up attached to the wrong item. ValueKey and ObjectKey are based on the data's identity. A GlobalKey lets you reach a State from outside (FormState, for example) or keep state when a widget moves elsewhere in the tree, but it's expensive, so use it sparingly."],
+ [2,"“Constraints go down, sizes go up, parent sets position” nghĩa là gì? Vì sao gặp lỗi unbounded height?","Cha truyền constraint (min/max width và height) xuống con, con chọn kích thước trong giới hạn đó rồi báo lên, cha quyết định vị trí. ListView đặt trong Column nhận chiều cao không giới hạn nên không biết phải cao bao nhiêu và báo lỗi. Sửa bằng Expanded hoặc Flexible, SizedBox có chiều cao cố định, hoặc <code>shrinkWrap</code> (tốn hiệu năng với danh sách dài).",
+  "What does “constraints go down, sizes go up, parent sets position” mean? Why do you get unbounded height errors?","A parent passes constraints (min and max width and height) down to its child, the child picks a size within them and reports it back up, and the parent decides where to place it. A ListView inside a Column gets an unbounded height, has no idea how tall to be, and throws. Fix it with Expanded or Flexible, a SizedBox with a fixed height, or <code>shrinkWrap</code>, which gets expensive for long lists."],
+ [2,"Vì sao nên dùng const constructor?","Widget const được tạo một lần lúc compile và dùng lại. Khi cha rebuild, Flutter thấy vẫn là cùng một instance nên bỏ qua việc build lại nhánh đó. Giảm cấp phát bộ nhớ và công việc build. Lint <code>prefer_const_constructors</code> sẽ nhắc.",
+  "Why should you use const constructors?","A const widget is created once at compile time and reused. When the parent rebuilds, Flutter sees the same instance and skips rebuilding that subtree. You get fewer allocations and less build work. The <code>prefer_const_constructors</code> lint will point out where you can add it."],
+ [3,"Implicit animation và explicit animation khác nhau thế nào?","Implicit (AnimatedContainer, AnimatedOpacity, TweenAnimationBuilder): chỉ cần đổi giá trị đích, Flutter tự animate; nhanh cho chuyển đổi đơn giản. Explicit (AnimationController + Tween + AnimatedBuilder hoặc các Transition): kiểm soát thời lượng, lặp, đảo chiều, chuỗi animation; cần TickerProvider và phải dispose controller.",
+  "How do implicit and explicit animations differ?","Implicit animations (AnimatedContainer, AnimatedOpacity, TweenAnimationBuilder) only need a new target value, and Flutter animates to it for you. They're the quick option for simple transitions. Explicit animations (an AnimationController with a Tween, plus AnimatedBuilder or a Transition widget) give you control over duration, repeating, reversing and sequencing. They need a TickerProvider, and you have to dispose the controller."],
+ [3,"ListView 10.000 item bị giật. Bạn làm gì?","Dùng <code>ListView.builder</code> (lazy) thay vì <code>ListView(children:)</code>. Đặt <code>itemExtent</code> hoặc <code>prototypeItem</code> nếu chiều cao cố định. Item dùng const, tách widget nhỏ, không tính toán nặng trong build. Resize ảnh bằng cacheWidth/cacheHeight và cache lại. Tránh Opacity, ClipRRect, shadow tốn kém trong item. Đo bằng DevTools ở profile mode trước khi sửa.",
+  "A ListView with 10,000 items is janky. What do you do?","Use <code>ListView.builder</code>, which builds lazily, instead of <code>ListView(children:)</code>. Set <code>itemExtent</code> or <code>prototypeItem</code> if rows have a fixed height. Make rows const where possible, split them into small widgets, and keep heavy work out of build. Decode images at display size with cacheWidth/cacheHeight and cache them. Avoid expensive Opacity, ClipRRect and shadows in rows. Measure in profile mode with DevTools before changing anything."],
+ [3,"Lint “Don't use BuildContext across async gaps” cảnh báo điều gì?","Sau <code>await</code>, widget có thể đã bị dispose nên context không còn hợp lệ. Kiểm tra <code>if (!context.mounted) return;</code> (hoặc <code>mounted</code> trong State) trước khi dùng Navigator hay ScaffoldMessenger. Cách sạch hơn là lấy Navigator/ScaffoldMessenger trước await, hoặc đưa logic điều hướng vào lớp state.",
+  "What is the “Don't use BuildContext across async gaps” lint warning you about?","After an <code>await</code>, the widget may have been disposed, so its context is no longer valid. Check <code>if (!context.mounted) return;</code> (or <code>mounted</code> inside a State) before touching Navigator or ScaffoldMessenger. A cleaner option is to grab the Navigator or ScaffoldMessenger before the await, or to move navigation logic into your state layer."],
+ [4,"So sánh Provider, Bloc, Riverpod và GetX.","Provider: đơn giản, dựa trên InheritedWidget, hợp app nhỏ. Bloc/Cubit: tách event và state rõ ràng, dễ lần vết, test tốt với bloc_test, hợp team lớn nhưng nhiều boilerplate. Riverpod: không phụ thuộc BuildContext, an toàn lúc compile, AsyncValue cho loading/error, autoDispose, family; bản 3.0 ổn định từ 09/2025. GetX gom quá nhiều thứ, khó test và bảo trì, hầu như không JD nào yêu cầu. Senior cần lập luận theo bài toán, không theo sở thích.",
+  "Compare Provider, Bloc, Riverpod and GetX.","Provider is simple, built on InheritedWidget, and fine for small apps. Bloc and Cubit separate events from state cleanly, are easy to trace, test well with bloc_test, and suit larger teams, at the cost of more boilerplate. Riverpod doesn't depend on BuildContext, catches mistakes at compile time, models loading and error with AsyncValue, and has autoDispose and family; 3.0 went stable in September 2025. GetX bundles too much, is hard to test and maintain, and almost no job ads ask for it. At senior level, argue from the problem, not from personal preference."],
+ [4,"Cubit và Bloc khác nhau thế nào? Khi nào chọn Bloc?","Cubit gọi hàm để emit state, gọn nhẹ. Bloc nhận event qua stream nên dùng được event transformer (debounce, <code>droppable</code>, <code>restartable</code> từ bloc_concurrency) và lưu vết được từng event. Chọn Bloc cho flow phức tạp như search có debounce, hủy request cũ, hoặc khi cần log event.",
+  "How does Cubit differ from Bloc, and when would you pick Bloc?","A Cubit exposes methods that emit new states, which keeps it lightweight. A Bloc receives events as a stream, so you can apply event transformers (debounce, <code>droppable</code>, <code>restartable</code> from bloc_concurrency) and trace every event. Pick Bloc for complex flows such as debounced search that cancels stale requests, or when you need an event log."],
+ [4,"ref.watch, ref.read và ref.listen khác nhau thế nào?","<code>watch</code> dùng trong build để rebuild khi provider đổi. <code>read</code> dùng trong callback (onPressed) để lấy giá trị một lần, không dùng trong build. <code>listen</code> chạy side effect (hiện SnackBar, điều hướng) khi giá trị đổi mà không rebuild widget.",
+  "What's the difference between ref.watch, ref.read and ref.listen?","<code>watch</code> belongs in build and rebuilds the widget when the provider changes. <code>read</code> belongs in callbacks like onPressed and grabs the value once; don't use it in build. <code>listen</code> runs a side effect, such as showing a SnackBar or navigating, when the value changes, without rebuilding the widget."],
+ [4,"Làm auth guard và deep link với go_router thế nào?","Dùng <code>redirect</code>: đọc trạng thái đăng nhập; chưa login thì trả về <code>/login</code>, đã login mà đang ở <code>/login</code> thì về <code>/</code>. Truyền <code>refreshListenable</code> (Listenable của auth state) để router đánh giá lại khi login/logout. Deep link cần cấu hình App Links (Android intent-filter) và Universal Links (iOS Associated Domains); go_router map URL vào route nên mở đúng màn.",
+  "How do you build an auth guard and deep links with go_router?","Use <code>redirect</code>: read the auth state, send signed-out users to <code>/login</code>, and send signed-in users on <code>/login</code> back to <code>/</code>. Pass a <code>refreshListenable</code> tied to the auth state so the router re-evaluates on login and logout. For deep links, configure App Links (an Android intent filter) and Universal Links (iOS Associated Domains); go_router maps the URL to a route, so the right screen opens."],
+ [4,"Clean Architecture trong Flutter gồm những lớp nào? Khi nào là thừa?","Presentation (widget + Bloc/Notifier), domain (entity, use case, interface repository), data (repository implementation, data source remote/local, DTO). Phụ thuộc hướng vào domain. Lợi ích: test domain không cần Flutter, đổi API hay DB không ảnh hưởng UI. Với app nhỏ, use case chỉ gọi lại repository là boilerplate thừa, nên áp dụng vừa đủ.",
+  "What are the layers of Clean Architecture in Flutter, and when is it overkill?","Presentation (widgets plus a Bloc or Notifier), domain (entities, use cases, repository interfaces) and data (repository implementations, remote and local data sources, DTOs). Dependencies point inward toward the domain. You can test the domain without Flutter, and swapping the API or database doesn't touch the UI. In a small app, use cases that just forward to a repository are pure boilerplate, so apply it in proportion."],
+ [5,"Nhiều request cùng nhận 401. Làm refresh token một lần với Dio thế nào?","Dùng <code>QueuedInterceptor</code> (hoặc khóa thủ công) để các request 401 xếp hàng chờ một lần refresh. Refresh thành công thì retry request với token mới bằng một Dio instance riêng để không lặp lại interceptor. Thất bại thì xóa token, logout, reject cả hàng đợi. Token lưu trong flutter_secure_storage.",
+  "Several requests get a 401 at once. How do you refresh the token only once with Dio?","Use a <code>QueuedInterceptor</code> (or your own lock) so every request that hits a 401 waits on a single refresh. If the refresh succeeds, retry the requests with the new token through a separate Dio instance so the interceptor doesn't loop. If it fails, clear the tokens, log the user out and reject everything in the queue. Keep tokens in flutter_secure_storage."],
+ [5,"Chọn SharedPreferences, secure storage, Hive/Isar hay Drift/sqflite thế nào?","SharedPreferences: key-value nhỏ như settings. flutter_secure_storage: token và dữ liệu nhạy cảm (Keychain/Keystore). Hive/Isar: NoSQL nhanh, lưu object. Drift/sqflite: SQLite, dữ liệu quan hệ, query phức tạp, migration, hợp offline-first. Kiểm tra tình trạng bảo trì của package trên pub.dev trước khi chọn.",
+  "How do you choose between SharedPreferences, secure storage, Hive/Isar and Drift/sqflite?","SharedPreferences is for small key-value data like settings. flutter_secure_storage is for tokens and other sensitive data (Keychain/Keystore). Hive and Isar are fast NoSQL object stores. Drift and sqflite give you SQLite, relational data, complex queries and migrations, which suits offline-first apps. Check how actively a package is maintained on pub.dev before you commit to it."],
+ [5,"Push notification với Flutter hoạt động thế nào ở 3 trạng thái app?","Foreground: nhận qua <code>onMessage</code>; Android không tự hiện nên dùng flutter_local_notifications. Background/terminated: OS hiện notification; handler nền phải là hàm top-level có <code>@pragma('vm:entry-point')</code>. Khi bấm: <code>onMessageOpenedApp</code> (từ background) và <code>getInitialMessage</code> (từ terminated) để điều hướng. iOS cần xin quyền và APNs key.",
+  "How do push notifications work in Flutter across the three app states?","Foreground: you receive the message through <code>onMessage</code>, and since Android won't display it for you, use flutter_local_notifications. Background or terminated: the OS shows the notification, and the background handler must be a top-level function annotated with <code>@pragma('vm:entry-point')</code>. On tap, use <code>onMessageOpenedApp</code> (from background) and <code>getInitialMessage</code> (from terminated) to navigate. iOS also needs permission and an APNs key."],
+ [5,"Parse JSON 5MB làm UI đứng. Bạn xử lý thế nào?","<code>jsonDecode</code> chạy đồng bộ trên UI isolate. Chuyển sang <code>Isolate.run</code> hoặc <code>compute</code>, hoặc yêu cầu API phân trang. Dùng json_serializable/freezed để có model có type. Đo bằng DevTools timeline trước và sau.",
+  "Parsing a 5 MB JSON response freezes the UI. How do you fix it?","<code>jsonDecode</code> runs synchronously on the UI isolate. Move it to <code>Isolate.run</code> or <code>compute</code>, or get the API to paginate. Use json_serializable or freezed for typed models. Measure with the DevTools timeline before and after."],
+ [6,"Các loại platform channel và Pigeon dùng để làm gì?","MethodChannel: gọi hàm kiểu request/response (lấy % pin). EventChannel: stream sự kiện từ native (trạng thái sạc, cảm biến). BasicMessageChannel: trao đổi message tự do. Pigeon sinh code type-safe cho Dart, Kotlin và Swift nên tránh gõ sai tên method hay kiểu dữ liệu. Handler native chạy trên main thread, việc nặng phải chuyển sang background thread.",
+  "What kinds of platform channels are there, and what is Pigeon for?","A MethodChannel handles request/response calls, like reading the battery level. An EventChannel streams events from native code, like charging state or sensor data. A BasicMessageChannel exchanges free-form messages. Pigeon generates type-safe code for Dart, Kotlin and Swift, so you can't misspell a method name or mismatch a type. Native handlers run on the main thread, so heavy work has to move to a background thread."],
+ [6,"Khi nào dùng FFI thay vì platform channel?","Platform channel bất đồng bộ và phải serialize message, hợp gọi API hệ điều hành. <code>dart:ffi</code> gọi thẳng hàm C, đồng bộ và rất nhanh, hợp thư viện C/C++/Rust (mã hóa, xử lý ảnh, SQLite). ffigen sinh binding tự động. Đổi lại bạn phải tự quản lý bộ nhớ native.",
+  "When would you use FFI instead of a platform channel?","Platform channels are asynchronous and serialize every message, which is fine for calling OS APIs. <code>dart:ffi</code> calls C functions directly and synchronously, so it's much faster, and it suits C, C++ or Rust libraries for things like encryption, image processing or SQLite. ffigen generates the bindings. The trade-off is that you manage native memory yourself."],
+ [6,"Cấu hình flavor dev/staging/prod thế nào?","Android dùng <code>productFlavors</code>, iOS dùng scheme + build configuration; mỗi flavor có applicationId/bundle id, tên app, icon và Firebase project riêng. Phía Dart đọc cấu hình qua <code>--dart-define</code> hoặc <code>--dart-define-from-file</code>. Chạy <code>flutter run --flavor staging -t lib/main_staging.dart</code>. Không để secret thật trong dart-define vì nó vẫn nằm trong binary.",
+  "How do you set up dev, staging and prod flavors?","On Android, use <code>productFlavors</code>; on iOS, use schemes with build configurations. Each flavor gets its own application ID or bundle ID, app name, icon and Firebase project. On the Dart side, read configuration through <code>--dart-define</code> or <code>--dart-define-from-file</code>, and run <code>flutter run --flavor staging -t lib/main_staging.dart</code>. Don't put real secrets in dart-define, because they still end up in the binary."],
+ [6,"Impeller là gì và giải quyết vấn đề gì?","Impeller là rendering engine mới của Flutter, mặc định trên iOS và phần lớn thiết bị Android hiện nay. Nó biên dịch sẵn shader lúc build nên loại bỏ hiện tượng giật do biên dịch shader lần đầu thường gặp với Skia. Khi gặp lỗi hiển thị lạ, có thể tạm tắt Impeller để khoanh vùng xem lỗi nằm ở engine hay ở code.",
+  "What is Impeller, and what problem does it solve?","Impeller is Flutter's newer rendering engine and the default on iOS and on most current Android devices. It compiles shaders ahead of time, which removes the first-run shader compilation jank that was common with Skia. If you hit an odd rendering bug, you can temporarily disable Impeller to tell whether the problem is in the engine or in your code."],
+ [7,"App giật. Bạn điều tra thế nào?","Chạy profile mode, vì debug mode không phản ánh hiệu năng thật. DevTools Performance: xem frame vượt ngân sách (16ms ở 60Hz) do UI thread (build/layout nặng) hay raster thread (paint nặng: saveLayer, Opacity, clip, shadow). Bật Track widget rebuilds. Xử lý: const, tách widget để thu hẹp phạm vi rebuild, chuyển việc nặng sang isolate, RepaintBoundary cho phần vẽ lại thường xuyên, resize ảnh.",
+  "The app is janky. How do you investigate?","Run in profile mode, because debug mode doesn't reflect real performance. In the DevTools Performance view, check whether frames blow the budget (16 ms at 60 Hz) on the UI thread, which means heavy build or layout, or on the raster thread, which means expensive painting like saveLayer, Opacity, clips and shadows. Turn on widget rebuild tracking. Then fix: add const, split widgets to narrow what rebuilds, move heavy work to an isolate, add a RepaintBoundary around parts that repaint often, and resize images."],
+ [7,"Unit test, widget test, golden test, integration test khác nhau thế nào?","Unit test: logic thuần (repository, Cubit với bloc_test), mock bằng mocktail. Widget test: <code>pumpWidget</code>, thao tác <code>tester.tap</code>/<code>enterText</code>, <code>pump</code>/<code>pumpAndSettle</code>, kiểm tra bằng finder; chạy nhanh, không cần thiết bị. Golden test: so ảnh UI với ảnh chuẩn để bắt lỗi giao diện. Integration test (integration_test, Patrol) chạy trên thiết bị thật cho các flow chính.",
+  "How do unit, widget, golden and integration tests differ?","Unit tests cover pure logic, such as a repository or a Cubit with bloc_test, with dependencies mocked by mocktail. Widget tests use <code>pumpWidget</code>, interact through <code>tester.tap</code> and <code>enterText</code>, advance with <code>pump</code> or <code>pumpAndSettle</code>, and assert with finders; they're fast and don't need a device. Golden tests compare a rendered screenshot against a reference image to catch visual regressions. Integration tests (integration_test, Patrol) run the main flows on a real device."],
+ [7,"Nguồn memory leak hay gặp trong Flutter?","AnimationController, TextEditingController, ScrollController, FocusNode không dispose; StreamSubscription và Timer không cancel; listener không remove; giữ BuildContext hoặc State trong closure sống lâu (singleton, cache). Dùng DevTools Memory để chụp snapshot, so sánh, tìm State đã dispose mà vẫn còn. leak_tracker giúp phát hiện ngay trong test.",
+  "What are the usual sources of memory leaks in Flutter?","AnimationControllers, TextEditingControllers, ScrollControllers and FocusNodes that are never disposed; StreamSubscriptions and Timers that are never cancelled; listeners that are never removed; and a BuildContext or State captured in a long-lived closure such as a singleton or cache. Use the DevTools Memory view to take and diff snapshots and look for disposed States that are still alive. leak_tracker can catch these in your tests."],
+ [7,"Bật obfuscate thì stack trace trên Crashlytics không đọc được. Làm sao?","Build với <code>--obfuscate --split-debug-info=&lt;dir&gt;</code>, lưu file symbol của từng bản build và upload lên Crashlytics hoặc Sentry. Có thể tự dịch bằng <code>flutter symbolize</code>. Thiếu đúng file symbol của bản đó thì không đọc được, nên đưa bước upload vào CI.",
+  "Obfuscation makes Crashlytics stack traces unreadable. How do you deal with it?","Build with <code>--obfuscate --split-debug-info=&lt;dir&gt;</code>, keep the symbol files for every build, and upload them to Crashlytics or Sentry. You can also decode a trace locally with <code>flutter symbolize</code>. Without the symbols from that exact build you can't read the trace, so make the upload a CI step."],
+ [8,"Shorebird làm được gì và không làm được gì?","Shorebird là code push cho Flutter: đẩy bản vá code Dart tới người dùng mà không qua review store. Không đổi được code native, thêm plugin mới hay thay asset phía native. Vẫn phải tuân thủ chính sách store và quản lý patch theo từng release. Kết hợp với staged rollout trên Play và App Store.",
+  "What can Shorebird do, and what can't it do?","Shorebird is code push for Flutter: it ships patches to your Dart code without going through store review. It can't change native code, add new plugins or replace native assets. You still have to follow store policy and track patches per release. Pair it with staged rollouts on Google Play and the App Store."],
+ [8,"Mô tả pipeline CI/CD bạn đề xuất cho app Flutter.","PR: <code>flutter analyze</code>, <code>dart format --set-exit-if-changed</code>, <code>flutter test</code> kèm golden. Merge main: build flavor staging, phân phối qua Firebase App Distribution hoặc TestFlight. Tag release: build production với build number tự tăng, ký bằng secret của CI, upload bằng Fastlane hoặc Codemagic, staged rollout, upload symbol và theo dõi Crashlytics. Cache pub và Gradle để build nhanh.",
+  "Describe the CI/CD pipeline you'd propose for a Flutter app.","On every PR: <code>flutter analyze</code>, <code>dart format --set-exit-if-changed</code>, and <code>flutter test</code> including goldens. On merge to main: build the staging flavor and distribute it through Firebase App Distribution or TestFlight. On a release tag: build production with an auto-incremented build number, sign it with keys stored as CI secrets, upload with Fastlane or Codemagic, start a staged rollout, upload symbols and watch Crashlytics. Cache pub and Gradle to keep builds fast."]
+];
+
+const FL_IV=[
+ {c:"Dart",e:"Dart",q:[
+  ["J","final và const khác nhau thế nào?","final gán một lần lúc runtime; const là hằng compile-time, được canonicalize; widget const giảm rebuild.","What's the difference between final and const?","final is assigned once at runtime; const is a compile-time constant and canonicalized; const widgets cut down on rebuilds."],
+  ["J","async/await có làm code chạy song song không?","Không; chỉ nhường event loop khi chờ I/O; việc nặng về CPU cần isolate.","Does async/await make code run in parallel?","No. It yields to the event loop while waiting on I/O; CPU-heavy work needs an isolate."],
+  ["M","Khi nào dùng mixin, extension, abstract class?","Chia sẻ hành vi không qua kế thừa; thêm method cho type có sẵn; định nghĩa interface/contract.","When do you use a mixin, an extension or an abstract class?","Sharing behavior without inheritance; adding methods to existing types; defining an interface or contract."],
+  ["M","freezed và json_serializable giải quyết vấn đề gì?","Data class bất biến, copyWith, ==, union; parse JSON có type; build_runner.","What problems do freezed and json_serializable solve?","Immutable data classes with copyWith and value equality, unions; typed JSON parsing; build_runner code generation."],
+  ["S","Records, patterns, sealed class của Dart 3 đã thay đổi cách bạn viết code thế nào?","State xử lý đủ trường hợp với sealed; destructuring; bớt class tạm; ví dụ thực tế.","How have Dart 3 records, patterns and sealed classes changed the way you write code?","Exhaustive state handling with sealed classes, destructuring, fewer throwaway classes, a real example."]]},
+ {c:"Flutter core",e:"Flutter core",q:[
+  ["J","StatelessWidget và StatefulWidget khác nhau thế nào?","Không có state thay đổi vs có State riêng; setState; khi nào thực sự cần.","How do StatelessWidget and StatefulWidget differ?","No mutable state vs its own State object; setState; when you actually need one."],
+  ["J","Hot reload và hot restart khác gì?","Reload chèn code mới, giữ state; restart chạy lại main, mất state; đổi initState hoặc biến global cần restart.","What's the difference between hot reload and hot restart?","Reload injects new code and keeps state; restart re-runs main and loses state; changes to initState or globals need a restart."],
+  ["M","Giải thích Widget, Element và RenderObject.","Cấu hình / instance sống trong cây / layout và paint; rebuild không đồng nghĩa repaint.","Explain widgets, elements and render objects.","Configuration / the live instance in the tree / layout and painting; a rebuild doesn't mean a repaint."],
+  ["M","InheritedWidget hoạt động thế nào? Provider dựa vào nó ra sao?","dependOnInheritedWidgetOfExactType đăng ký phụ thuộc; updateShouldNotify; Provider bọc lại cho dễ dùng.","How does InheritedWidget work, and how does Provider build on it?","dependOnInheritedWidgetOfExactType registers a dependency; updateShouldNotify; Provider wraps it in a friendlier API."],
+  ["S","Bạn tổ chức một app Flutter lớn thế nào?","Feature-first, clean architecture vừa đủ, DI, package nội bộ hoặc monorepo (melos), lint chung.","How do you structure a large Flutter app?","Feature-first folders, just enough clean architecture, DI, internal packages or a monorepo (melos), shared lint rules."]]},
+ {c:"State management & kiến trúc",e:"State management & architecture",q:[
+  ["J","setState làm gì? Khi nào không nên dùng?","Đánh dấu element dirty và lên lịch rebuild; không dùng cho state chia sẻ giữa nhiều màn.","What does setState do, and when shouldn't you use it?","It marks the element dirty and schedules a rebuild; it's not for state shared across screens."],
+  ["M","Dự án mới bạn chọn Bloc hay Riverpod? Vì sao?","Quy mô team, độ phức tạp, khả năng test, boilerplate, kinh nghiệm của team; không trả lời theo sở thích.","Would you pick Bloc or Riverpod for a new project? Why?","Team size, complexity, testability, boilerplate, the team's experience; not personal preference."],
+  ["M","Làm search có debounce với Bloc thế nào?","Event transformer kết hợp debounce và restartable (bloc_concurrency / stream_transform), bỏ request cũ.","How do you implement debounced search with Bloc?","An event transformer that combines debounce with restartable (bloc_concurrency / stream_transform) and drops stale requests."],
+  ["S","Thiết kế offline-first cho app ghi chép thu chi bằng Flutter.","Drift làm nguồn hiển thị, outbox, sync khi có mạng (connectivity_plus), xử lý conflict, idempotency key, WorkManager / background fetch.","Design offline-first support for an expense-tracking app in Flutter.","Drift drives the UI, an outbox queues changes, sync on reconnect (connectivity_plus), conflict resolution, idempotency keys, WorkManager or background fetch."],
+  ["S","Khi nào Clean Architecture là thừa?","App nhỏ, use case chỉ chuyển tiếp lời gọi; chi phí boilerplate; áp dụng tương xứng.","When is Clean Architecture overkill?","Small apps, use cases that only forward calls, the cost of boilerplate; apply it in proportion."]]},
+ {c:"Native & nền tảng",e:"Native & platform",q:[
+  ["M","Bạn đã dùng platform channel chưa? Cho ví dụ.","MethodChannel/EventChannel, Pigeon, xử lý PlatformException, thread.","Have you used platform channels? Give an example.","MethodChannel or EventChannel, Pigeon, handling PlatformException, threading."],
+  ["M","Cấu hình flavor dev/staging/prod thế nào?","productFlavors, iOS scheme, dart-define, Firebase riêng từng môi trường.","How do you set up dev, staging and prod flavors?","Android productFlavors, iOS schemes, dart-define, a Firebase project per environment."],
+  ["S","Nâng cấp Flutter SDK và các package lớn thế nào để ít rủi ro?","Đọc breaking change, flutter pub outdated, nâng theo nhóm, chạy test và golden, kiểm plugin native, staged rollout.","How do you upgrade the Flutter SDK and major packages with minimal risk?","Read the breaking changes, run flutter pub outdated, upgrade in batches, run tests and goldens, check native plugins, ship with a staged rollout."],
+  ["S","Khi nào dùng FFI thay vì platform channel?","Thư viện C/C++/Rust, cần gọi đồng bộ, hiệu năng; tự quản lý bộ nhớ.","When would you use FFI instead of a platform channel?","C, C++ or Rust libraries, synchronous calls, performance; managing native memory yourself."]]},
+ {c:"Hiệu năng, test, debug",e:"Performance, testing & debugging",q:[
+  ["J","Bạn debug app Flutter bằng công cụ gì?","DevTools (Inspector, Network, Logging), breakpoint, debugPrint.","What do you use to debug a Flutter app?","DevTools (Inspector, Network, Logging), breakpoints, debugPrint."],
+  ["M","App giật khi scroll. Bạn điều tra thế nào?","Profile mode, DevTools Performance, UI thread hay raster thread, theo dõi rebuild, ảnh, saveLayer.","The app stutters while scrolling. How do you investigate?","Profile mode, the DevTools Performance view, UI vs raster thread, rebuild tracking, images, saveLayer."],
+  ["M","Viết widget test cho màn login thế nào?","pumpWidget với ProviderScope/BlocProvider mock, enterText, tap, pumpAndSettle, kiểm tra lỗi hoặc điều hướng.","How would you write a widget test for a login screen?","pumpWidget with a mocked ProviderScope or BlocProvider, enterText, tap, pumpAndSettle, then assert on errors or navigation."],
+  ["S","Golden test có lợi và hại gì?","Bắt lỗi UI; dễ vỡ theo font và nền tảng; chạy trong môi trường CI cố định; alchemist.","What are the pros and cons of golden tests?","They catch UI regressions; they're brittle across fonts and platforms; run them in a fixed CI environment; alchemist helps."],
+  ["S","Giảm kích thước app Flutter thế nào?","--analyze-size, App Bundle / split-per-abi, tree shaking icon, nén ảnh, deferred components, bỏ package thừa.","How do you reduce a Flutter app's size?","--analyze-size, App Bundles or split-per-abi, icon tree shaking, compressed images, deferred components, dropping unused packages."]]},
+ {c:"Release & CI/CD",e:"Release & CI/CD",q:[
+  ["J","Các bước đưa app Flutter lên Google Play?","Keystore, key.properties, flutter build appbundle, Play Console, internal testing.","What are the steps to publish a Flutter app on Google Play?","Keystore, key.properties, flutter build appbundle, Play Console, internal testing."],
+  ["M","Bạn đã dùng Codemagic, GitHub Actions hay Fastlane thế nào?","Pipeline thực tế, signing, phân môi trường, thời gian build.","How have you used Codemagic, GitHub Actions or Fastlane?","A real pipeline, signing, environments, build times."],
+  ["M","Shorebird code push có rủi ro gì?","Chỉ vá được Dart, chính sách store, quản lý patch theo release, rollback.","What are the risks of Shorebird code push?","Dart-only patches, store policy, tracking patches per release, rollback."],
+  ["S","Thiết kế pipeline CI/CD cho app Flutter có 3 flavor.","PR check, build theo flavor, signing trong secret, phân phối cho tester, staged rollout, upload symbol.","Design a CI/CD pipeline for a Flutter app with three flavors.","PR checks, per-flavor builds, signing keys in secrets, tester distribution, staged rollout, symbol uploads."]]},
+ {c:"System design mobile",e:"Mobile system design",q:[
+  ["S","Thiết kế màn chat realtime bằng Flutter.","web_socket_channel có reconnect, optimistic UI, cache bằng Drift, phân trang ngược, upload ảnh nền, FCM khi offline.","Design a real-time chat screen in Flutter.","web_socket_channel with reconnects, optimistic UI, a Drift cache, reverse pagination, background image uploads, FCM when offline."],
+  ["S","Thiết kế feed vô hạn có ảnh và video.","Cursor pagination, ListView.builder hoặc Slivers, cache ảnh, chỉ phát video đang hiện (visibility_detector), dispose controller.","Design an infinite feed with images and video.","Cursor pagination, ListView.builder or slivers, image caching, only playing the visible video (visibility_detector), disposing controllers."],
+  ["S","Một codebase Flutter cho cả mobile và web: cần lưu ý gì?","Responsive/adaptive, plugin không hỗ trợ web, routing theo URL, SEO hạn chế, kích thước bundle, web renderer.","One Flutter codebase for mobile and web: what do you watch out for?","Responsive and adaptive layouts, plugins without web support, URL-based routing, limited SEO, bundle size, the web renderer."]]},
+ {c:"Hành vi (behavioral)",e:"Behavioral",q:[
+  ["J","Kể về app Flutter bạn tự hào nhất.","STAR: bối cảnh, vai trò của bạn, kỹ thuật, kết quả có số.","Tell me about the Flutter app you're proudest of.","STAR: the context, your role, the technical work, results with numbers."],
+  ["M","Một bug production nghiêm trọng bạn từng xử lý.","Phát hiện thế nào, khoanh vùng, hotfix, postmortem, phòng ngừa.","Walk me through a serious production bug you dealt with.","How it was spotted, how you narrowed it down, the hotfix, the postmortem, prevention."],
+  ["M","Bạn dùng AI coding tool (Claude, Cursor) trong công việc thế nào?","Việc nào giao cho AI, cách kiểm tra code sinh ra, một lần AI sai và bạn phát hiện.","How do you use AI coding tools like Claude or Cursor in your work?","What you hand off to AI, how you verify what it generates, a time it got something wrong and you caught it."],
+  ["S","Bạn mentor junior hoặc nâng chất lượng code của team thế nào?","Review có hướng dẫn, tài liệu, pair programming, lint rule, đo kết quả.","How do you mentor juniors or raise the team's code quality?","Reviews that teach, documentation, pair programming, lint rules, measuring the results."]]},
+ {c:"Bạn nên hỏi lại nhà tuyển dụng",e:"Questions to ask the interviewer",q:[
+  ["J","App dùng state management gì, đang ở phiên bản Flutter nào?","Cho biết độ cũ của codebase và khối lượng nâng cấp.","Which state management does the app use, and which Flutter version is it on?","Tells you how old the codebase is and how much upgrade work is waiting."],
+  ["M","Team có dev native không? Ai viết plugin khi cần?","Ai xử lý phần native khi có vấn đề.","Are there native developers on the team? Who writes plugins when you need one?","Who handles native work when it comes up."],
+  ["M","Các vòng kỹ thuật có cho dùng AI không?","Hỏi trước để chuẩn bị đúng cách.","Are AI tools allowed in the technical rounds?","Ask up front so you can prepare the right way."],
+  ["S","Vấn đề kỹ thuật lớn nhất của app hiện nay là gì?","Hiểu kỳ vọng thật cho vị trí.","What's the biggest technical challenge in the app right now?","Shows you what they really expect from this role."]]}
+];
+
+/* ---------------- App ---------------- */
+const TR={
+ rn:{freq:RN_FREQ,total:RN_FREQ_TOTAL,weeks:RN_WEEKS,quiz:RN_QUIZ,iv:RN_IV,key:'rn8w-done',qf:0,lf:'all'},
+ fl:{freq:FL_FREQ,total:FL_FREQ_TOTAL,weeks:FL_WEEKS,quiz:FL_QUIZ,iv:FL_IV,key:'fl8w-done',qf:0,lf:'all'}
+};
+const UI={
+ vi:{all:'Tất cả',week:'Tuần ',lv:{J:'Junior',M:'Middle',S:'Senior'},n:'câu',pts:'Ý cần có:',topics:'chủ đề'},
+ en:{all:'All',week:'Week ',lv:{J:'Junior',M:'Mid-level',S:'Senior'},n:'questions',pts:'What they want to hear:',topics:'topics'}
+};
+const SECS=['jd','plan','quiz','iv','lc'];
+let prefs={track:'rn',sec:'jd',lang:'vi'};
+try{Object.assign(prefs,JSON.parse(localStorage.getItem('iv-prefs')||'{}'))}catch(e){}
+const h=location.hash.slice(1).split('-');
+if(TR[h[0]])prefs.track=h[0];
+if(SECS.includes(h[1]))prefs.sec=h[1];
+if(!SECS.includes(prefs.sec))prefs.sec='jd';
+if(!TR[prefs.track])prefs.track='rn';
+
+const $=id=>document.getElementById(id);
+function savePrefs(){try{localStorage.setItem('iv-prefs',JSON.stringify(prefs))}catch(e){}}
+
+function renderFreq(t){const T=TR[t],el=$(t+'-freq');if(!el)return;
+ el.innerHTML=T.freq.map(([s,n,nice])=>`<div class="freq-row"><span>${s}</span><span class="bar ${nice?'nice':''}"><i style="width:${n/T.total*100}%"></i></span><span class="n">${n}/${T.total}</span></div>`).join('');}
+
+function renderWeeks(t){const T=TR[t],el=$(t+'-weeks');if(!el)return;
+ let done={};try{done=JSON.parse(localStorage.getItem(T.key)||'{}')}catch(e){}
+ el.innerHTML=T.weeks.map((w,i)=>`
  <div class="week"><div class="idx"><span>TUẦN</span><b>${i+1}</b></div>
   <div class="body"><h3>${w.t}</h3><p class="muted">${w.g}</p>
-   <ul class="topics">${w.k.map((k,j)=>`<li><label><input type="checkbox" id="w${i}k${j}" data-k="w${i}k${j}" ${done['w'+i+'k'+j]?'checked':''}><span>${k}</span></label></li>`).join('')}</ul>
+   <ul class="topics">${w.k.map((k,j)=>`<li><label><input type="checkbox" id="${t}w${i}k${j}" data-k="w${i}k${j}" ${done['w'+i+'k'+j]?'checked':''}><span>${k}</span></label></li>`).join('')}</ul>
    <div class="lab"><b>Lab</b>${w.lab}</div>
    <p class="mono muted">Tài liệu: ${w.r}</p></div></div>`).join('');
-function upd(){const n=Object.values(done).filter(Boolean).length;const p=Math.round(n/total*100);
- document.getElementById('pct').textContent=p+'%';document.getElementById('pctbar').style.width=p+'%';
- document.getElementById('pcttxt').textContent=`${n}/${total} chủ đề`;}
-document.getElementById('weeks').addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;done[k]=e.target.checked;
- try{localStorage.setItem(KEY,JSON.stringify(done))}catch(_){}upd();});
-upd();
+ const total=T.weeks.reduce((a,w)=>a+w.k.length,0);
+ const upd=()=>{const n=Object.values(done).filter(Boolean).length,p=total?Math.round(n/total*100):0;
+  $(t+'-pct').textContent=p+'%';$(t+'-pctbar').style.width=p+'%';$(t+'-pcttxt').textContent=`${n}/${total} chủ đề`;};
+ el.onchange=e=>{const k=e.target.dataset.k;if(!k)return;done[k]=e.target.checked;try{localStorage.setItem(T.key,JSON.stringify(done))}catch(_){}upd();};
+ upd();}
 
-const QUIZ=[
- [1,"Thứ tự log của đoạn code sau là gì?<pre>console.log(1);\nsetTimeout(()=>console.log(2),0);\nPromise.resolve().then(()=>console.log(3));\nconsole.log(4);</pre>","<b>1 → 4 → 3 → 2.</b> Code đồng bộ chạy trước. Callback của Promise vào microtask queue, được xử lý ngay khi call stack rỗng. setTimeout vào macrotask queue nên chạy sau toàn bộ microtask."],
- [1,"Closure là gì? Cho một ví dụ bug thực tế liên quan tới closure trong React.","Closure là hàm “nhớ” biến của scope nơi nó được tạo. Bug điển hình: <code>setInterval(()=>setCount(count+1),1000)</code> trong useEffect với deps rỗng, <code>count</code> luôn là 0 (stale closure). Sửa: dùng updater <code>setCount(c=>c+1)</code> hoặc đưa count vào deps / dùng ref."],
- [1,"<code>interface</code> và <code>type</code> khác nhau thế nào? Khi nào dùng discriminated union?","interface mở rộng được (declaration merging, extends), phù hợp cho object shape public. type mô tả được union, tuple, mapped/conditional type. Discriminated union (<code>{status:'loading'}|{status:'ok',data:T}|{status:'error',error:E}</code>) dùng cho state có nhiều trạng thái, TS tự narrow theo field <code>status</code> và loại bỏ trạng thái không hợp lệ."],
- [1,"Promise.all và Promise.allSettled khác gì? Gọi 3 API mà 1 cái lỗi thì sao?","all reject ngay khi một promise reject (fail-fast), các kết quả thành công bị mất. allSettled chờ tất cả và trả về mảng <code>{status, value|reason}</code>. Màn dashboard gọi 3 API độc lập nên dùng allSettled để hiện phần thành công."],
- [2,"Khi nào một component React re-render?","Khi state của nó đổi, khi component cha re-render (dù props không đổi), hoặc khi context mà nó dùng đổi giá trị. Props đổi không phải nguyên nhân trực tiếp. Re-render là do cha render lại. React.memo chặn trường hợp “cha render” nếu props shallow-equal."],
- [2,"useMemo/useCallback có nên bọc mọi thứ không?","Không. Chúng có chi phí (so sánh deps, giữ bộ nhớ). Chỉ dùng khi: tính toán nặng; giá trị/hàm truyền vào component đã memo hoặc vào deps của hook khác; tham chiếu ổn định cần cho item của FlatList. Đo bằng Profiler trước. React Compiler (React 19) tự memo nên giảm nhu cầu viết tay."],
- [2,"Fetch dữ liệu trong useEffect có thể gặp race condition thế nào? Cách xử lý?","User đổi tab A→B nhanh, response A về sau B và ghi đè. Xử lý: cleanup với AbortController hoặc cờ <code>ignore=true</code>; tốt hơn là dùng TanStack Query / RTK Query vốn đã xử lý cache, hủy và dedupe."],
- [2,"Tại sao không nên dùng index làm key?","Khi list thêm/xóa/sắp xếp, index của item thay đổi nên React gán nhầm state/DOM cũ cho item mới. Lỗi thấy rõ ở TextInput, checkbox, animation. Dùng id ổn định từ dữ liệu."],
- [3,"FlatList bị giật với 2.000 item. Bạn làm gì?","1) Đo trước (Perf Monitor xem JS FPS hay UI FPS tụt). 2) Item bọc React.memo, renderItem/keyExtractor ổn định bằng useCallback. 3) <code>getItemLayout</code> nếu chiều cao cố định. 4) Chỉnh <code>windowSize</code>, <code>initialNumToRender</code>, <code>maxToRenderPerBatch</code>. 5) Ảnh có cache và resize đúng kích thước. 6) Tránh logic nặng trong item. 7) Cân nhắc FlashList (tái sử dụng view)."],
- [3,"Flexbox trong RN khác web như thế nào?","flexDirection mặc định là column. Mọi View đều là flex container. flex: số dương là grow theo tỉ lệ. Không có cascade CSS, style không kế thừa (trừ Text lồng Text). Đơn vị là dp không có px/em. Không có grid (trừ thư viện)."],
- [3,"Reanimated chạy animation trên UI thread nghĩa là gì và vì sao quan trọng?","Code trong worklet được chạy trên UI thread nên animation không phụ thuộc JS thread. Khi JS bận (parse JSON, render list) animation vẫn 60/120fps. Animated API cũ chỉ đạt điều đó với useNativeDriver và chỉ cho transform/opacity."],
- [4,"Server state và client state là gì? Bạn chọn công cụ nào cho từng loại?","Server state: dữ liệu thuộc backend, cần cache, đồng bộ, refetch (danh sách giao dịch). Dùng TanStack Query hoặc RTK Query. Client state: UI/session (theme, filter, form nháp). Dùng useState, Zustand hoặc Redux slice. Nhét server state vào Redux tự viết dẫn tới phải tự lo loading/error/cache."],
- [4,"Redux-Saga dùng để làm gì? So sánh với thunk.","Saga xử lý side effect bằng generator: dễ làm flow phức tạp (hủy bằng takeLatest, race, debounce, chạy nền, polling), test dễ vì yield trả về mô tả effect. Thunk đơn giản hơn, phù hợp async một bước. Dự án mới thường dùng RTK + RTK Query/listener middleware thay saga."],
- [4,"Auth flow trong React Navigation làm thế nào cho đúng?","Render có điều kiện hai nhóm screen theo trạng thái token (<code>isSignedIn ? AppStack : AuthStack</code>), không dùng navigate('Home') sau login. Lúc khởi động hiển thị splash trong khi đọc token từ secure storage. Khi logout state đổi, navigator tự chuyển và xóa history."],
- [4,"AsyncStorage, MMKV, SQLite: chọn cái nào?","AsyncStorage: key-value async, chậm, phù hợp dữ liệu nhỏ. MMKV: key-value đồng bộ qua JSI, rất nhanh, hỗ trợ mã hóa, tốt cho settings/persist store. SQLite / WatermelonDB / Realm: dữ liệu quan hệ, truy vấn, lượng lớn, offline-first. Token phải ở Keychain/Keystore."],
- [5,"Nhiều request cùng nhận 401. Làm sao chỉ gọi refresh token một lần?","Interceptor giữ một biến <code>refreshPromise</code>. Request đầu tiên gặp 401 tạo promise refresh, các request sau chờ cùng promise đó rồi retry với token mới. Refresh lỗi thì logout và reject toàn bộ hàng đợi. Đánh dấu request đã retry để không lặp vô hạn."],
- [5,"Push notification hoạt động thế nào ở 3 trạng thái app?","Foreground: app nhận message, tự quyết định hiện local notification. Background: OS hiện notification, khi bấm app nhận event mở. Killed: OS hiện, khi bấm lấy initial notification lúc khởi động để điều hướng. Android cần notification channel, iOS cần xin quyền và APNs key. Data-only message có giới hạn trên iOS."],
- [5,"Giữ kết nối WebSocket ổn định trên mobile thế nào?","Reconnect với exponential backoff + jitter; heartbeat ping/pong để phát hiện kết nối chết; lắng nghe NetInfo và AppState (đóng khi background lâu, mở lại và đồng bộ lại khi active); dedupe message theo id; fallback sang refetch REST khi reconnect."],
- [6,"Bridge cũ và JSI khác nhau thế nào?","Bridge: JS và native giao tiếp qua message JSON bất đồng bộ, có batch, tốn serialize và không gọi đồng bộ được. JSI: interface C++ cho JS giữ tham chiếu trực tiếp tới object host, gọi đồng bộ, không serialize. JSI là nền của TurboModules, Fabric, Reanimated, MMKV, VisionCamera."],
- [6,"Fabric và TurboModules giải quyết vấn đề gì?","Fabric: renderer mới viết bằng C++, shadow tree dùng chung, layout đồng bộ khi cần, hỗ trợ concurrent React (Suspense, transition). TurboModules: native module load lười khi dùng lần đầu (startup nhanh hơn), có type an toàn nhờ Codegen sinh từ spec TypeScript, gọi qua JSI."],
- [6,"Khi nào cần viết native module? Bạn đã/sẽ làm thế nào?","Khi cần API hệ điều hành chưa có thư viện, SDK native của bên thứ ba, hoặc tác vụ nặng cần tốc độ native. Cách nhanh nhất hiện nay: Expo Modules API (Kotlin/Swift, khai báo Function, AsyncFunction, Events), dùng được cả trong app bare. Cần chú ý thread, permission, xử lý lỗi trả về Promise reject."],
- [6,"Hermes mang lại gì?","Engine JS tối ưu cho mobile: biên dịch sẵn sang bytecode lúc build nên startup nhanh, ít RAM, bundle nhỏ. Là engine mặc định. Debug qua React Native DevTools (Chrome DevTools protocol)."],
- [7,"App khởi động chậm 4 giây. Quy trình điều tra?","Đo từng giai đoạn: native init → load bundle → JS chạy → màn đầu render → dữ liệu đầu tiên. Công cụ: Android Studio/Xcode Instruments, Hermes profile, log mốc thời gian. Xử lý: bật Hermes, inline requires/lazy load màn, giảm import nặng ở root, trì hoãn SDK không cần ngay (analytics), cache dữ liệu màn đầu, giữ splash cho tới khi sẵn sàng."],
- [7,"Test gì bằng Jest + RNTL, test gì bằng E2E?","RNTL: hành vi component/màn hình như người dùng thấy (getByRole, getByText, fireEvent/userEvent), mock API và module native. Nhanh, chạy mỗi PR. E2E (Detox/Maestro): vài flow quan trọng chạy trên app thật (login, thanh toán). Chậm và dễ flaky nên giữ ít. Unit thuần cho util, reducer, hook logic."],
- [7,"Các nguồn memory leak hay gặp trong RN?","Listener (AppState, Keyboard, NetInfo, EventEmitter) không remove trong cleanup; setInterval/setTimeout chưa clear; subscription WebSocket/Firebase không hủy; setState sau unmount trên promise; ảnh lớn không resize; giữ tham chiếu trong module scope. Phát hiện: memory profiler Android Studio / Instruments, Hermes heap snapshot."],
- [8,"OTA update làm được gì và không làm được gì?","Được: đổi JS bundle và asset (sửa bug, đổi UI) mà không qua review store. Không được: thay đổi code native, thêm thư viện native, đổi permission. Cần quản lý runtime version để bundle mới không chạy trên binary không tương thích. Phải tuân thủ chính sách store (không đổi bản chất app)."],
- [8,"Mô tả quy trình release mà bạn đề xuất cho một team 4 dev.","Trunk-based với feature flag; mỗi PR chạy lint + typecheck + test; merge main build bản internal (TestFlight / Internal testing) tự động; QA trên staging; tag release → build production, tăng version tự động; staged rollout 10% → 50% → 100% theo dõi crash-free rate trên Sentry/Crashlytics; hotfix JS qua OTA, native qua build mới."],
- [6,"Bạn nâng cấp app từ RN 0.7x lên bản mới nhất thế nào?","1) Đọc changelog và breaking change từng bản. 2) Dùng React Native Upgrade Helper để xem diff file native (Gradle, Podfile, AppDelegate). Với Expo thì <code>npx expo install --fix</code> theo từng SDK. 3) Kiểm thư viện bên thứ ba có hỗ trợ New Architecture chưa (React Native Directory), thay hoặc patch nếu cần. 4) Nâng từng bước nếu cách xa nhiều bản. 5) Chạy toàn bộ test + E2E, test tay cả 2 nền tảng, release theo staged rollout."],
- [7,"Sentry báo crash tăng sau bản release mới. Bạn xử lý thế nào?","Xem crash-free rate theo release và nhóm issue mới xuất hiện. Đọc stack trace đã symbolicate (cần upload source map / dSYM / mapping), xem breadcrumb, lọc theo OS, thiết bị, phiên bản. Đánh giá mức ảnh hưởng: tạm dừng staged rollout nếu nghiêm trọng. Tái hiện, sửa, hotfix qua OTA nếu lỗi ở JS hoặc build mới nếu ở native. Cuối cùng thêm test và alert để không lặp lại."],
- [8,"Staged rollout là gì, làm thế nào trên từng nền tảng?","Phát hành dần cho một phần người dùng để phát hiện lỗi sớm. Google Play: chọn % rollout, có thể halt. App Store: phased release 7 ngày, có thể pause. EAS Update: rollout theo %, rollback về bản trước. Theo dõi crash-free rate, ANR, chỉ số business trước khi tăng %."],
- [8,"Android build release crash nhưng debug thì không. Bạn kiểm tra gì?","Đọc logcat của bản release. Nghi phạm thường gặp: ProGuard/R8 xóa class dùng qua reflection (thêm keep rule), biến môi trường khác nhau, khác biệt Hermes/minify, lỗi chỉ hiện khi không có Metro, cấu hình signing. Bật source map và mapping file để đọc stack trace."]
-];
-const WN=["Tất cả",...WEEKS.map((_,i)=>"Tuần "+(i+1))];
-let qf=0;
-function renderQuiz(){document.getElementById('qfilter').innerHTML=WN.map((n,i)=>`<button aria-pressed="${qf===i}" data-i="${i}">${n}</button>`).join('');
- document.getElementById('quizlist').innerHTML=QUIZ.filter(q=>qf===0||q[0]===qf).map(q=>`<details><summary><span><span class="mono muted">T${q[0]} · </span>${q[1]}</span></summary><div class="ans">${q[2]}</div></details>`).join('');}
-document.getElementById('qfilter').addEventListener('click',e=>{if(e.target.dataset.i==null)return;qf=+e.target.dataset.i;renderQuiz();});
-renderQuiz();
+function renderQuiz(t){const T=TR[t],L=UI[prefs.lang],en=prefs.lang==='en',f=$(t+'-qfilter'),list=$(t+'-quizlist');if(!f)return;
+ const weeks=[...new Set(T.quiz.map(q=>q[0]))].sort((a,b)=>a-b);
+ f.innerHTML=[0,...weeks].map(w=>`<button aria-pressed="${T.qf===w}" data-w="${w}">${w?L.week+w:L.all}</button>`).join('');
+ f.onclick=e=>{const b=e.target.closest('button');if(!b)return;T.qf=+b.dataset.w;renderQuiz(t);};
+ list.innerHTML=T.quiz.filter(q=>!T.qf||q[0]===T.qf).map(q=>`<details><summary><span><span class="mono muted">${en?'W':'T'}${q[0]} · </span>${en?q[3]:q[1]}</span></summary><div class="ans">${en?q[4]:q[2]}</div></details>`).join('');}
 
-const IV=[
- {c:"JavaScript / TypeScript",q:[
-  ["J","Phân biệt var, let, const. Hoisting là gì?","Scope function vs block; TDZ; const không có nghĩa là immutable với object."],
-  ["J","== khác === thế nào? Truthy/falsy?","Ép kiểu ngầm; luôn dùng ===; 0, '', null, undefined, NaN là falsy."],
-  ["M","Giải thích event loop và vì sao JS thread bận làm app đơ.","Microtask/macrotask; RN render cần JS gửi lệnh; tác vụ nặng chia nhỏ hoặc chuyển native/worklet."],
-  ["M","Viết hàm debounce. Viết type cho hàm debounce có generic.","Closure giữ timer; <code>&lt;T extends (...a:any[])=&gt;void&gt;</code>, Parameters&lt;T&gt;."],
-  ["S","Bạn thiết kế type cho response API thế nào để an toàn runtime?","TS chỉ kiểm lúc compile; validate bằng zod/valibot tại biên; sinh type từ OpenAPI."]]},
- {c:"React",q:[
-  ["J","Props và state khác nhau thế nào?","Props từ cha, read-only; state nội bộ, đổi gây re-render."],
-  ["J","useEffect với deps [], [a], không có deps khác nhau ra sao?","Chạy 1 lần sau mount / khi a đổi / mỗi lần render; cleanup chạy trước lần sau và khi unmount."],
-  ["M","Context có vấn đề gì về hiệu năng? Giải pháp?","Mọi consumer re-render khi value đổi; tách context, memo value, dùng store có selector (Zustand, Redux)."],
-  ["M","Kể một lần bạn sửa vấn đề re-render.","Dùng Profiler tìm nguyên nhân, số liệu trước/sau, giải pháp cụ thể."],
-  ["S","React 19 / React Compiler thay đổi cách bạn viết code thế nào?","Auto-memo, Actions, use(), giảm useMemo/useCallback tay; điều kiện tuân thủ Rules of React."]]},
- {c:"React Native core",q:[
-  ["J","ScrollView và FlatList khác nhau thế nào?","ScrollView render hết; FlatList ảo hóa, chỉ render vùng nhìn thấy."],
-  ["J","Làm sao viết code khác nhau cho iOS và Android?","Platform.OS, Platform.select, file .ios/.android."],
-  ["M","Xử lý bàn phím che input trên Android và iOS thế nào?","KeyboardAvoidingView behavior khác nhau, windowSoftInputMode, react-native-keyboard-controller."],
-  ["M","Bạn tổ chức thư mục project RN thế nào?","Feature-based, tách ui/hooks/api/store, alias path, shared components."],
-  ["S","Expo hay bare React Native cho dự án mới? Vì sao?","Expo hiện là khuyến nghị chính thức; prebuild + config plugin + dev client vẫn viết native được; trường hợp đặc thù cần bare."]]},
- {c:"State, dữ liệu & mạng",q:[
-  ["J","Redux hoạt động thế nào? Action, reducer, store.","Luồng một chiều, reducer pure, immutable (Immer trong RTK)."],
-  ["M","Khi nào chọn Redux, Zustand hay chỉ dùng Context?","Quy mô team, devtools, middleware, boilerplate, selector."],
-  ["M","Xử lý refresh token khi nhiều request cùng hết hạn?","Queue một refresh promise, retry, logout khi fail."],
-  ["S","Thiết kế offline-first cho app ghi chép thu chi.","DB local là nguồn hiển thị, outbox hàng đợi thay đổi, sync khi có mạng, conflict (last-write-wins / version), idempotency key."],
-  ["S","Lưu token ở đâu và bảo mật app RN thế nào?","Keychain/Keystore, không lưu secret trong bundle, SSL pinning, jailbreak/root check khi cần, OWASP MASVS."]]},
- {c:"Native & New Architecture",q:[
-  ["M","Bạn đã dùng native module nào? Có tự viết không?","Ví dụ cụ thể; cách giao tiếp Promise/callback/event."],
-  ["M","Upgrade React Native lên bản mới bạn làm thế nào?","Upgrade Helper, đọc changelog, kiểm thư viện tương thích New Arch, nâng từng bước, test cả 2 nền tảng."],
-  ["S","Giải thích JSI, Fabric, TurboModules, Codegen cho một dev mới.","Tại sao bỏ bridge, gọi đồng bộ, lazy load, type-safe spec."],
-  ["S","Một thư viện chưa hỗ trợ New Architecture, bạn xử lý ra sao?","Interop layer, tìm fork/thay thế, tự patch (patch-package), viết lại bằng Expo Modules."]]},
- {c:"Hiệu năng, test, debug",q:[
-  ["J","Bạn debug app RN bằng công cụ gì?","React Native DevTools, console, network inspector, logcat/Xcode console."],
-  ["M","App giật khi scroll. Hướng điều tra?","JS FPS hay UI FPS; Profiler; tối ưu list; ảnh; animation trên UI thread."],
-  ["M","Bạn viết test gì cho một màn hình login?","RNTL: validate, gọi API mock, loading, lỗi, điều hướng; E2E cho flow thật."],
-  ["S","Đặt mục tiêu và theo dõi hiệu năng ở production thế nào?","TTI/startup, crash-free rate, ANR, slow frames; Sentry/Firebase Performance; ngân sách hiệu năng trong CI."]]},
- {c:"Release & CI/CD",q:[
-  ["J","Các bước đưa app Android lên Google Play?","Keystore, build AAB, Play Console, internal testing, review."],
-  ["M","App bị Apple reject, bạn đã gặp lý do nào?","Thiếu giải thích quyền, đăng nhập Apple, nội dung, crash lúc review, metadata."],
-  ["M","OTA update có rủi ro gì?","Lệch runtime version với native, rollback, chính sách store."],
-  ["S","Thiết kế pipeline CI/CD cho app RN.","PR check, build tự động, phân môi trường, signing bảo mật trong secret, staged rollout, theo dõi sau release."],
-  ["M","Sau khi release, bạn theo dõi chất lượng app thế nào?","Sentry/Crashlytics: crash-free rate, issue mới theo release; ANR; đánh giá store; dừng rollout khi có lỗi nghiêm trọng."],
-  ["S","Kể lần bạn nâng cấp React Native hoặc Expo SDK. Khó nhất là gì?","Phiên bản từ/đến, thư viện không tương thích, cách giải quyết, thời gian, cách giảm rủi ro khi release."]]},
- {c:"System design mobile",q:[
-  ["S","Thiết kế màn chat realtime (tin nhắn, trạng thái gửi, ảnh).","WebSocket + fallback, optimistic UI, ID tạm, phân trang ngược, lưu local, upload nền, push khi offline."],
-  ["S","Thiết kế feed vô hạn có ảnh và video.","Cursor pagination, FlashList, prefetch, cache ảnh, chỉ phát video đang hiện, giải phóng bộ nhớ."],
-  ["S","App có 3 team cùng làm. Bạn chia kiến trúc thế nào?","Monorepo/feature module, design system chung, ranh giới API rõ, ownership, quy ước code, CI riêng từng phần."]]},
- {c:"Hành vi (behavioral)",q:[
-  ["J","Kể về dự án RN bạn tự hào nhất.","STAR: bối cảnh, vai trò của bạn, kỹ thuật, kết quả có số."],
-  ["M","Một bug production nghiêm trọng bạn từng xử lý.","Phát hiện thế nào, khoanh vùng, hotfix, postmortem, phòng ngừa."],
-  ["M","Bất đồng với designer/BE về một yêu cầu, bạn làm gì?","Dữ liệu, đề xuất phương án, thỏa hiệp, kết quả."],
-  ["S","Bạn mentor junior hoặc nâng chất lượng code của team thế nào?","Review có hướng dẫn, tài liệu, pair programming, lint rule, đo kết quả."]]},
- {c:"Bạn nên hỏi lại nhà tuyển dụng",q:[
-  ["J","App dùng Expo hay bare? Phiên bản RN, đã lên New Architecture chưa?","Cho biết độ cũ của codebase và khối lượng nâng cấp."],
-  ["J","Quy trình release và tỉ lệ test tự động hiện tại?","Cho biết mức trưởng thành kỹ thuật."],
-  ["M","Team mobile có bao nhiêu người, có dev native không?","Ai xử lý phần native khi cần."],
-  ["S","Vấn đề kỹ thuật lớn nhất của app hiện nay là gì?","Hiểu kỳ vọng thật cho vị trí."]]}
-];
-const LV={J:"Junior",M:"Middle",S:"Senior"};
-let lf="all";
-function renderIV(){
- document.getElementById('lvfilter').innerHTML=[["all","Tất cả"],["J","Junior"],["M","Middle"],["S","Senior"]].map(([k,n])=>`<button aria-pressed="${lf===k}" data-l="${k}">${n}</button>`).join('');
- document.getElementById('ivlist').innerHTML=IV.map(g=>{const qs=g.q.filter(q=>lf==="all"||q[0]===lf);if(!qs.length)return'';
-  return `<div class="qgroup"><div class="qhead"><h3>${g.c}</h3><span class="mono muted">${qs.length} câu</span></div>${qs.map(q=>`<details><summary><span><span class="tag ${q[0]==='S'?'must':q[0]==='M'?'nice':'ok'}">${LV[q[0]]}</span> ${q[1]}</span></summary><div class="ans"><span><b>Ý cần có:</b> ${q[2]}</span></div></details>`).join('')}</div>`}).join('');}
-document.getElementById('lvfilter').addEventListener('click',e=>{if(!e.target.dataset.l)return;lf=e.target.dataset.l;renderIV();});
-renderIV();
+function renderIV(t){const T=TR[t],L=UI[prefs.lang],en=prefs.lang==='en',f=$(t+'-lvfilter'),list=$(t+'-ivlist');if(!f)return;
+ f.innerHTML=[['all',L.all],['J',L.lv.J],['M',L.lv.M],['S',L.lv.S]].map(([k,n])=>`<button aria-pressed="${T.lf===k}" data-l="${k}">${n}</button>`).join('');
+ f.onclick=e=>{const b=e.target.closest('button');if(!b)return;T.lf=b.dataset.l;renderIV(t);};
+ list.innerHTML=T.iv.map(g=>{const qs=g.q.filter(q=>T.lf==='all'||q[0]===T.lf);if(!qs.length)return'';
+  return `<div class="qgroup"><div class="qhead"><h3>${en?g.e:g.c}</h3><span class="mono muted">${qs.length} ${L.n}</span></div>${qs.map(q=>`<details><summary><span><span class="tag ${q[0]==='S'?'must':q[0]==='M'?'nice':'ok'}">${L.lv[q[0]]}</span> ${en?q[3]:q[1]}</span></summary><div class="ans"><span><b>${L.pts}</b> ${en?q[4]:q[2]}</span></div></details>`).join('')}</div>`}).join('');}
 
-const tabs=[...document.querySelectorAll('nav.tabs button')];
-function show(id){tabs.forEach(b=>{const on=b.getAttribute('aria-controls')===id;b.setAttribute('aria-selected',on);document.getElementById(b.getAttribute('aria-controls')).hidden=!on;});
- try{localStorage.setItem('rn8w-tab',id)}catch(_){}}
-tabs.forEach(b=>b.addEventListener('click',()=>show(b.getAttribute('aria-controls'))));
-const h=location.hash.slice(1);let saved=null;try{saved=localStorage.getItem('rn8w-tab')}catch(_){}
-const IDS=['jd','plan','quiz','iv','lc'];
-if(IDS.includes(h))show(h);else if(saved&&IDS.includes(saved))show(saved);
+function apply(scroll){
+ const {track,sec,lang}=prefs;
+ document.documentElement.setAttribute('data-lang',lang);
+ document.documentElement.lang=lang;
+ $('app').dataset.track=track;
+ document.querySelectorAll('header.hero').forEach(el=>el.hidden=el.dataset.track!==track);
+ document.querySelectorAll('section.panel').forEach(el=>el.hidden=!(el.dataset.track===track&&el.dataset.sec===sec));
+ document.querySelectorAll('#trackSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.track===track));
+ document.querySelectorAll('#langSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
+ document.querySelectorAll('#secnav button').forEach(b=>b.setAttribute('aria-current',b.dataset.sec===sec));
+ document.title=track==='fl'?'Flutter 8 tuần':'React Native 8 tuần';
+ try{history.replaceState(null,'','#'+track+'-'+sec)}catch(e){}
+ savePrefs();
+ if(scroll)window.scrollTo({top:0});
+}
+$('trackSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;prefs.track=b.dataset.track;apply(true);};
+$('langSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;prefs.lang=b.dataset.lang;Object.keys(TR).forEach(t=>{renderQuiz(t);renderIV(t);});apply(false);};
+$('secnav').onclick=e=>{const b=e.target.closest('button');if(!b)return;prefs.sec=b.dataset.sec;apply(true);};
+
+Object.keys(TR).forEach(t=>{renderFreq(t);renderWeeks(t);renderQuiz(t);renderIV(t);});
+apply(false);
 </script>
 
 </body>
