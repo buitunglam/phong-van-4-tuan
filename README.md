@@ -11,7 +11,7 @@ Mỗi stack có 5 mục, chọn ở menu bên trái:
 | Mục | Nội dung |
 |---|---|
 | **JD nói gì** | Tần suất từng kỹ năng trên các JD đã đọc, bảng tin Senior trên TopCV / ITviec / TopDev, mức lương, khác biệt giữa Middle và Senior |
-| **Lộ trình 4 tuần** | Mỗi tuần chia ngày 1–3 và ngày 4–7, có checklist, lab và tài liệu. Lab của cả 4 tuần cộng lại thành một app hoàn chỉnh để đưa vào CV |
+| **Lộ trình 4 tuần** | Mỗi tuần chia ngày 1–3 và ngày 4–7, có checklist, lab và tài liệu. Bấm vào từng chủ đề để xem **Khái niệm, Giải thích và Ví dụ thực tế** (288 chủ đề). Lab của cả 4 tuần cộng lại thành một app hoàn chỉnh để đưa vào CV |
 | **Câu hỏi luyện tập** | Câu hỏi kèm đáp án mẫu, lọc theo tuần |
 | **Câu hỏi phỏng vấn** | Câu hỏi theo nhóm và cấp độ (Junior / Middle / Senior), kèm các ý interviewer muốn nghe |
 | **Live coding** | Các dạng đề hay gặp, bảng chấm điểm, cách chia 60 phút, code mẫu nên thuộc, bài code review tìm lỗi và 7 bài luyện bấm giờ |
