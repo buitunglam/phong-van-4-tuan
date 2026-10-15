@@ -32,7 +32,6 @@
 html[data-lang="en"] .l-vi,html:not([data-lang="en"]) .l-en{display:none!important}
 body{background:var(--bg);color:var(--fg);font:15px/1.65 var(--body);margin:0}
 .app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
-.app[data-track="fl"]{--accent:var(--fl);--accent-soft:var(--fl-soft)}
 aside.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;overflow-y:auto;border-right:1px solid var(--line);background:var(--surface);padding:24px 16px;display:flex;flex-direction:column;gap:22px}
 .brand{font:800 18px/1.2 var(--display)}
 .brand small{display:block;font:600 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
@@ -42,6 +41,12 @@ aside.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;hei
 .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:8px;padding:3px;gap:3px;background:var(--bg)}
 .seg button{font:600 13px var(--body);border:0;background:none;color:var(--muted);padding:7px 8px;border-radius:6px;cursor:pointer;white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgb(0 0 0 / .12)}
+.stacklist{display:grid;gap:2px}
+.stacklist button{display:flex;gap:10px;align-items:center;text-align:left;font:500 14px var(--body);color:var(--fg);background:none;border:0;padding:8px 10px;border-radius:6px;cursor:pointer}
+.stacklist .dot{width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.stacklist button[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.stackselect{display:none;width:100%;font:600 14px var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.stackselect:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 nav.secnav{display:grid;gap:2px}
 nav.secnav button{display:flex;gap:10px;align-items:baseline;text-align:left;font:500 14px var(--body);color:var(--fg);background:none;border:0;padding:8px 10px;border-radius:6px;cursor:pointer}
 nav.secnav button .n{font:600 11px var(--mono);color:var(--muted);width:16px;flex:none}
@@ -111,7 +116,9 @@ pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;bord
   .app{grid-template-columns:minmax(0,1fr)}
   aside.side{height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;gap:10px;z-index:5}
   .brand,.side-foot,.grp-label{display:none}
-  .side-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .side-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
+  .stacklist{display:none}
+  .stackselect{display:block}
   nav.secnav{display:flex;overflow-x:auto;gap:4px}
   nav.secnav button{white-space:nowrap;padding:6px 10px}
   nav.secnav button .n{display:none}
@@ -127,10 +134,8 @@ pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;bord
   <div class="side-top">
     <div class="grp">
       <span class="grp-label"><span class="l-vi">Công nghệ</span><span class="l-en">Stack</span></span>
-      <div class="seg" id="trackSeg">
-        <button data-track="rn" aria-pressed="true">React Native</button>
-        <button data-track="fl" aria-pressed="false">Flutter</button>
-      </div>
+      <nav class="stacklist" id="trackList" aria-label="Stack"></nav>
+      <select class="stackselect" id="trackSelect" aria-label="Stack"></select>
     </div>
     <div class="grp">
       <span class="grp-label"><span class="l-vi">Ngôn ngữ Q&amp;A</span><span class="l-en">Q&amp;A language</span></span>
@@ -1469,6 +1474,12 @@ const FL_IV=[
 ];
 
 /* ---------------- App ---------------- */
+// Stack registry: to add a stack, add an entry here plus its --{id}/--{id}-soft color tokens,
+// its hero/sections in HTML (data-track="{id}") and its data arrays in TR below.
+const STACKS=[
+ {id:'rn',name:'React Native'},
+ {id:'fl',name:'Flutter'}
+];
 const TR={
  rn:{freq:RN_FREQ,total:RN_FREQ_TOTAL,weeks:RN_WEEKS,quiz:RN_QUIZ,iv:RN_IV,key:'rn8w-done',qf:0,lf:'all'},
  fl:{freq:FL_FREQ,total:FL_FREQ_TOTAL,weeks:FL_WEEKS,quiz:FL_QUIZ,iv:FL_IV,key:'fl8w-done',qf:0,lf:'all'}
@@ -1522,18 +1533,26 @@ function apply(scroll){
  const {track,sec,lang}=prefs;
  document.documentElement.setAttribute('data-lang',lang);
  document.documentElement.lang=lang;
- $('app').dataset.track=track;
+ const app=$('app');
+ app.dataset.track=track;
+ app.style.setProperty('--accent',`var(--${track})`);
+ app.style.setProperty('--accent-soft',`var(--${track}-soft)`);
  document.querySelectorAll('header.hero').forEach(el=>el.hidden=el.dataset.track!==track);
  document.querySelectorAll('section.panel').forEach(el=>el.hidden=!(el.dataset.track===track&&el.dataset.sec===sec));
- document.querySelectorAll('#trackSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.track===track));
+ document.querySelectorAll('#trackList button').forEach(b=>b.setAttribute('aria-current',b.dataset.track===track));
+ $('trackSelect').value=track;
  document.querySelectorAll('#langSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
  document.querySelectorAll('#secnav button').forEach(b=>b.setAttribute('aria-current',b.dataset.sec===sec));
- document.title=track==='fl'?'Flutter 8 tuần':'React Native 8 tuần';
+ document.title=`${STACKS.find(s=>s.id===track).name} 8 tuần`;
  try{history.replaceState(null,'','#'+track+'-'+sec)}catch(e){}
  savePrefs();
  if(scroll)window.scrollTo({top:0});
 }
-$('trackSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;prefs.track=b.dataset.track;apply(true);};
+$('trackList').innerHTML=STACKS.map(s=>`<button data-track="${s.id}" style="--c:var(--${s.id})"><span class="dot"></span><span>${s.name}</span></button>`).join('');
+$('trackSelect').innerHTML=STACKS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+const setTrack=id=>{if(!TR[id])return;prefs.track=id;apply(true);};
+$('trackList').onclick=e=>{const b=e.target.closest('button');if(b)setTrack(b.dataset.track);};
+$('trackSelect').onchange=e=>setTrack(e.target.value);
 $('langSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;prefs.lang=b.dataset.lang;Object.keys(TR).forEach(t=>{renderQuiz(t);renderIV(t);});apply(false);};
 $('secnav').onclick=e=>{const b=e.target.closest('button');if(!b)return;prefs.sec=b.dataset.sec;apply(true);};
 
