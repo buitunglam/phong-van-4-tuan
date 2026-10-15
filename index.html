@@ -120,7 +120,10 @@ pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;bord
   .brand,.side-foot,.grp-label{display:none}
   .side-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
   .stacklist{display:none}
-  .stackselect{display:block}
+  /* same height for the stack dropdown and the VI/EN switch */
+  .stackselect{display:block;height:40px;padding-block:0}
+  .side-top .seg{height:40px}
+  .side-top .seg button{padding-block:0}
   nav.secnav{display:flex;overflow-x:auto;gap:4px}
   nav.secnav button{white-space:nowrap;padding:6px 10px}
   nav.secnav button .n{display:none}
