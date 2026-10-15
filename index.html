@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>React Native 8 tuần</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky tab bar + single reading column; weeks as a vertical track with a mono "metro" index */
+:root{
+  --bg:#f5f7f8; --surface:#ffffff; --fg:#14212b; --muted:#5b6b77; --line:#d9e1e6;
+  --accent:#0b7f9e; --accent-soft:#e2f2f6; --must:#b5432f; --nice:#5a6fb0; --ok:#2f8a57;
+  --display:"Bricolage Grotesque","Be Vietnam Pro",system-ui,sans-serif;
+  --body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f171d; --surface:#16212a; --fg:#e4ecf0; --muted:#93a4b0; --line:#273641;
+  --accent:#4cc3e0; --accent-soft:#16323c; --must:#f08a72; --nice:#9fb0ee; --ok:#6cc995; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f171d; --surface:#16212a; --fg:#e4ecf0; --muted:#93a4b0; --line:#273641;
+  --accent:#4cc3e0; --accent-soft:#16323c; --must:#f08a72; --nice:#9fb0ee; --ok:#6cc995; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.65 var(--body);padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:860px;margin:0 auto}
+header.hero{padding-block:40px 20px;display:grid;gap:10px}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font:800 clamp(30px,6vw,46px)/1.08 var(--display);margin:0;text-wrap:balance}
+h2{font:700 26px/1.2 var(--display);margin:0;text-wrap:balance}
+h3{font:600 18px/1.3 var(--display);margin:0;text-wrap:balance}
+p{margin:0;max-width:68ch}
+.lede{color:var(--muted);font-size:16px}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;padding-block:8px}
+nav.tabs button{font:600 14px var(--body);color:var(--muted);background:none;border:0;padding:8px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+nav.tabs button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.panel{display:grid;gap:22px;padding-block:28px}
+.mono{font-family:var(--mono);font-size:12.5px}
+.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:10px;min-width:0}
+.freq{display:grid;gap:8px}
+.freq-row{display:grid;grid-template-columns:minmax(0,1fr) 110px 34px;gap:10px;align-items:center;font-size:14px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bar.nice i{background:var(--nice)}
+.freq-row .n{font:600 12px var(--mono);text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.tag{display:inline-block;font:600 11px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 7px;border-radius:4px;border:1px solid currentColor}
+.tag.must{color:var(--must)} .tag.nice{color:var(--nice)} .tag.ok{color:var(--ok)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.progress{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.progress .bar{flex:1;min-width:140px;height:10px}
+.week{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px}
+.week .idx{font:600 13px var(--mono);color:var(--accent);display:flex;flex-direction:column;align-items:center;gap:6px}
+.week .idx b{font:800 28px/1 var(--display);color:var(--fg)}
+.week .idx::after{content:"";flex:1;width:2px;background:var(--line);min-height:20px}
+.week:last-child .idx::after{display:none}
+.week .body{display:grid;gap:12px;padding-bottom:28px;min-width:0}
+.topics{display:grid;gap:6px;list-style:none;padding:0}
+.topics label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.topics input{margin-top:5px;accent-color:var(--accent);flex:none}
+.topics input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.lab{border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-soft);border-radius:0 8px 8px 0;font-size:14px}
+.lab b{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:2px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+details+details{margin-top:8px}
+summary{cursor:pointer;padding:12px 14px;font-weight:600;list-style:none;display:flex;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";font:600 14px var(--mono);color:var(--accent);flex:none;width:12px}
+details[open] summary::before{content:"−"}
+.ans{padding:0 14px 14px 36px;display:grid;gap:8px;font-size:14.5px}
+code{font:13px var(--mono);background:var(--accent-soft);padding:1px 5px;border-radius:4px}
+pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;border-radius:8px;overflow-x:auto;margin:0}
+.qgroup{display:grid;gap:10px}
+.qhead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.filter{display:flex;gap:6px;flex-wrap:wrap}
+.filter button{font:600 13px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:6px 12px;border-radius:999px;cursor:pointer}
+.filter button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.src a{color:var(--accent)}
+.src li{font-size:13.5px}
+@media (max-width:520px){.week{grid-template-columns:40px minmax(0,1fr);gap:10px}.week .idx b{font-size:22px}.freq-row{grid-template-columns:minmax(0,1fr) 70px 30px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <span class="eyebrow">Lộ trình phỏng vấn · React Native · 10/2026</span>
+  <h1>React Native trong 8 tuần</h1>
+  <p class="lede">Tổng hợp từ các JD React Native trên TopDev, JobsGO, ITviec, Workable và các trang tuyển dụng quốc tế. Mỗi tuần có mục tiêu, checklist, bài lab và câu hỏi tự kiểm tra. Cuối trang là bộ câu hỏi phỏng vấn theo cấp độ.</p>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Phần">
+  <button role="tab" id="t-jd" aria-controls="jd" aria-selected="true">JD nói gì</button>
+  <button role="tab" id="t-plan" aria-controls="plan" aria-selected="false">Lộ trình 8 tuần</button>
+  <button role="tab" id="t-quiz" aria-controls="quiz" aria-selected="false">Câu hỏi luyện tập</button>
+  <button role="tab" id="t-iv" aria-controls="iv" aria-selected="false">Câu hỏi phỏng vấn</button>
+</nav>
+
+<!-- ============ JD ============ -->
+<section class="panel" id="jd" role="tabpanel" aria-labelledby="t-jd">
+  <div style="display:grid;gap:8px">
+    <h2>Các JD thực sự yêu cầu gì</h2>
+    <p class="muted">Đếm trên 9 JD đọc chi tiết (4 Việt Nam, 5 quốc tế, Junior → Senior). Thanh xanh là yêu cầu bắt buộc, thanh tím là điểm cộng.</p>
+  </div>
+  <div class="box">
+    <div class="freq" id="freq"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <span class="tag must">Phải có</span>
+      <ul>
+        <li>JavaScript ES6+ và TypeScript vững</li>
+        <li>React hooks, vòng đời render, tối ưu re-render</li>
+        <li>Một thư viện state: Redux Toolkit (Saga), MobX hoặc Zustand</li>
+        <li>REST API, xác thực, xử lý lỗi; WebSocket cho realtime</li>
+        <li>Build và phát hành lên App Store, Google Play</li>
+        <li>Unit test và E2E test</li>
+        <li>Git flow / trunk-based, code review</li>
+        <li>Debug và tối ưu hiệu năng iOS + Android</li>
+      </ul>
+    </div>
+    <div class="box">
+      <span class="tag nice">Điểm cộng tạo khác biệt</span>
+      <ul>
+        <li>Native module bằng Swift / Kotlin</li>
+        <li>New Architecture: JSI, TurboModules, Fabric</li>
+        <li>Expo, EAS Build / Submit / Update</li>
+        <li>CI/CD mobile (GitHub Actions, Fastlane, EAS Workflows)</li>
+        <li>Firebase, push notification, deep linking, analytics</li>
+        <li>Sentry / Datadog, theo dõi crash</li>
+        <li>Mentor, dẫn dắt kiến trúc</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Cấp độ</th><th>Kinh nghiệm JD đòi</th><th>Nhà tuyển dụng kỳ vọng</th></tr></thead>
+      <tbody>
+        <tr><td><b>Fresher / Junior</b></td><td class="mono">0–1 năm</td><td>Viết component, gọi API, dùng Redux/Saga theo pattern có sẵn, biết đẩy app lên store với hướng dẫn.</td></tr>
+        <tr><td><b>Middle</b></td><td class="mono">2–4 năm</td><td>Tự đưa feature lên production, xử lý khác biệt iOS/Android, TypeScript thành thạo, realtime, review code.</td></tr>
+        <tr><td><b>Senior / Lead</b></td><td class="mono">4–5+ năm</td><td>Quyết định kiến trúc, debug ở ranh giới JS ↔ native, CI/CD, quy trình release, mentor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box src">
+    <h3>Nguồn</h3>
+    <ul>
+      <li><a href="https://topdev.vn/viec-lam/senior-mobile-developer-mobile-developer-react-native-vn-intellipro-s-client-2064484" target="_blank" rel="noopener">TopDev · Senior Mobile Developer (React Native), IntelliPro</a></li>
+      <li><a href="https://topdev.vn/viec-lam/middle-react-native-developer-cong-ty-co-phan-hola-tech-2063579" target="_blank" rel="noopener">TopDev · Middle React Native Developer, Hola Tech</a></li>
+      <li><a href="https://topdev.vn/viec-lam/senior-mobile-app-react-native-soxes-ag-2033591" target="_blank" rel="noopener">TopDev · Senior Mobile App React Native, Soxes AG</a></li>
+      <li><a href="https://topdev.vn/viec-lam/fresher-junior-mobile-developer-react-native-cong-ty-tnhh-ant-tech-2-2023122" target="_blank" rel="noopener">TopDev · Fresher/Junior React Native, Ant Tech</a></li>
+      <li><a href="https://jobs.workable.com/jobs/68b4b2b9-d0a6-4dcb-a284-12426a2da278.md" target="_blank" rel="noopener">Workable · Senior React Native Developer</a></li>
+      <li><a href="https://jobsgo.vn/viec-lam-react-native.html" target="_blank" rel="noopener">JobsGO · Việc làm React Native</a></li>
+      <li><a href="https://forum.uit.edu.vn/t/tuyen-dung-react-react-native-600-1200/145195" target="_blank" rel="noopener">Diễn đàn UIT · Tuyển React/React Native</a></li>
+      <li><a href="https://www.thirstysprout.com/post/hire-react-native-developers" target="_blank" rel="noopener">ThirstySprout · Phân cấp Junior/Mid/Senior</a></li>
+      <li><a href="https://www.kore1.com/hire-react-native-developers-2026/" target="_blank" rel="noopener">Kore1 · New Architecture trong tuyển dụng 2026</a></li>
+      <li><a href="https://djinni.co/jobs/keyword-react_native" target="_blank" rel="noopener">Djinni · React Native jobs</a></li>
+    </ul>
+    <p class="muted" style="font-size:13px">Bài đăng trong các group Facebook không được công cụ tìm kiếm index nên không có trong mẫu. Một số JD trên TopDev đã hết hạn nhưng yêu cầu vẫn đại diện cho thị trường.</p>
+  </div>
+</section>
+
+<!-- ============ PLAN ============ -->
+<section class="panel" id="plan" role="tabpanel" aria-labelledby="t-plan" hidden>
+  <div style="display:grid;gap:8px">
+    <h2>Lộ trình 8 tuần</h2>
+    <p class="muted">Khoảng 10–12 giờ mỗi tuần. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab cả 8 tuần cộng lại thành một app hoàn chỉnh để đưa vào CV: <b>“Expense Tracker”</b> có login, danh sách, realtime, offline, push và CI.</p>
+  </div>
+  <div class="box progress"><span class="mono" id="pct">0%</span><div class="bar"><i id="pctbar" style="width:0"></i></div><span class="muted" id="pcttxt"></span></div>
+  <div id="weeks"></div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="panel" id="quiz" role="tabpanel" aria-labelledby="t-quiz" hidden>
+  <div style="display:grid;gap:8px">
+    <h2>Câu hỏi luyện tập</h2>
+    <p class="muted">Tự trả lời thành tiếng trước, sau đó mới mở đáp án. Mục tiêu là nói được trong 1–2 phút có ví dụ cụ thể.</p>
+  </div>
+  <div class="filter" id="qfilter"></div>
+  <div id="quizlist" class="qgroup"></div>
+</section>
+
+<!-- ============ INTERVIEW ============ -->
+<section class="panel" id="iv" role="tabpanel" aria-labelledby="t-iv" hidden>
+  <div style="display:grid;gap:8px">
+    <h2>Câu hỏi phỏng vấn</h2>
+    <p class="muted">Gom theo dạng nhà tuyển dụng hay hỏi. Mỗi câu có các ý interviewer muốn nghe. Lọc theo cấp độ bạn đang ứng tuyển.</p>
+  </div>
+  <div class="filter" id="lvfilter"></div>
+  <div id="ivlist" style="display:grid;gap:26px"></div>
+</section>
+</div>
+
+<script>
+const FREQ=[
+  ["JavaScript / TypeScript",9,0],["React / RN core, hooks",9,0],["Git, quy trình nhóm",8,0],
+  ["State: Redux · Saga · MobX · Zustand",7,0],["REST API / bên thứ ba",7,0],["Release App Store / Google Play",7,0],
+  ["Debug & tối ưu hiệu năng",6,0],["Unit / E2E test",5,0],["Tiếng Anh giao tiếp",5,0],
+  ["Native iOS/Android, native module",7,1],["CI/CD mobile",4,1],["Firebase / Push / Deep link",4,1],
+  ["Expo / EAS",3,1],["New Architecture (JSI, Turbo, Fabric)",3,1],["WebSocket / realtime",2,1],["GraphQL / Realm",1,1]
+];
+document.getElementById('freq').innerHTML=FREQ.map(([t,n,nice])=>`<div class="freq-row"><span>${t}</span><span class="bar ${nice?'nice':''}"><i style="width:${n/9*100}%"></i></span><span class="n">${n}/9</span></div>`).join('');
+
+const WEEKS=[
+ {t:"JavaScript & TypeScript nền tảng",g:"Trả lời trôi chảy mọi câu JS cơ bản, đọc và viết type phức tạp không cần tra.",
+  k:["Event loop: call stack, microtask (Promise) vs macrotask (setTimeout)","Closure, scope, hoisting, TDZ của let/const","this, call/apply/bind, arrow function","Promise, async/await, Promise.all / allSettled / race, xử lý lỗi","Immutability, spread, shallow vs deep copy, ===","TS: generics, union, discriminated union, narrowing, type guard","TS: utility types (Partial, Pick, Omit, Record, ReturnType), keyof, typeof","Module ES, debounce/throttle tự viết"],
+  lab:"Khởi tạo repo Expo + TypeScript strict. Viết util debounce, throttle, retry(fn, n) có test Jest. Bật ESLint + Prettier + husky.",
+  r:"javascript.info · TypeScript Handbook · type-challenges (easy/medium)"},
+ {t:"React chuyên sâu",g:"Giải thích được vì sao một component re-render và cách chặn đúng chỗ.",
+  k:["Render vs commit, reconciliation, vai trò của key","useState (batching, updater fn), useReducer","useEffect: dependency, cleanup, stale closure, race condition khi fetch","useRef, useMemo, useCallback, React.memo: khi nào nên và không nên","Context: re-render toàn bộ consumer, cách tách context","Custom hook, composition, render props, compound component","React 18/19: concurrent, useTransition, useDeferredValue, Suspense, React Compiler","Error Boundary"],
+  lab:"Viết hook useFetch có hủy request (AbortController) và hook useDebouncedValue. Dựng màn danh sách giao dịch giả lập, đo re-render bằng React DevTools Profiler.",
+  r:"react.dev (Learn + Reference) · “A Complete Guide to useEffect” (Dan Abramov)"},
+ {t:"React Native cơ bản & UI",g:"Dựng UI đúng trên cả iOS và Android, danh sách dài vẫn mượt.",
+  k:["Core components: View, Text, Image, Pressable, ScrollView, TextInput","Flexbox trong RN (mặc định column), StyleSheet, dimension, responsive","Platform.OS, file .ios.tsx/.android.tsx, khác biệt shadow/elevation","FlatList / SectionList: keyExtractor, getItemLayout, windowSize; FlashList","KeyboardAvoidingView, SafeAreaView (react-native-safe-area-context), StatusBar","Gesture Handler + Reanimated: worklet, shared value, UI thread","Ảnh: cache (expo-image / FastImage), resize, SVG","Accessibility: accessibilityLabel, role, dynamic font size"],
+  lab:"Màn danh sách giao dịch 5.000 dòng bằng FlashList, swipe-to-delete bằng Gesture Handler + Reanimated, dark mode, form thêm giao dịch không bị bàn phím che.",
+  r:"reactnative.dev/docs · docs.swmansion.com (Reanimated, Gesture Handler) · shopify.github.io/flash-list"},
+ {t:"Navigation, state & dữ liệu",g:"Chọn và bảo vệ được lựa chọn state management cho từng loại dữ liệu.",
+  k:["React Navigation: stack, tab, drawer, nested, truyền params có type","Expo Router (file-based), auth flow (màn login vs app)","Deep link & universal link / app link, linking config","Phân biệt server state và client state","Redux Toolkit: slice, createAsyncThunk, RTK Query; Redux-Saga (takeLatest, call, put, fork)","Zustand / MobX: ưu nhược so với Redux","TanStack Query: cache, staleTime, invalidate, optimistic update","Lưu trữ: AsyncStorage vs MMKV vs SQLite/WatermelonDB/Realm; offline-first"],
+  lab:"Thêm auth flow + tab navigator. Server state dùng TanStack Query (hoặc RTK Query), client state dùng Zustand, persist bằng MMKV. Deep link mở chi tiết giao dịch.",
+  r:"reactnavigation.org · docs.expo.dev/router · redux-toolkit.js.org · tanstack.com/query"},
+ {t:"Networking, realtime & tích hợp",g:"Xây lớp API production-ready: token, retry, realtime, push.",
+  k:["Axios/fetch: interceptor, refresh token song song không bị gọi nhiều lần","Lưu token an toàn: Keychain/Keystore (expo-secure-store), không dùng AsyncStorage","WebSocket: reconnect với backoff, heartbeat, xử lý khi app background","Push: FCM/APNs, token, foreground/background/killed, notifee/expo-notifications","Firebase: Analytics, Crashlytics, Remote Config","AppState, NetInfo, xử lý mất mạng","i18n, định dạng tiền tệ/ngày","Bảo mật: SSL pinning, obfuscation, không để secret trong bundle"],
+  lab:"Lớp apiClient có refresh-token queue, màn realtime nhận cập nhật số dư qua WebSocket, push notification mở đúng màn qua deep link.",
+  r:"docs.expo.dev/push-notifications · rnfirebase.io · OWASP MASVS"},
+ {t:"Kiến trúc RN & native",g:"Giải thích New Architecture bằng lời của mình và viết được một native module.",
+  k:["Các thread: JS, UI (main), background; Hermes engine","Bridge cũ (async, JSON serialize) vs JSI (gọi C++ đồng bộ)","Fabric renderer, TurboModules (lazy load), Codegen, bridgeless mode","Từ RN 0.76 New Architecture mặc định; các bản mới chỉ còn New Architecture","Viết native module Kotlin + Swift (Expo Modules API hoặc Turbo Module)","Native UI component, gửi event từ native lên JS","Expo prebuild, config plugin, dev client; bare vs managed","Gradle, CocoaPods, signing cơ bản, đọc crash log native"],
+  lab:"Viết Expo module “BatteryInfo” (Kotlin + Swift) trả về % pin và phát event khi sạc. Viết config plugin thêm permission vào AndroidManifest/Info.plist.",
+  r:"reactnative.dev/architecture · docs.expo.dev/modules · github.com/reactwg/react-native-new-architecture"},
+ {t:"Hiệu năng, test & debug",g:"Đo trước khi tối ưu. Có test ở 3 tầng.",
+  k:["Đo: React DevTools Profiler, React Native DevTools, Perf Monitor, Hermes profile","Re-render: memo, tách component, selector, tránh inline object/func ở list item","Startup time: Hermes bytecode, lazy require, giảm bundle, inline requires","Memory leak: listener chưa remove, timer, subscription","Animation 60fps: chạy trên UI thread (Reanimated), useNativeDriver","Jest + React Native Testing Library: test theo hành vi người dùng, mock module native","E2E: Detox hoặc Maestro","Sentry: source map, breadcrumb, release health"],
+  lab:"Viết test RNTL cho form và list, 1 flow E2E (login → thêm giao dịch) bằng Maestro. Tích hợp Sentry. Ghi lại số đo trước/sau một lần tối ưu.",
+  r:"callstack.com “Ultimate Guide to React Native Optimization” · callstack.github.io/react-native-testing-library · maestro.mobile.dev"},
+ {t:"Release, CI/CD & phỏng vấn thử",g:"Tự đưa app lên store, có pipeline, và kể được dự án theo STAR.",
+  k:["Versioning: versionCode/CFBundleVersion, semver, môi trường dev/staging/prod","Signing: keystore Android, certificate + provisioning profile iOS","EAS Build / Submit / Update; Fastlane; GitHub Actions","OTA update: EAS Update, runtime version, giới hạn (không đổi được native). CodePush của App Center đã ngừng 03/2025","Quy trình review App Store / Google Play, lý do bị reject hay gặp, staged rollout","System design mobile: kiến trúc feature-based, offline sync, cache, phân lớp","Behavioral: STAR, xung đột, sự cố production","Mock interview 2 buổi + chỉnh CV/GitHub"],
+  lab:"Pipeline GitHub Actions: lint + test mỗi PR, EAS Build khi merge main, EAS Update cho channel staging. Viết README có kiến trúc, ảnh chụp, video demo.",
+  r:"docs.expo.dev/eas · docs.fastlane.tools · Apple App Review Guidelines"}
+];
+const KEY='rn8w-done';
+let done={};try{done=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+const total=WEEKS.reduce((a,w)=>a+w.k.length,0);
+document.getElementById('weeks').innerHTML=WEEKS.map((w,i)=>`
+ <div class="week"><div class="idx"><span>TUẦN</span><b>${i+1}</b></div>
+  <div class="body"><h3>${w.t}</h3><p class="muted">${w.g}</p>
+   <ul class="topics">${w.k.map((k,j)=>`<li><label><input type="checkbox" id="w${i}k${j}" data-k="w${i}k${j}" ${done['w'+i+'k'+j]?'checked':''}><span>${k}</span></label></li>`).join('')}</ul>
+   <div class="lab"><b>Lab</b>${w.lab}</div>
+   <p class="mono muted">Tài liệu: ${w.r}</p></div></div>`).join('');
+function upd(){const n=Object.values(done).filter(Boolean).length;const p=Math.round(n/total*100);
+ document.getElementById('pct').textContent=p+'%';document.getElementById('pctbar').style.width=p+'%';
+ document.getElementById('pcttxt').textContent=`${n}/${total} chủ đề`;}
+document.getElementById('weeks').addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;done[k]=e.target.checked;
+ try{localStorage.setItem(KEY,JSON.stringify(done))}catch(_){}upd();});
+upd();
+
+const QUIZ=[
+ [1,"Thứ tự log của đoạn code sau là gì?<pre>console.log(1);\nsetTimeout(()=>console.log(2),0);\nPromise.resolve().then(()=>console.log(3));\nconsole.log(4);</pre>","<b>1 → 4 → 3 → 2.</b> Code đồng bộ chạy trước. Callback của Promise vào microtask queue, được xử lý ngay khi call stack rỗng. setTimeout vào macrotask queue nên chạy sau toàn bộ microtask."],
+ [1,"Closure là gì? Cho một ví dụ bug thực tế liên quan tới closure trong React.","Closure là hàm “nhớ” biến của scope nơi nó được tạo. Bug điển hình: <code>setInterval(()=>setCount(count+1),1000)</code> trong useEffect với deps rỗng, <code>count</code> luôn là 0 (stale closure). Sửa: dùng updater <code>setCount(c=>c+1)</code> hoặc đưa count vào deps / dùng ref."],
+ [1,"<code>interface</code> và <code>type</code> khác nhau thế nào? Khi nào dùng discriminated union?","interface mở rộng được (declaration merging, extends), phù hợp cho object shape public. type mô tả được union, tuple, mapped/conditional type. Discriminated union (<code>{status:'loading'}|{status:'ok',data:T}|{status:'error',error:E}</code>) dùng cho state có nhiều trạng thái, TS tự narrow theo field <code>status</code> và loại bỏ trạng thái không hợp lệ."],
+ [1,"Promise.all và Promise.allSettled khác gì? Gọi 3 API mà 1 cái lỗi thì sao?","all reject ngay khi một promise reject (fail-fast), các kết quả thành công bị mất. allSettled chờ tất cả và trả về mảng <code>{status, value|reason}</code>. Màn dashboard gọi 3 API độc lập nên dùng allSettled để hiện phần thành công."],
+ [2,"Khi nào một component React re-render?","Khi state của nó đổi, khi component cha re-render (dù props không đổi), hoặc khi context mà nó dùng đổi giá trị. Props đổi không phải nguyên nhân trực tiếp. Re-render là do cha render lại. React.memo chặn trường hợp “cha render” nếu props shallow-equal."],
+ [2,"useMemo/useCallback có nên bọc mọi thứ không?","Không. Chúng có chi phí (so sánh deps, giữ bộ nhớ). Chỉ dùng khi: tính toán nặng; giá trị/hàm truyền vào component đã memo hoặc vào deps của hook khác; tham chiếu ổn định cần cho item của FlatList. Đo bằng Profiler trước. React Compiler (React 19) tự memo nên giảm nhu cầu viết tay."],
+ [2,"Fetch dữ liệu trong useEffect có thể gặp race condition thế nào? Cách xử lý?","User đổi tab A→B nhanh, response A về sau B và ghi đè. Xử lý: cleanup với AbortController hoặc cờ <code>ignore=true</code>; tốt hơn là dùng TanStack Query / RTK Query vốn đã xử lý cache, hủy và dedupe."],
+ [2,"Tại sao không nên dùng index làm key?","Khi list thêm/xóa/sắp xếp, index của item thay đổi nên React gán nhầm state/DOM cũ cho item mới. Lỗi thấy rõ ở TextInput, checkbox, animation. Dùng id ổn định từ dữ liệu."],
+ [3,"FlatList bị giật với 2.000 item. Bạn làm gì?","1) Đo trước (Perf Monitor xem JS FPS hay UI FPS tụt). 2) Item bọc React.memo, renderItem/keyExtractor ổn định bằng useCallback. 3) <code>getItemLayout</code> nếu chiều cao cố định. 4) Chỉnh <code>windowSize</code>, <code>initialNumToRender</code>, <code>maxToRenderPerBatch</code>. 5) Ảnh có cache và resize đúng kích thước. 6) Tránh logic nặng trong item. 7) Cân nhắc FlashList (tái sử dụng view)."],
+ [3,"Flexbox trong RN khác web như thế nào?","flexDirection mặc định là column. Mọi View đều là flex container. flex: số dương là grow theo tỉ lệ. Không có cascade CSS, style không kế thừa (trừ Text lồng Text). Đơn vị là dp không có px/em. Không có grid (trừ thư viện)."],
+ [3,"Reanimated chạy animation trên UI thread nghĩa là gì và vì sao quan trọng?","Code trong worklet được chạy trên UI thread nên animation không phụ thuộc JS thread. Khi JS bận (parse JSON, render list) animation vẫn 60/120fps. Animated API cũ chỉ đạt điều đó với useNativeDriver và chỉ cho transform/opacity."],
+ [4,"Server state và client state là gì? Bạn chọn công cụ nào cho từng loại?","Server state: dữ liệu thuộc backend, cần cache, đồng bộ, refetch (danh sách giao dịch). Dùng TanStack Query hoặc RTK Query. Client state: UI/session (theme, filter, form nháp). Dùng useState, Zustand hoặc Redux slice. Nhét server state vào Redux tự viết dẫn tới phải tự lo loading/error/cache."],
+ [4,"Redux-Saga dùng để làm gì? So sánh với thunk.","Saga xử lý side effect bằng generator: dễ làm flow phức tạp (hủy bằng takeLatest, race, debounce, chạy nền, polling), test dễ vì yield trả về mô tả effect. Thunk đơn giản hơn, phù hợp async một bước. Dự án mới thường dùng RTK + RTK Query/listener middleware thay saga."],
+ [4,"Auth flow trong React Navigation làm thế nào cho đúng?","Render có điều kiện hai nhóm screen theo trạng thái token (<code>isSignedIn ? AppStack : AuthStack</code>), không dùng navigate('Home') sau login. Lúc khởi động hiển thị splash trong khi đọc token từ secure storage. Khi logout state đổi, navigator tự chuyển và xóa history."],
+ [4,"AsyncStorage, MMKV, SQLite: chọn cái nào?","AsyncStorage: key-value async, chậm, phù hợp dữ liệu nhỏ. MMKV: key-value đồng bộ qua JSI, rất nhanh, hỗ trợ mã hóa, tốt cho settings/persist store. SQLite / WatermelonDB / Realm: dữ liệu quan hệ, truy vấn, lượng lớn, offline-first. Token phải ở Keychain/Keystore."],
+ [5,"Nhiều request cùng nhận 401. Làm sao chỉ gọi refresh token một lần?","Interceptor giữ một biến <code>refreshPromise</code>. Request đầu tiên gặp 401 tạo promise refresh, các request sau chờ cùng promise đó rồi retry với token mới. Refresh lỗi thì logout và reject toàn bộ hàng đợi. Đánh dấu request đã retry để không lặp vô hạn."],
+ [5,"Push notification hoạt động thế nào ở 3 trạng thái app?","Foreground: app nhận message, tự quyết định hiện local notification. Background: OS hiện notification, khi bấm app nhận event mở. Killed: OS hiện, khi bấm lấy initial notification lúc khởi động để điều hướng. Android cần notification channel, iOS cần xin quyền và APNs key. Data-only message có giới hạn trên iOS."],
+ [5,"Giữ kết nối WebSocket ổn định trên mobile thế nào?","Reconnect với exponential backoff + jitter; heartbeat ping/pong để phát hiện kết nối chết; lắng nghe NetInfo và AppState (đóng khi background lâu, mở lại và đồng bộ lại khi active); dedupe message theo id; fallback sang refetch REST khi reconnect."],
+ [6,"Bridge cũ và JSI khác nhau thế nào?","Bridge: JS và native giao tiếp qua message JSON bất đồng bộ, có batch, tốn serialize và không gọi đồng bộ được. JSI: interface C++ cho JS giữ tham chiếu trực tiếp tới object host, gọi đồng bộ, không serialize. JSI là nền của TurboModules, Fabric, Reanimated, MMKV, VisionCamera."],
+ [6,"Fabric và TurboModules giải quyết vấn đề gì?","Fabric: renderer mới viết bằng C++, shadow tree dùng chung, layout đồng bộ khi cần, hỗ trợ concurrent React (Suspense, transition). TurboModules: native module load lười khi dùng lần đầu (startup nhanh hơn), có type an toàn nhờ Codegen sinh từ spec TypeScript, gọi qua JSI."],
+ [6,"Khi nào cần viết native module? Bạn đã/sẽ làm thế nào?","Khi cần API hệ điều hành chưa có thư viện, SDK native của bên thứ ba, hoặc tác vụ nặng cần tốc độ native. Cách nhanh nhất hiện nay: Expo Modules API (Kotlin/Swift, khai báo Function, AsyncFunction, Events), dùng được cả trong app bare. Cần chú ý thread, permission, xử lý lỗi trả về Promise reject."],
+ [6,"Hermes mang lại gì?","Engine JS tối ưu cho mobile: biên dịch sẵn sang bytecode lúc build nên startup nhanh, ít RAM, bundle nhỏ. Là engine mặc định. Debug qua React Native DevTools (Chrome DevTools protocol)."],
+ [7,"App khởi động chậm 4 giây. Quy trình điều tra?","Đo từng giai đoạn: native init → load bundle → JS chạy → màn đầu render → dữ liệu đầu tiên. Công cụ: Android Studio/Xcode Instruments, Hermes profile, log mốc thời gian. Xử lý: bật Hermes, inline requires/lazy load màn, giảm import nặng ở root, trì hoãn SDK không cần ngay (analytics), cache dữ liệu màn đầu, giữ splash cho tới khi sẵn sàng."],
+ [7,"Test gì bằng Jest + RNTL, test gì bằng E2E?","RNTL: hành vi component/màn hình như người dùng thấy (getByRole, getByText, fireEvent/userEvent), mock API và module native. Nhanh, chạy mỗi PR. E2E (Detox/Maestro): vài flow quan trọng chạy trên app thật (login, thanh toán). Chậm và dễ flaky nên giữ ít. Unit thuần cho util, reducer, hook logic."],
+ [7,"Các nguồn memory leak hay gặp trong RN?","Listener (AppState, Keyboard, NetInfo, EventEmitter) không remove trong cleanup; setInterval/setTimeout chưa clear; subscription WebSocket/Firebase không hủy; setState sau unmount trên promise; ảnh lớn không resize; giữ tham chiếu trong module scope. Phát hiện: memory profiler Android Studio / Instruments, Hermes heap snapshot."],
+ [8,"OTA update làm được gì và không làm được gì?","Được: đổi JS bundle và asset (sửa bug, đổi UI) mà không qua review store. Không được: thay đổi code native, thêm thư viện native, đổi permission. Cần quản lý runtime version để bundle mới không chạy trên binary không tương thích. Phải tuân thủ chính sách store (không đổi bản chất app)."],
+ [8,"Mô tả quy trình release mà bạn đề xuất cho một team 4 dev.","Trunk-based với feature flag; mỗi PR chạy lint + typecheck + test; merge main build bản internal (TestFlight / Internal testing) tự động; QA trên staging; tag release → build production, tăng version tự động; staged rollout 10% → 50% → 100% theo dõi crash-free rate trên Sentry/Crashlytics; hotfix JS qua OTA, native qua build mới."],
+ [8,"Android build release crash nhưng debug thì không. Bạn kiểm tra gì?","Đọc logcat của bản release. Nghi phạm thường gặp: ProGuard/R8 xóa class dùng qua reflection (thêm keep rule), biến môi trường khác nhau, khác biệt Hermes/minify, lỗi chỉ hiện khi không có Metro, cấu hình signing. Bật source map và mapping file để đọc stack trace."]
+];
+const WN=["Tất cả",...WEEKS.map((_,i)=>"Tuần "+(i+1))];
+let qf=0;
+function renderQuiz(){document.getElementById('qfilter').innerHTML=WN.map((n,i)=>`<button aria-pressed="${qf===i}" data-i="${i}">${n}</button>`).join('');
+ document.getElementById('quizlist').innerHTML=QUIZ.filter(q=>qf===0||q[0]===qf).map(q=>`<details><summary><span><span class="mono muted">T${q[0]} · </span>${q[1]}</span></summary><div class="ans">${q[2]}</div></details>`).join('');}
+document.getElementById('qfilter').addEventListener('click',e=>{if(e.target.dataset.i==null)return;qf=+e.target.dataset.i;renderQuiz();});
+renderQuiz();
+
+const IV=[
+ {c:"JavaScript / TypeScript",q:[
+  ["J","Phân biệt var, let, const. Hoisting là gì?","Scope function vs block; TDZ; const không có nghĩa là immutable với object."],
+  ["J","== khác === thế nào? Truthy/falsy?","Ép kiểu ngầm; luôn dùng ===; 0, '', null, undefined, NaN là falsy."],
+  ["M","Giải thích event loop và vì sao JS thread bận làm app đơ.","Microtask/macrotask; RN render cần JS gửi lệnh; tác vụ nặng chia nhỏ hoặc chuyển native/worklet."],
+  ["M","Viết hàm debounce. Viết type cho hàm debounce có generic.","Closure giữ timer; <code>&lt;T extends (...a:any[])=&gt;void&gt;</code>, Parameters&lt;T&gt;."],
+  ["S","Bạn thiết kế type cho response API thế nào để an toàn runtime?","TS chỉ kiểm lúc compile; validate bằng zod/valibot tại biên; sinh type từ OpenAPI."]]},
+ {c:"React",q:[
+  ["J","Props và state khác nhau thế nào?","Props từ cha, read-only; state nội bộ, đổi gây re-render."],
+  ["J","useEffect với deps [], [a], không có deps khác nhau ra sao?","Chạy 1 lần sau mount / khi a đổi / mỗi lần render; cleanup chạy trước lần sau và khi unmount."],
+  ["M","Context có vấn đề gì về hiệu năng? Giải pháp?","Mọi consumer re-render khi value đổi; tách context, memo value, dùng store có selector (Zustand, Redux)."],
+  ["M","Kể một lần bạn sửa vấn đề re-render.","Dùng Profiler tìm nguyên nhân, số liệu trước/sau, giải pháp cụ thể."],
+  ["S","React 19 / React Compiler thay đổi cách bạn viết code thế nào?","Auto-memo, Actions, use(), giảm useMemo/useCallback tay; điều kiện tuân thủ Rules of React."]]},
+ {c:"React Native core",q:[
+  ["J","ScrollView và FlatList khác nhau thế nào?","ScrollView render hết; FlatList ảo hóa, chỉ render vùng nhìn thấy."],
+  ["J","Làm sao viết code khác nhau cho iOS và Android?","Platform.OS, Platform.select, file .ios/.android."],
+  ["M","Xử lý bàn phím che input trên Android và iOS thế nào?","KeyboardAvoidingView behavior khác nhau, windowSoftInputMode, react-native-keyboard-controller."],
+  ["M","Bạn tổ chức thư mục project RN thế nào?","Feature-based, tách ui/hooks/api/store, alias path, shared components."],
+  ["S","Expo hay bare React Native cho dự án mới? Vì sao?","Expo hiện là khuyến nghị chính thức; prebuild + config plugin + dev client vẫn viết native được; trường hợp đặc thù cần bare."]]},
+ {c:"State, dữ liệu & mạng",q:[
+  ["J","Redux hoạt động thế nào? Action, reducer, store.","Luồng một chiều, reducer pure, immutable (Immer trong RTK)."],
+  ["M","Khi nào chọn Redux, Zustand hay chỉ dùng Context?","Quy mô team, devtools, middleware, boilerplate, selector."],
+  ["M","Xử lý refresh token khi nhiều request cùng hết hạn?","Queue một refresh promise, retry, logout khi fail."],
+  ["S","Thiết kế offline-first cho app ghi chép thu chi.","DB local là nguồn hiển thị, outbox hàng đợi thay đổi, sync khi có mạng, conflict (last-write-wins / version), idempotency key."],
+  ["S","Lưu token ở đâu và bảo mật app RN thế nào?","Keychain/Keystore, không lưu secret trong bundle, SSL pinning, jailbreak/root check khi cần, OWASP MASVS."]]},
+ {c:"Native & New Architecture",q:[
+  ["M","Bạn đã dùng native module nào? Có tự viết không?","Ví dụ cụ thể; cách giao tiếp Promise/callback/event."],
+  ["M","Upgrade React Native lên bản mới bạn làm thế nào?","Upgrade Helper, đọc changelog, kiểm thư viện tương thích New Arch, nâng từng bước, test cả 2 nền tảng."],
+  ["S","Giải thích JSI, Fabric, TurboModules, Codegen cho một dev mới.","Tại sao bỏ bridge, gọi đồng bộ, lazy load, type-safe spec."],
+  ["S","Một thư viện chưa hỗ trợ New Architecture, bạn xử lý ra sao?","Interop layer, tìm fork/thay thế, tự patch (patch-package), viết lại bằng Expo Modules."]]},
+ {c:"Hiệu năng, test, debug",q:[
+  ["J","Bạn debug app RN bằng công cụ gì?","React Native DevTools, console, network inspector, logcat/Xcode console."],
+  ["M","App giật khi scroll. Hướng điều tra?","JS FPS hay UI FPS; Profiler; tối ưu list; ảnh; animation trên UI thread."],
+  ["M","Bạn viết test gì cho một màn hình login?","RNTL: validate, gọi API mock, loading, lỗi, điều hướng; E2E cho flow thật."],
+  ["S","Đặt mục tiêu và theo dõi hiệu năng ở production thế nào?","TTI/startup, crash-free rate, ANR, slow frames; Sentry/Firebase Performance; ngân sách hiệu năng trong CI."]]},
+ {c:"Release & CI/CD",q:[
+  ["J","Các bước đưa app Android lên Google Play?","Keystore, build AAB, Play Console, internal testing, review."],
+  ["M","App bị Apple reject, bạn đã gặp lý do nào?","Thiếu giải thích quyền, đăng nhập Apple, nội dung, crash lúc review, metadata."],
+  ["M","OTA update có rủi ro gì?","Lệch runtime version với native, rollback, chính sách store."],
+  ["S","Thiết kế pipeline CI/CD cho app RN.","PR check, build tự động, phân môi trường, signing bảo mật trong secret, staged rollout, theo dõi sau release."]]},
+ {c:"System design mobile",q:[
+  ["S","Thiết kế màn chat realtime (tin nhắn, trạng thái gửi, ảnh).","WebSocket + fallback, optimistic UI, ID tạm, phân trang ngược, lưu local, upload nền, push khi offline."],
+  ["S","Thiết kế feed vô hạn có ảnh và video.","Cursor pagination, FlashList, prefetch, cache ảnh, chỉ phát video đang hiện, giải phóng bộ nhớ."],
+  ["S","App có 3 team cùng làm. Bạn chia kiến trúc thế nào?","Monorepo/feature module, design system chung, ranh giới API rõ, ownership, quy ước code, CI riêng từng phần."]]},
+ {c:"Hành vi (behavioral)",q:[
+  ["J","Kể về dự án RN bạn tự hào nhất.","STAR: bối cảnh, vai trò của bạn, kỹ thuật, kết quả có số."],
+  ["M","Một bug production nghiêm trọng bạn từng xử lý.","Phát hiện thế nào, khoanh vùng, hotfix, postmortem, phòng ngừa."],
+  ["M","Bất đồng với designer/BE về một yêu cầu, bạn làm gì?","Dữ liệu, đề xuất phương án, thỏa hiệp, kết quả."],
+  ["S","Bạn mentor junior hoặc nâng chất lượng code của team thế nào?","Review có hướng dẫn, tài liệu, pair programming, lint rule, đo kết quả."]]},
+ {c:"Bạn nên hỏi lại nhà tuyển dụng",q:[
+  ["J","App dùng Expo hay bare? Phiên bản RN, đã lên New Architecture chưa?","Cho biết độ cũ của codebase và khối lượng nâng cấp."],
+  ["J","Quy trình release và tỉ lệ test tự động hiện tại?","Cho biết mức trưởng thành kỹ thuật."],
+  ["M","Team mobile có bao nhiêu người, có dev native không?","Ai xử lý phần native khi cần."],
+  ["S","Vấn đề kỹ thuật lớn nhất của app hiện nay là gì?","Hiểu kỳ vọng thật cho vị trí."]]}
+];
+const LV={J:"Junior",M:"Middle",S:"Senior"};
+let lf="all";
+function renderIV(){
+ document.getElementById('lvfilter').innerHTML=[["all","Tất cả"],["J","Junior"],["M","Middle"],["S","Senior"]].map(([k,n])=>`<button aria-pressed="${lf===k}" data-l="${k}">${n}</button>`).join('');
+ document.getElementById('ivlist').innerHTML=IV.map(g=>{const qs=g.q.filter(q=>lf==="all"||q[0]===lf);if(!qs.length)return'';
+  return `<div class="qgroup"><div class="qhead"><h3>${g.c}</h3><span class="mono muted">${qs.length} câu</span></div>${qs.map(q=>`<details><summary><span><span class="tag ${q[0]==='S'?'must':q[0]==='M'?'nice':'ok'}">${LV[q[0]]}</span> ${q[1]}</span></summary><div class="ans"><span><b>Ý cần có:</b> ${q[2]}</span></div></details>`).join('')}</div>`}).join('');}
+document.getElementById('lvfilter').addEventListener('click',e=>{if(!e.target.dataset.l)return;lf=e.target.dataset.l;renderIV();});
+renderIV();
+
+const tabs=[...document.querySelectorAll('nav.tabs button')];
+function show(id){tabs.forEach(b=>{const on=b.getAttribute('aria-controls')===id;b.setAttribute('aria-selected',on);document.getElementById(b.getAttribute('aria-controls')).hidden=!on;});
+ try{localStorage.setItem('rn8w-tab',id)}catch(_){}}
+tabs.forEach(b=>b.addEventListener('click',()=>show(b.getAttribute('aria-controls'))));
+const h=location.hash.slice(1);let saved=null;try{saved=localStorage.getItem('rn8w-tab')}catch(_){}
+if(['jd','plan','quiz','iv'].includes(h))show(h);else if(saved&&['jd','plan','quiz','iv'].includes(saved))show(saved);
+</script>
+
+</body>
+</html>
