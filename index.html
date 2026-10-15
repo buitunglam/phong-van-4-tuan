@@ -6,7 +6,7 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>React Native 8 tuần</title>
+<title>React Native 4 tuần</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -97,6 +97,10 @@ ul{margin:0;padding-left:20px;display:grid;gap:4px}
 .topics label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .topics input{margin-top:5px;accent-color:var(--accent);flex:none}
 .topics input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.half{display:grid;gap:10px}
+.half+.half{padding-top:14px;border-top:1px dashed var(--line)}
+.half-label{font:600 12px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+.half-label span{color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
 .lab{border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-soft);border-radius:0 8px 8px 0;font-size:14px}
 .lab b{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:2px}
 details{background:var(--surface);border:1px solid var(--line);border-radius:8px}
@@ -158,7 +162,7 @@ pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;bord
     <span class="grp-label"><span class="l-vi">Mục</span><span class="l-en">Sections</span></span>
     <nav class="secnav" id="secnav" aria-label="Sections">
       <button data-sec="jd"><span class="n">01</span><span><span class="l-vi">JD nói gì</span><span class="l-en">What JDs ask for</span></span></button>
-      <button data-sec="plan"><span class="n">02</span><span><span class="l-vi">Lộ trình 8 tuần</span><span class="l-en">8-week plan</span></span></button>
+      <button data-sec="plan"><span class="n">02</span><span><span class="l-vi">Lộ trình 4 tuần</span><span class="l-en">4-week plan</span></span></button>
       <button data-sec="quiz"><span class="n">03</span><span><span class="l-vi">Câu hỏi luyện tập</span><span class="l-en">Practice questions</span></span></button>
       <button data-sec="iv"><span class="n">04</span><span><span class="l-vi">Câu hỏi phỏng vấn</span><span class="l-en">Interview questions</span></span></button>
       <button data-sec="lc"><span class="n">05</span><span>Live coding</span></button>
@@ -171,12 +175,12 @@ pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;bord
 <div class="wrap">
 <header class="hero" data-track="rn">
   <span class="eyebrow">Lộ trình phỏng vấn · React Native · 10/2026</span>
-  <h1>React Native trong 8 tuần</h1>
+  <h1>React Native trong 4 tuần</h1>
   <p class="lede">Tổng hợp từ các JD React Native trên TopDev, TopCV, JobsGO, ITviec, Workable, LinkedIn và các trang tuyển dụng quốc tế. Mỗi tuần có mục tiêu, checklist, bài lab và câu hỏi tự kiểm tra.</p>
 </header>
 <header class="hero" data-track="fl" hidden>
   <span class="eyebrow">Lộ trình phỏng vấn · Flutter · 10/2026</span>
-  <h1>Flutter trong 8 tuần</h1>
+  <h1>Flutter trong 4 tuần</h1>
   <p class="lede">Tổng hợp từ các JD Flutter trên TopDev, TopCV, JobsGO, ITviec, LinkedIn và các trang tuyển dụng quốc tế. Cùng cấu trúc với lộ trình React Native.</p>
 </header>
 
@@ -317,8 +321,8 @@ pre{font:12.5px/1.55 var(--mono);background:var(--accent-soft);padding:12px;bord
 <!-- ================= RN · PLAN / QUIZ / IV ================= -->
 <section class="panel" data-track="rn" data-sec="plan" hidden>
   <div style="display:grid;gap:8px">
-    <h2>Lộ trình 8 tuần</h2>
-    <p class="muted">Khoảng 10–12 giờ mỗi tuần. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab cả 8 tuần cộng lại thành một app hoàn chỉnh để đưa vào CV: <b>“Expense Tracker”</b> có login, danh sách, realtime, offline, push và CI.</p>
+    <h2>Lộ trình 4 tuần</h2>
+    <p class="muted">Khoảng 20–24 giờ mỗi tuần (3–4 giờ mỗi ngày). Mỗi tuần chia hai nửa: ngày 1–3 và ngày 4–7, mỗi nửa có checklist và lab riêng. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab cả 4 tuần cộng lại thành một app hoàn chỉnh để đưa vào CV: <b>“Expense Tracker”</b> có login, danh sách, realtime, offline, push và CI.</p>
   </div>
   <div class="box progress"><span class="mono" id="rn-pct">0%</span><div class="bar"><i id="rn-pctbar" style="width:0"></i></div><span class="muted" id="rn-pcttxt"></span></div>
   <div id="rn-weeks"></div>
@@ -581,13 +585,13 @@ function useInfiniteList&lt;T extends { id: string }&gt;(fetchPage: (cursor?: st
       <table>
         <thead><tr><th>#</th><th>Bài</th><th>Giờ</th><th>Sau tuần</th></tr></thead>
         <tbody>
-          <tr><td class="mono">1</td><td>Đếm ngược có Start / Pause / Reset, không lệch giờ khi app vào background</td><td class="mono">15′</td><td class="mono">2</td></tr>
-          <tr><td class="mono">2</td><td>Danh sách user từ <code>jsonplaceholder.typicode.com/users</code> có loading, error, retry</td><td class="mono">25′</td><td class="mono">3</td></tr>
-          <tr><td class="mono">3</td><td>Search repo GitHub (<code>api.github.com/search/repositories?q=</code>) có debounce và bỏ response cũ</td><td class="mono">30′</td><td class="mono">3</td></tr>
-          <tr><td class="mono">4</td><td>Danh sách Pokémon (<code>pokeapi.co/api/v2/pokemon?limit=20</code>) infinite scroll + pull-to-refresh</td><td class="mono">40′</td><td class="mono">4</td></tr>
-          <tr><td class="mono">5</td><td>Form đăng ký có validate, bàn phím không che, chặn submit 2 lần</td><td class="mono">30′</td><td class="mono">4</td></tr>
-          <tr><td class="mono">6</td><td>Weather app: nhập thành phố → màn chi tiết → lưu danh sách yêu thích, giữ lại khi mở lại app</td><td class="mono">45′</td><td class="mono">5</td></tr>
-          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng</td><td class="mono">20′</td><td class="mono">7</td></tr>
+          <tr><td class="mono">1</td><td>Đếm ngược có Start / Pause / Reset, không lệch giờ khi app vào background</td><td class="mono">15′</td><td class="mono">1</td></tr>
+          <tr><td class="mono">2</td><td>Danh sách user từ <code>jsonplaceholder.typicode.com/users</code> có loading, error, retry</td><td class="mono">25′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">3</td><td>Search repo GitHub (<code>api.github.com/search/repositories?q=</code>) có debounce và bỏ response cũ</td><td class="mono">30′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">4</td><td>Danh sách Pokémon (<code>pokeapi.co/api/v2/pokemon?limit=20</code>) infinite scroll + pull-to-refresh</td><td class="mono">40′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">5</td><td>Form đăng ký có validate, bàn phím không che, chặn submit 2 lần</td><td class="mono">30′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">6</td><td>Weather app: nhập thành phố → màn chi tiết → lưu danh sách yêu thích, giữ lại khi mở lại app</td><td class="mono">45′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng</td><td class="mono">20′</td><td class="mono">4</td></tr>
         </tbody>
       </table>
     </div>
@@ -736,8 +740,8 @@ function useInfiniteList&lt;T extends { id: string }&gt;(fetchPage: (cursor?: st
 <!-- ================= FLUTTER · PLAN / QUIZ / IV ================= -->
 <section class="panel" data-track="fl" data-sec="plan" hidden>
   <div style="display:grid;gap:8px">
-    <h2>Lộ trình 8 tuần</h2>
-    <p class="muted">Khoảng 10–12 giờ mỗi tuần. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab 8 tuần cộng lại thành app <b>“Expense Tracker”</b> bản Flutter: login, danh sách, offline, push, plugin native, CI.</p>
+    <h2>Lộ trình 4 tuần</h2>
+    <p class="muted">Khoảng 20–24 giờ mỗi tuần (3–4 giờ mỗi ngày). Mỗi tuần chia hai nửa: ngày 1–3 và ngày 4–7, mỗi nửa có checklist và lab riêng. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab 4 tuần cộng lại thành app <b>“Expense Tracker”</b> bản Flutter: login, danh sách, offline, push, plugin native, CI.</p>
   </div>
   <div class="box progress"><span class="mono" id="fl-pct">0%</span><div class="bar"><i id="fl-pctbar" style="width:0"></i></div><span class="muted" id="fl-pcttxt"></span></div>
   <div id="fl-weeks"></div>
@@ -1114,13 +1118,13 @@ class _UserListState extends State&lt;UserList&gt; {
       <table>
         <thead><tr><th>#</th><th>Bài</th><th>Giờ</th><th>Sau tuần</th></tr></thead>
         <tbody>
-          <tr><td class="mono">1</td><td>Đồng hồ đếm ngược Start / Pause / Reset, dispose đúng, không lệch giờ khi app vào background</td><td class="mono">15′</td><td class="mono">2</td></tr>
-          <tr><td class="mono">2</td><td>Danh sách user từ <code>jsonplaceholder.typicode.com/users</code> có loading, error, retry; làm bằng FutureBuilder rồi chuyển sang Cubit</td><td class="mono">25′</td><td class="mono">4</td></tr>
-          <tr><td class="mono">3</td><td>Search repo GitHub (<code>api.github.com/search/repositories?q=</code>) có debounce và bỏ response cũ</td><td class="mono">30′</td><td class="mono">4</td></tr>
-          <tr><td class="mono">4</td><td>Danh sách Pokémon (<code>pokeapi.co/api/v2/pokemon?limit=20</code>) infinite scroll + pull-to-refresh</td><td class="mono">40′</td><td class="mono">5</td></tr>
-          <tr><td class="mono">5</td><td>Form đăng ký có validate, chặn submit 2 lần, bàn phím không che</td><td class="mono">30′</td><td class="mono">3</td></tr>
-          <tr><td class="mono">6</td><td>Task manager dùng SQLite (sqflite hoặc Drift): thêm, đánh dấu xong, xóa, tìm kiếm; chạy được cả dọc và ngang</td><td class="mono">60′</td><td class="mono">5</td></tr>
-          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng</td><td class="mono">20′</td><td class="mono">7</td></tr>
+          <tr><td class="mono">1</td><td>Đồng hồ đếm ngược Start / Pause / Reset, dispose đúng, không lệch giờ khi app vào background</td><td class="mono">15′</td><td class="mono">1</td></tr>
+          <tr><td class="mono">2</td><td>Danh sách user từ <code>jsonplaceholder.typicode.com/users</code> có loading, error, retry; làm bằng FutureBuilder rồi chuyển sang Cubit</td><td class="mono">25′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">3</td><td>Search repo GitHub (<code>api.github.com/search/repositories?q=</code>) có debounce và bỏ response cũ</td><td class="mono">30′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">4</td><td>Danh sách Pokémon (<code>pokeapi.co/api/v2/pokemon?limit=20</code>) infinite scroll + pull-to-refresh</td><td class="mono">40′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">5</td><td>Form đăng ký có validate, chặn submit 2 lần, bàn phím không che</td><td class="mono">30′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">6</td><td>Task manager dùng SQLite (sqflite hoặc Drift): thêm, đánh dấu xong, xóa, tìm kiếm; chạy được cả dọc và ngang</td><td class="mono">60′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng</td><td class="mono">20′</td><td class="mono">4</td></tr>
         </tbody>
       </table>
     </div>
@@ -1148,7 +1152,7 @@ class _UserListState extends State&lt;UserList&gt; {
 <!-- ================= NEXT.JS ================= -->
 <header class="hero" data-track="nx" hidden>
   <span class="eyebrow">Lộ trình phỏng vấn · Next.js · 10/2026</span>
-  <h1>Next.js trong 8 tuần</h1>
+  <h1>Next.js trong 4 tuần</h1>
   <p class="lede">Tổng hợp từ các JD React/Next.js trên TopDev, ITviec, TopCV, JobsGO, VietnamWorks, LinkedIn và các trang tuyển dụng quốc tế. Kiến thức bám theo Next.js 16.4 và React 19.3, bản mới nhất tính đến 10/2026. Cùng cấu trúc với lộ trình React Native và Flutter.</p>
 </header>
 
@@ -1319,8 +1323,8 @@ class _UserListState extends State&lt;UserList&gt; {
 <!-- ================= NEXT.JS · PLAN / QUIZ / IV ================= -->
 <section class="panel" data-track="nx" data-sec="plan" hidden>
   <div style="display:grid;gap:8px">
-    <h2>Lộ trình 8 tuần</h2>
-    <p class="muted">Khoảng 10–12 giờ mỗi tuần. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab 8 tuần cộng lại thành web app <b>“Expense Tracker”</b> bằng Next.js 16: đăng nhập, danh sách có search và filter trong URL, Server Actions, caching, test, CI và deploy.</p>
+    <h2>Lộ trình 4 tuần</h2>
+    <p class="muted">Khoảng 20–24 giờ mỗi tuần (3–4 giờ mỗi ngày). Mỗi tuần chia hai nửa: ngày 1–3 và ngày 4–7, mỗi nửa có checklist và lab riêng. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab 4 tuần cộng lại thành web app <b>“Expense Tracker”</b> bằng Next.js 16: đăng nhập, danh sách có search và filter trong URL, Server Actions, caching, test, CI và deploy.</p>
   </div>
   <div class="box progress"><span class="mono" id="nx-pct">0%</span><div class="bar"><i id="nx-pctbar" style="width:0"></i></div><span class="muted" id="nx-pcttxt"></span></div>
   <div id="nx-weeks"></div>
@@ -1705,12 +1709,12 @@ export default async function TransactionsPage({ searchParams }) {
         <thead><tr><th>#</th><th>Bài</th><th>Giờ</th><th>Sau tuần</th></tr></thead>
         <tbody>
           <tr><td class="mono">1</td><td>Tự viết <code>debounce</code> (có <code>cancel</code>), <code>throttle</code> và <code>Promise.allSettled</code>, kèm test bằng Vitest</td><td class="mono">25′</td><td class="mono">1</td></tr>
-          <tr><td class="mono">2</td><td>Tabs hoặc Accordion dùng được bằng bàn phím theo ARIA APG, không dùng thư viện</td><td class="mono">25′</td><td class="mono">2</td></tr>
-          <tr><td class="mono">3</td><td>Danh sách + trang chi tiết <code>/products/[id]</code> từ <code>dummyjson.com/products</code> có <code>generateMetadata</code>, <code>notFound()</code>, <code>loading.tsx</code>, <code>error.tsx</code></td><td class="mono">30′</td><td class="mono">3</td></tr>
-          <tr><td class="mono">4</td><td>Search sản phẩm (<code>dummyjson.com/products/search?q=</code>) có debounce, đồng bộ URL, Suspense, không hiện kết quả cũ</td><td class="mono">30′</td><td class="mono">4</td></tr>
-          <tr><td class="mono">5</td><td>Form thêm giao dịch bằng Server Action: zod, <code>useActionState</code>, giữ giá trị khi lỗi, <code>useOptimistic</code></td><td class="mono">40′</td><td class="mono">5</td></tr>
-          <tr><td class="mono">6</td><td>Data table sort + filter + phân trang lưu trong <code>searchParams</code>, có <code>aria-sort</code></td><td class="mono">45′</td><td class="mono">5</td></tr>
-          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng (Server Component + Server Action)</td><td class="mono">20′</td><td class="mono">7</td></tr>
+          <tr><td class="mono">2</td><td>Tabs hoặc Accordion dùng được bằng bàn phím theo ARIA APG, không dùng thư viện</td><td class="mono">25′</td><td class="mono">1</td></tr>
+          <tr><td class="mono">3</td><td>Danh sách + trang chi tiết <code>/products/[id]</code> từ <code>dummyjson.com/products</code> có <code>generateMetadata</code>, <code>notFound()</code>, <code>loading.tsx</code>, <code>error.tsx</code></td><td class="mono">30′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">4</td><td>Search sản phẩm (<code>dummyjson.com/products/search?q=</code>) có debounce, đồng bộ URL, Suspense, không hiện kết quả cũ</td><td class="mono">30′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">5</td><td>Form thêm giao dịch bằng Server Action: zod, <code>useActionState</code>, giữ giá trị khi lỗi, <code>useOptimistic</code></td><td class="mono">40′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">6</td><td>Data table sort + filter + phân trang lưu trong <code>searchParams</code>, có <code>aria-sort</code></td><td class="mono">45′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng (Server Component + Server Action)</td><td class="mono">20′</td><td class="mono">4</td></tr>
         </tbody>
       </table>
     </div>
@@ -1747,7 +1751,7 @@ export default async function TransactionsPage({ searchParams }) {
 <!-- ================= ANDROID ================= -->
 <header class="hero" data-track="an" hidden>
   <span class="eyebrow">Lộ trình phỏng vấn · Android native (Kotlin) · 10/2026</span>
-  <h1>Android Kotlin trong 8 tuần</h1>
+  <h1>Android Kotlin trong 4 tuần</h1>
   <p class="lede">Tổng hợp từ các JD Android native trên ITviec, TopDev, TopCV, JobsGO, VietnamWorks, LinkedIn và các trang tuyển dụng quốc tế (Greenhouse, Lever, Ashby, Workable, Djinni). Cùng cấu trúc với lộ trình React Native và Flutter.</p>
 </header>
 
@@ -1897,8 +1901,8 @@ export default async function TransactionsPage({ searchParams }) {
 <!-- ================= ANDROID · PLAN / QUIZ / IV ================= -->
 <section class="panel" data-track="an" data-sec="plan" hidden>
   <div style="display:grid;gap:8px">
-    <h2>Lộ trình 8 tuần</h2>
-    <p class="muted">Khoảng 10–12 giờ mỗi tuần. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab 8 tuần cộng lại thành app <b>“Expense Tracker”</b> bản Android native: Compose, multi-module, Hilt, Room offline-first, WorkManager sync, push, test, Baseline Profile, CI.</p>
+    <h2>Lộ trình 4 tuần</h2>
+    <p class="muted">Khoảng 20–24 giờ mỗi tuần (3–4 giờ mỗi ngày). Mỗi tuần chia hai nửa: ngày 1–3 và ngày 4–7, mỗi nửa có checklist và lab riêng. Tick vào mục đã học, tiến độ được lưu trên trình duyệt này. Lab 4 tuần cộng lại thành app <b>“Expense Tracker”</b> bản Android native: Compose, multi-module, Hilt, Room offline-first, WorkManager sync, push, test, Baseline Profile, CI.</p>
   </div>
   <div class="box progress"><span class="mono" id="an-pct">0%</span><div class="bar"><i id="an-pctbar" style="width:0"></i></div><span class="muted" id="an-pcttxt"></span></div>
   <div id="an-weeks"></div>
@@ -2323,13 +2327,13 @@ fun UserListScreen(viewModel: UserListViewModel, initialQuery: String) {
       <table>
         <thead><tr><th>#</th><th>Bài</th><th>Giờ</th><th>Sau tuần</th></tr></thead>
         <tbody>
-          <tr><td class="mono">1</td><td>Counter + form đăng nhập có validate, state sống qua xoay màn và process death (<code>rememberSaveable</code> / <code>SavedStateHandle</code>), kiểm tra bằng <code>adb shell am kill</code></td><td class="mono">20′</td><td class="mono">3</td></tr>
-          <tr><td class="mono">2</td><td>Danh sách user từ <code>jsonplaceholder.typicode.com/users</code> có loading, error, retry; ViewModel + UiState sealed + Retrofit</td><td class="mono">30′</td><td class="mono">4</td></tr>
-          <tr><td class="mono">3</td><td>Search repo GitHub (<code>api.github.com/search/repositories?q=</code>) có debounce, <code>flatMapLatest</code>, <code>stateIn</code></td><td class="mono">30′</td><td class="mono">5</td></tr>
-          <tr><td class="mono">4</td><td>Danh sách Pokémon (<code>pokeapi.co/api/v2/pokemon?limit=20</code>) infinite scroll + pull-to-refresh, làm tay rồi làm lại bằng Paging 3</td><td class="mono">45′</td><td class="mono">6</td></tr>
-          <tr><td class="mono">5</td><td>Cache danh sách bài 2 vào Room, hiển thị khi tắt mạng, refresh nền khi có mạng</td><td class="mono">40′</td><td class="mono">6</td></tr>
-          <tr><td class="mono">6</td><td>App danh bạ nhân viên kiểu Block: một màn list có ảnh, pull-to-refresh, empty/error, unit test cho ViewModel, README nêu trade-off</td><td class="mono">90′</td><td class="mono">7</td></tr>
-          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng</td><td class="mono">20′</td><td class="mono">5</td></tr>
+          <tr><td class="mono">1</td><td>Counter + form đăng nhập có validate, state sống qua xoay màn và process death (<code>rememberSaveable</code> / <code>SavedStateHandle</code>), kiểm tra bằng <code>adb shell am kill</code></td><td class="mono">20′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">2</td><td>Danh sách user từ <code>jsonplaceholder.typicode.com/users</code> có loading, error, retry; ViewModel + UiState sealed + Retrofit</td><td class="mono">30′</td><td class="mono">2</td></tr>
+          <tr><td class="mono">3</td><td>Search repo GitHub (<code>api.github.com/search/repositories?q=</code>) có debounce, <code>flatMapLatest</code>, <code>stateIn</code></td><td class="mono">30′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">4</td><td>Danh sách Pokémon (<code>pokeapi.co/api/v2/pokemon?limit=20</code>) infinite scroll + pull-to-refresh, làm tay rồi làm lại bằng Paging 3</td><td class="mono">45′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">5</td><td>Cache danh sách bài 2 vào Room, hiển thị khi tắt mạng, refresh nền khi có mạng</td><td class="mono">40′</td><td class="mono">3</td></tr>
+          <tr><td class="mono">6</td><td>App danh bạ nhân viên kiểu Block: một màn list có ảnh, pull-to-refresh, empty/error, unit test cho ViewModel, README nêu trade-off</td><td class="mono">90′</td><td class="mono">4</td></tr>
+          <tr><td class="mono">7</td><td>Code review đoạn mẫu ở trên rồi viết lại cho đúng</td><td class="mono">20′</td><td class="mono">3</td></tr>
         </tbody>
       </table>
     </div>
@@ -3670,6 +3674,32 @@ function refsHtml(keys,lang){
  return `<div class="refs"><b>${lang==='en'?'Read more':'Đọc đầy đủ'}</b>${keys.map(k=>`<a href="${R[k][1]}" target="_blank" rel="noopener">${R[k][0]}</a>`).join('')}</div>`;
 }
 
+/* ---------------- 4-week plan: each week = two of the original weekly modules ---------------- */
+const PLAN4={
+ rn:[
+  {t:"JavaScript, TypeScript & React",g:"Trả lời trôi chảy câu hỏi JS/TS nền tảng, giải thích được vì sao component re-render và chặn đúng chỗ."},
+  {t:"React Native UI, navigation & state",g:"Dựng UI mượt trên cả iOS và Android, chọn và bảo vệ được cách quản lý state cho từng loại dữ liệu."},
+  {t:"Networking, tích hợp & kiến trúc native",g:"Có lớp API production-ready (token, realtime, push), giải thích được New Architecture và viết được native module."},
+  {t:"Hiệu năng, test, release & phỏng vấn thử",g:"Đo trước khi tối ưu, có test ở 3 tầng, tự đưa app lên store qua pipeline và kể được dự án theo STAR."}],
+ fl:[
+  {t:"Dart & Flutter core",g:"Nắm async, isolate, null safety và Dart 3; giải thích được widget rebuild và layout constraint."},
+  {t:"UI nâng cao, state management & kiến trúc",g:"Dựng UI phức tạp mà vẫn mượt, chọn và bảo vệ được state management, navigation và kiến trúc."},
+  {t:"Networking, dữ liệu & native",g:"Lớp dữ liệu production-ready (token, offline, push), viết được plugin native và cấu hình nhiều môi trường."},
+  {t:"Hiệu năng, test, release & phỏng vấn thử",g:"Đo trước khi tối ưu, có test 3 tầng cộng golden, tự đưa app lên store qua pipeline và kể được dự án theo STAR."}],
+ nx:[
+  {t:"JavaScript, TypeScript & React 19",g:"Vững nền JS/TS và React 19: render, hooks, khi nào re-render và cách tránh effect thừa."},
+  {t:"App Router, data fetching & caching",g:"Giải thích được Server và Client Component, routing, các tầng cache của Next.js 16 và cách mutate dữ liệu đúng."},
+  {t:"Client state, form, styling, auth & bảo mật",g:"Form và state phía client chạy tốt, xác thực và phân quyền đặt đúng chỗ, không lộ dữ liệu hay secret."},
+  {t:"Hiệu năng, SEO, test, deploy & phỏng vấn thử",g:"Đạt Core Web Vitals, có test nhiều tầng, deploy qua CI/CD và kể được dự án theo STAR."}],
+ an:[
+  {t:"Kotlin & Android nền tảng",g:"Viết Kotlin idiomatic; nắm lifecycle, các component, config change và process death."},
+  {t:"Jetpack Compose, kiến trúc & DI",g:"Dựng UI Compose đặt state đúng chỗ, kiến trúc theo guide chính thức, DI với Hilt."},
+  {t:"Coroutines, Flow, dữ liệu & offline",g:"Concurrency an toàn, collect Flow theo lifecycle, lớp dữ liệu Room + network chạy được offline."},
+  {t:"Hiệu năng, test, release, bảo mật & phỏng vấn thử",g:"Đo và tối ưu startup, jank, ANR; test nhiều tầng; release an toàn lên Play và kể được dự án theo STAR."}]
+};
+const HALF=["Ngày 1–3","Ngày 4–7"];
+const toPlanWeek=w=>Math.ceil(w/2); // original module 1..8 -> plan week 1..4
+
 /* ---------------- App ---------------- */
 // Stack registry: to add a stack, add an entry here plus its --{id}/--{id}-soft color tokens,
 // its hero/sections in HTML (data-track="{id}") and its data arrays in TR below.
@@ -3706,12 +3736,16 @@ function renderFreq(t){const T=TR[t],el=$(t+'-freq');if(!el)return;
 
 function renderWeeks(t){const T=TR[t],el=$(t+'-weeks');if(!el)return;
  let done={};try{done=JSON.parse(localStorage.getItem(T.key)||'{}')}catch(e){}
- el.innerHTML=T.weeks.map((w,i)=>`
- <div class="week"><div class="idx"><span>TUẦN</span><b>${i+1}</b></div>
-  <div class="body"><h3>${w.t}</h3><p class="muted">${w.g}</p>
-   <ul class="topics">${w.k.map((k,j)=>`<li><label><input type="checkbox" id="${t}w${i}k${j}" data-k="w${i}k${j}" ${done['w'+i+'k'+j]?'checked':''}><span>${k}</span></label></li>`).join('')}</ul>
-   <div class="lab"><b>Lab</b>${w.lab}</div>
-   <p class="mono muted">Tài liệu: ${w.r}</p></div></div>`).join('');
+ const plan=PLAN4[t].map((m,i)=>({...m,mods:[2*i,2*i+1].filter(x=>T.weeks[x]).map(x=>({i:x,w:T.weeks[x]}))}));
+ el.innerHTML=plan.map((p,n)=>`
+ <div class="week"><div class="idx"><span>TUẦN</span><b>${n+1}</b></div>
+  <div class="body"><h3>${p.t}</h3><p class="muted">${p.g}</p>
+   ${p.mods.map(({i,w},h)=>`<div class="half">
+    <span class="half-label">${HALF[h]} · <span>${w.t}</span></span>
+    <ul class="topics">${w.k.map((k,j)=>`<li><label><input type="checkbox" id="${t}w${i}k${j}" data-k="w${i}k${j}" ${done['w'+i+'k'+j]?'checked':''}><span>${k}</span></label></li>`).join('')}</ul>
+    <div class="lab"><b>Lab · ${HALF[h]}</b>${w.lab}</div>
+    <p class="mono muted">Tài liệu: ${w.r}</p></div>`).join('')}
+  </div></div>`).join('');
  const total=T.weeks.reduce((a,w)=>a+w.k.length,0);
  const upd=()=>{const n=Object.values(done).filter(Boolean).length,p=total?Math.round(n/total*100):0;
   $(t+'-pct').textContent=p+'%';$(t+'-pctbar').style.width=p+'%';$(t+'-pcttxt').textContent=`${n}/${total} chủ đề`;};
@@ -3719,10 +3753,10 @@ function renderWeeks(t){const T=TR[t],el=$(t+'-weeks');if(!el)return;
  upd();}
 
 function renderQuiz(t){const T=TR[t],L=UI[prefs.lang],en=prefs.lang==='en',f=$(t+'-qfilter'),list=$(t+'-quizlist');if(!f)return;
- const weeks=[...new Set(T.quiz.map(q=>q[0]))].sort((a,b)=>a-b);
+ const weeks=[...new Set(T.quiz.map(q=>toPlanWeek(q[0])))].sort((a,b)=>a-b);
  f.innerHTML=[0,...weeks].map(w=>`<button aria-pressed="${T.qf===w}" data-w="${w}">${w?L.week+w:L.all}</button>`).join('');
  f.onclick=e=>{const b=e.target.closest('button');if(!b)return;T.qf=+b.dataset.w;renderQuiz(t);};
- list.innerHTML=T.quiz.map((q,i)=>[q,i]).filter(([q])=>!T.qf||q[0]===T.qf).map(([q,i])=>`<details><summary><span><span class="mono muted">${en?'W':'T'}${q[0]} · </span>${en?q[3]:q[1]}</span></summary><div class="ans"><div>${en?q[4]:q[2]}</div>${refsHtml(T.qref[i],prefs.lang)}</div></details>`).join('');}
+ list.innerHTML=T.quiz.map((q,i)=>[q,i]).filter(([q])=>!T.qf||toPlanWeek(q[0])===T.qf).map(([q,i])=>`<details><summary><span><span class="mono muted">${en?'W':'T'}${toPlanWeek(q[0])} · </span>${en?q[3]:q[1]}</span></summary><div class="ans"><div>${en?q[4]:q[2]}</div>${refsHtml(T.qref[i],prefs.lang)}</div></details>`).join('');}
 
 function renderIV(t){const T=TR[t],L=UI[prefs.lang],en=prefs.lang==='en',f=$(t+'-lvfilter'),list=$(t+'-ivlist');if(!f)return;
  f.innerHTML=[['all',L.all],['J',L.lv.J],['M',L.lv.M],['S',L.lv.S]].map(([k,n])=>`<button aria-pressed="${T.lf===k}" data-l="${k}">${n}</button>`).join('');
@@ -3744,7 +3778,7 @@ function apply(scroll){
  $('trackSelect').value=track;
  document.querySelectorAll('#langSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
  document.querySelectorAll('#secnav button').forEach(b=>b.setAttribute('aria-current',b.dataset.sec===sec));
- document.title=`${STACKS.find(s=>s.id===track).name} 8 tuần`;
+ document.title=`${STACKS.find(s=>s.id===track).name} 4 tuần`;
  try{history.replaceState(null,'','#'+track+'-'+sec)}catch(e){}
  savePrefs();
  if(scroll)window.scrollTo({top:0});
