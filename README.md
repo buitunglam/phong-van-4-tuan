@@ -2,7 +2,7 @@
 
 Bộ tài liệu ôn tập để đi phỏng vấn vị trí **React Native, Flutter, Next.js và Android (Kotlin)**, tập trung vào cấp Middle–Senior ở thị trường Việt Nam. Toàn bộ nội dung bám theo yêu cầu trong các JD thực tế, không phải danh sách câu hỏi chung chung.
 
-**Xem trực tiếp:** https://buitunglam.github.io/rn-8-tuan
+**Xem trực tiếp:** https://buitunglam.github.io/phong-van-4-tuan/
 
 ## Có gì bên trong
 
