@@ -1,6 +1,6 @@
-# Lộ trình ôn phỏng vấn Mobile, Web, Backend & Product Owner
+# Lộ trình ôn phỏng vấn Mobile, Web, Backend, Product Owner & Business Analyst
 
-Bộ tài liệu ôn tập để đi phỏng vấn vị trí **React Native, Flutter, React.js, Next.js, Android (Kotlin), Node.js backend và Product Owner (mobile app)**, tập trung vào thị trường Việt Nam (Middle–Senior với các track kỹ thuật, Junior–Middle với Product Owner). Toàn bộ nội dung bám theo yêu cầu trong các JD thực tế, không phải danh sách câu hỏi chung chung.
+Bộ tài liệu ôn tập để đi phỏng vấn vị trí **React Native, Flutter, React.js, Next.js, Android (Kotlin), Node.js backend, Product Owner (mobile app) và Business Analyst (IT)**, tập trung vào thị trường Việt Nam (Middle–Senior với các track kỹ thuật, Junior–Middle với Product Owner và Business Analyst). Toàn bộ nội dung bám theo yêu cầu trong các JD thực tế, không phải danh sách câu hỏi chung chung.
 
 **Xem trực tiếp:** https://buitunglam.github.io/phong-van-4-tuan/
 
@@ -11,11 +11,11 @@ Mỗi lộ trình có 5 mục, chọn ở menu bên trái (trên điện thoại
 | Mục | Nội dung |
 |---|---|
 | **JD nói gì** | Tần suất từng kỹ năng trên các JD đã đọc, bảng tin Senior trên TopCV / ITviec / TopDev, mức lương, khác biệt giữa Middle và Senior |
-| **Lộ trình 4 tuần** | Mỗi tuần chia ngày 1–3 và ngày 4–7, có checklist, lab và tài liệu. Bấm vào từng chủ đề để xem **Khái niệm, Giải thích và Ví dụ thực tế** (528 chủ đề). Lab của cả 4 tuần cộng lại thành một app hoàn chỉnh để đưa vào CV (Node.js là backend API, React.js là web app cho chính app đó, Product Owner là PO portfolio cho app đó) |
+| **Lộ trình 4 tuần** | Mỗi tuần chia ngày 1–3 và ngày 4–7, có checklist, lab và tài liệu. Bấm vào từng chủ đề để xem **Khái niệm, Giải thích và Ví dụ thực tế** (608 chủ đề). Lab của cả 4 tuần cộng lại thành một app hoàn chỉnh để đưa vào CV (Node.js là backend API, React.js là web app cho chính app đó, Product Owner là PO portfolio cho app đó, Business Analyst là BA portfolio cho bản doanh nghiệp của app đó) |
 | **Câu hỏi luyện tập** | Câu hỏi kèm đáp án mẫu, lọc theo tuần |
 | **Câu hỏi phỏng vấn** | Câu hỏi theo nhóm và cấp độ (Junior / Middle / Senior), kèm các ý interviewer muốn nghe |
 | **Live coding** | Các dạng đề hay gặp, bảng chấm điểm, cách chia 60 phút, code mẫu nên thuộc, bài code review tìm lỗi và 7 bài luyện bấm giờ |
-| **Case study** (Product Owner) | Thay cho live coding: các dạng vòng case và take-home, bảng chấm, cách chia 45 phút, 2 bài mẫu có lời giải (trial-to-paid giảm, thiết kế A/B test paywall), bài review tìm 8 lỗi trong PRD và kết quả A/B test, 7 bài luyện bấm giờ |
+| **Case study** (Product Owner, Business Analyst) | Thay cho live coding: các dạng vòng case và take-home, bảng chấm, cách chia 45 phút, 2 bài mẫu có lời giải, bài review tìm lỗi, 7 bài luyện bấm giờ. Product Owner: trial-to-paid giảm, thiết kế A/B test paywall, review 8 lỗi trong PRD và kết quả A/B test. Business Analyst: elicitation role-play, user story + acceptance criteria + SQL cho rule duyệt theo hạn mức, review 11 lỗi trong một đoạn SRS, BPMN và ERD |
 
 | Lộ trình | Câu luyện tập | Câu phỏng vấn | Phiên bản bám theo |
 |---|---|---|---|
@@ -26,11 +26,12 @@ Mỗi lộ trình có 5 mục, chọn ở menu bên trái (trên điện thoại
 | Android | 34 | 46 | Android 17 (API 37), Compose, Room 3, Navigation 3 |
 | Node.js | 32 | 47 | Node 24 LTS (Node 26 lên LTS 28/10/2026), TypeScript 7, Express 5, NestJS 12, PostgreSQL 18 |
 | Product Owner | 32 | 53 | Scrum Guide 2020, App Review Guidelines (16/10/2026), chính sách và biểu phí Google Play 2026, Firebase / GA4, RevenueCat |
+| Business Analyst | 32 | 53 | BABOK v3 và The Business Analysis Standard v2.0 (IIBA), BPMN 2.0.2, UML 2.5.1, ISO/IEC/IEEE 29148:2018, ISO/IEC 25010:2023, Scrum Guide 2020, Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15, Thông tư 50/2024 và 77/2025 của NHNN |
 
 Một vài tính năng nhỏ:
 
 - **Song ngữ:** nút **VI / EN** đổi câu hỏi và câu trả lời sang tiếng Anh, dùng để luyện phỏng vấn bằng tiếng Anh.
-- **Đọc đầy đủ:** mỗi câu trả lời có link tới tài liệu chính thức (react.dev, reactnative.dev, docs.flutter.dev, dart.dev, nextjs.org, developer.android.com, kotlinlang.org, nodejs.org, docs.nestjs.com, web.dev, tanstack.com, scrumguides.org, developer.apple.com, support.google.com/googleplay, firebase.google.com, revenuecat.com…).
+- **Đọc đầy đủ:** mỗi câu trả lời có link tới tài liệu chính thức (react.dev, reactnative.dev, docs.flutter.dev, dart.dev, nextjs.org, developer.android.com, kotlinlang.org, nodejs.org, docs.nestjs.com, web.dev, tanstack.com, scrumguides.org, developer.apple.com, support.google.com/googleplay, firebase.google.com, revenuecat.com, iiba.org, omg.org…).
 - **Lưu tiến độ:** các mục đã tick trong checklist được lưu trên trình duyệt bạn đang dùng.
 
 ## Cách dùng
@@ -38,11 +39,11 @@ Một vài tính năng nhỏ:
 1. Mở mục **JD nói gì** của lộ trình bạn ứng tuyển để biết nhà tuyển dụng cần gì.
 2. Học theo **Lộ trình 4 tuần**, khoảng 3–4 giờ mỗi ngày, tick từng chủ đề khi xong.
 3. Cuối mỗi nửa tuần, trả lời thành tiếng các **Câu hỏi luyện tập** của tuần đó trước khi mở đáp án.
-4. Tuần cuối, làm các bài **Live coding** (hoặc **Case study** với Product Owner) có bấm giờ và quay màn hình, rồi luyện **Câu hỏi phỏng vấn** theo đúng cấp độ.
+4. Tuần cuối, làm các bài **Live coding** (hoặc **Case study** với Product Owner và Business Analyst) có bấm giờ và quay màn hình, rồi luyện **Câu hỏi phỏng vấn** theo đúng cấp độ.
 
 ## Nguồn dữ liệu
 
-- **JD:** lấy từ TopDev, TopCV, ITviec, JobsGO, VietnamWorks, CareerViet, LinkedIn, trang tuyển dụng của công ty và các trang quốc tế (Lever, Greenhouse, Workable, Ashby, Djinni), tổng hợp tháng 10/2026. Track Product Owner bám thêm hai JD cụ thể (TDC00970, TDC00957) và đếm trên 24 JD PO app mobile, game, subscription.
+- **JD:** lấy từ TopDev, TopCV, ITviec, JobsGO, VietnamWorks, CareerViet, LinkedIn, trang tuyển dụng của công ty và các trang quốc tế (Lever, Greenhouse, Workable, Ashby, Djinni), tổng hợp tháng 10/2026. Track Product Owner bám thêm hai JD cụ thể (TDC00970, TDC00957) và đếm trên 24 JD PO app mobile, game, subscription. Track Business Analyst đếm trên 48 JD BA mảng phần mềm đọc toàn văn trên ITviec, VietnamWorks, TopDev, Joboko (outsourcing, ngân hàng và fintech, product, khách Nhật).
   - Một số trang chặn đọc chi tiết, nên các tin đó chỉ dựa trên đoạn trích của công cụ tìm kiếm. Trên trang có ghi chú rõ.
   - Nhiều tin đã hết hạn nhưng yêu cầu vẫn đại diện cho thị trường.
 - **Kiến thức:** ưu tiên tài liệu chính thức. Các mốc phiên bản (Next.js 16, Android 17, yêu cầu target API của Google Play, lịch LTS của Node.js…) đã được đối chiếu với trang chính thức tại thời điểm viết.
@@ -64,6 +65,6 @@ tracks/<lộ trình>/
   explain.js               khái niệm / giải thích / ví dụ cho từng chủ đề của lộ trình
 ```
 
-Thư mục `tracks/`: `react-native`, `flutter`, `nextjs`, `reactjs`, `android`, `nodejs`, `product-owner`.
+Thư mục `tracks/`: `react-native`, `flutter`, `nextjs`, `reactjs`, `android`, `nodejs`, `product-owner`, `business-analyst`.
 
 Thêm một lộ trình mới: tạo `tracks/<tên>/{page,data,explain}.js` theo mẫu của lộ trình có sẵn, thêm 3 thẻ `<script>` vào `index.html`, thêm một dòng vào `STACKS` và `TR` trong `assets/app.js`, và thêm cặp màu `--<id>` / `--<id>-soft` trong `assets/styles.css`.

@@ -9,7 +9,7 @@ img{max-width:100%}
   --bg:#f5f7f8; --surface:#ffffff; --fg:#14212b; --muted:#5b6b77; --line:#d9e1e6;
   --rn:#0b7f9e; --rn-soft:#e2f2f6; --fl:#2f5fc4; --fl-soft:#e6ecfa;
   --nx:#2d333b; --nx-soft:#e8eaee; --an:#2c7a4b; --an-soft:#e2f1e8; --nd:#8a5d00; --nd-soft:#f6eedb; --rj:#b0306a; --rj-soft:#f9e6ef;
-  --po:#6a45bf; --po-soft:#efe9fb;
+  --po:#6a45bf; --po-soft:#efe9fb; --ba:#b04a12; --ba-soft:#fbece2;
   --accent:var(--rn); --accent-soft:var(--rn-soft); --must:#b5432f; --nice:#5a6fb0; --ok:#2f8a57;
   --display:"Bricolage Grotesque","Be Vietnam Pro",system-ui,sans-serif;
   --body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -17,11 +17,11 @@ img{max-width:100%}
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0f171d; --surface:#16212a; --fg:#e4ecf0; --muted:#93a4b0; --line:#273641;
-  --rn:#4cc3e0; --rn-soft:#16323c; --fl:#86a8f2; --fl-soft:#1b2744; --nx:#d5dbe2; --nx-soft:#252c34; --an:#6fcf97; --an-soft:#173326; --nd:#f2c14e; --nd-soft:#3a2e12; --rj:#f28cb9; --rj-soft:#3b1b2b; --po:#b9a0f5; --po-soft:#2a2342;
+  --rn:#4cc3e0; --rn-soft:#16323c; --fl:#86a8f2; --fl-soft:#1b2744; --nx:#d5dbe2; --nx-soft:#252c34; --an:#6fcf97; --an-soft:#173326; --nd:#f2c14e; --nd-soft:#3a2e12; --rj:#f28cb9; --rj-soft:#3b1b2b; --po:#b9a0f5; --po-soft:#2a2342; --ba:#f4a271; --ba-soft:#3a2418;
   --must:#f08a72; --nice:#9fb0ee; --ok:#6cc995; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0f171d; --surface:#16212a; --fg:#e4ecf0; --muted:#93a4b0; --line:#273641;
-  --rn:#4cc3e0; --rn-soft:#16323c; --fl:#86a8f2; --fl-soft:#1b2744; --nx:#d5dbe2; --nx-soft:#252c34; --an:#6fcf97; --an-soft:#173326; --nd:#f2c14e; --nd-soft:#3a2e12; --rj:#f28cb9; --rj-soft:#3b1b2b; --po:#b9a0f5; --po-soft:#2a2342;
+  --rn:#4cc3e0; --rn-soft:#16323c; --fl:#86a8f2; --fl-soft:#1b2744; --nx:#d5dbe2; --nx-soft:#252c34; --an:#6fcf97; --an-soft:#173326; --nd:#f2c14e; --nd-soft:#3a2e12; --rj:#f28cb9; --rj-soft:#3b1b2b; --po:#b9a0f5; --po-soft:#2a2342; --ba:#f4a271; --ba-soft:#3a2418;
   --must:#f08a72; --nice:#9fb0ee; --ok:#6cc995; color-scheme:dark}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}

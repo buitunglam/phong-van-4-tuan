@@ -2,7 +2,7 @@
    Track content lives in tracks/<name>/{page,data,explain}.js, loaded before this file. */
 
 /* ---------------- Further reading (official docs first), owned by each track ---------------- */
-const R={...RN_R,...FL_R,...NX_R,...AN_R,...ND_R,...RJ_R,...PO_R};
+const R={...RN_R,...FL_R,...NX_R,...AN_R,...ND_R,...RJ_R,...PO_R,...BA_R};
 
 function refsHtml(keys,lang){
  if(!keys||!keys.length)return'';
@@ -23,7 +23,8 @@ const STACKS=[
  {id:'rj',name:'React.js'},
  {id:'an',name:'Android'},
  {id:'nd',name:'Node.js'},
- {id:'po',name:'Product Owner',lc:'Case study'}
+ {id:'po',name:'Product Owner',lc:'Case study'},
+ {id:'ba',name:'Business Analyst',lc:'Case study'}
 ];
 const TR={
  rn:{page:RN_PAGE,plan:RN_PLAN,freq:RN_FREQ,total:RN_FREQ_TOTAL,weeks:RN_WEEKS,quiz:RN_QUIZ,qref:RN_QUIZ_REF,iv:RN_IV,ivref:RN_IV_REF,expl:typeof EXPL_RN!=='undefined'?EXPL_RN:{},key:'rn8w-done',qf:0,lf:'all'},
@@ -32,7 +33,8 @@ const TR={
  an:{page:AN_PAGE,plan:AN_PLAN,freq:AN_FREQ,total:AN_FREQ_TOTAL,weeks:AN_WEEKS,quiz:AN_QUIZ,qref:AN_QUIZ_REF,iv:AN_IV,ivref:AN_IV_REF,expl:typeof EXPL_AN!=='undefined'?EXPL_AN:{},key:'an8w-done',qf:0,lf:'all'},
  nd:{page:ND_PAGE,plan:ND_PLAN,freq:ND_FREQ,total:ND_FREQ_TOTAL,weeks:ND_WEEKS,quiz:ND_QUIZ,qref:ND_QUIZ_REF,iv:ND_IV,ivref:ND_IV_REF,expl:typeof EXPL_ND!=='undefined'?EXPL_ND:{},key:'nd8w-done',qf:0,lf:'all'},
  rj:{page:RJ_PAGE,plan:RJ_PLAN,freq:RJ_FREQ,total:RJ_FREQ_TOTAL,weeks:RJ_WEEKS,quiz:RJ_QUIZ,qref:RJ_QUIZ_REF,iv:RJ_IV,ivref:RJ_IV_REF,expl:typeof EXPL_RJ!=='undefined'?EXPL_RJ:{},key:'rj8w-done',qf:0,lf:'all'},
- po:{page:PO_PAGE,plan:PO_PLAN,freq:PO_FREQ,total:PO_FREQ_TOTAL,weeks:PO_WEEKS,quiz:PO_QUIZ,qref:PO_QUIZ_REF,iv:PO_IV,ivref:PO_IV_REF,expl:typeof EXPL_PO!=='undefined'?EXPL_PO:{},key:'po8w-done',qf:0,lf:'all'}
+ po:{page:PO_PAGE,plan:PO_PLAN,freq:PO_FREQ,total:PO_FREQ_TOTAL,weeks:PO_WEEKS,quiz:PO_QUIZ,qref:PO_QUIZ_REF,iv:PO_IV,ivref:PO_IV_REF,expl:typeof EXPL_PO!=='undefined'?EXPL_PO:{},key:'po8w-done',qf:0,lf:'all'},
+ ba:{page:BA_PAGE,plan:BA_PLAN,freq:BA_FREQ,total:BA_FREQ_TOTAL,weeks:BA_WEEKS,quiz:BA_QUIZ,qref:BA_QUIZ_REF,iv:BA_IV,ivref:BA_IV_REF,expl:typeof EXPL_BA!=='undefined'?EXPL_BA:{},key:'ba8w-done',qf:0,lf:'all'}
 };
 const UI={
  vi:{all:'Tất cả',week:'Tuần ',lv:{J:'Junior',M:'Middle',S:'Senior'},n:'câu',pts:'Ý cần có:',topics:'chủ đề'},
